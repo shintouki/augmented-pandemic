@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 def index(request):
     context = {'text': 'Welcome to our game'}
-    return render(request, 'polls/index.html', context)
+    # return HttpResponse("hello")
+    return render(request, 'game/index.html', context)
 
 def register(request):
     return HttpResponse("Register here")
