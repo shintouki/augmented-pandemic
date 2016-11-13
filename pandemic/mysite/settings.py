@@ -25,7 +25,7 @@ SECRET_KEY = '1+mtak-391$ad*bxkdb4_etmoq)f@t#^%@^1gp-ti*m#aj+!6q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
