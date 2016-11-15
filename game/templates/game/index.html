@@ -5,13 +5,7 @@
 		<title>Augmented Pandemic Home Page</title> 
 	</head>
 	<body>
-		<div>
-			<a href="{% url 'game:index' %}">Home</a>
-			<a href="{% url 'game:register' %}">Register</a>
-			<a href="{% url 'game:users' %}">Users</a>
-			<a href="{% url 'game:leaderboard' %}">Leaderboard</a>
-		</div>
+		{% include "game/navigation_bar.html" %}
 		<p>{{ text }}</p>
 	</body>
 </html>
-
