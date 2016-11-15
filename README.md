@@ -2,6 +2,8 @@
 
 This is a game that combines augmented reality and the idea of escaping from a pandemic.
 
+https://augmented-pandemic.herokuapp.com/game/
+
 ### What is this repository for? ###
 
 Insert Game overview.
@@ -26,3 +28,4 @@ Insert Game overview.
 * Product Owner: Ryan Walters
 * SCRUM: Sharon Huang
 * Developer: Ted Shin
+>>>>>>> sharon/master

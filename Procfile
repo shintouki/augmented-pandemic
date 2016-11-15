@@ -1,0 +1,1 @@
+web: gunicorn augmented-pandemic.wsgi --log-file -
