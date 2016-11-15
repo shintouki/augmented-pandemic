@@ -1,6 +1,6 @@
 # README #
 
-This is a game that incoporates augmented reality and the idea of escaping from a pandemic.
+This is a game that combines augmented reality and the idea of escaping from a pandemic.
 
 ### What is this repository for? ###
 
