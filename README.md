@@ -23,6 +23,6 @@ Insert Game overview.
 
 ### Who do I talk to? ###
 
-Product Owner: Ryan Walters
-SCRUM: Sharon Huang
-Developer: Ted Shin
+* Product Owner: Ryan Walters
+* SCRUM: Sharon Huang
+* Developer: Ted Shin
