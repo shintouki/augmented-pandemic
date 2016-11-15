@@ -1,3 +1,4 @@
+
 # README #
 
 This is a game that combines augmented reality and the idea of escaping from a pandemic.
@@ -6,7 +7,7 @@ https://augmented-pandemic.herokuapp.com/game/
 
 ### What is this repository for? ###
 
-Insert Game overview.
+This is multiplayer game that realies on the user wits and endurance to win
 
 ### How do I get set up? ###
 
