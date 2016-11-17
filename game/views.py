@@ -5,6 +5,10 @@ def index(request):
     context = {'text': 'Welcome to our game'}
     return render(request, 'game/index.html', context)
 
+def register(request):
+    context = {'text': 'Register here'}
+    return render(request, 'registration/register.html', context)
+
 def users(request):
 	context = {'text': 'User list here'}
 	return render(request, 'game/users.html', context)
