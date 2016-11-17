@@ -11,5 +11,20 @@
 	<body>
 		{% include "game/navigation_bar.html" %}
 		<p>{{ text }}</p>
+
+		<form action="action_page.php">
+			<div class="container">
+				<label><b>Username</b></label>
+				<input type="text" placeholder="Enter Username" name="uname" required><br>
+				<label><b>Password</b></label>
+				<input type="password" placeholder="Enter Password" name="psw" required><br>
+				<input type="checkbox" checked="checked"> Remember me<br>
+				<button type="submit">Login</button>
+				<button type="button" class="cancelbtn">Cancel</button><br>
+				<span class="psw">Forgot <a href="#">password?</a></span>
+				<span class="psw"><a href="{% url 'game:register' %}">New user?</a></span>
+			</div>
+		</form>
+
 	</body>
 </html>
