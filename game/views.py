@@ -7,7 +7,7 @@ def index(request):
 
 def register(request):
     context = {'text': 'Register here'}
-    return render(request, 'game/register.html', context)
+    return render(request, 'registration/register.html', context)
 
 def users(request):
 	context = {'text': 'User list here'}
