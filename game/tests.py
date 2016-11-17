@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.test import TestCase
 from django.urls import reverse
 
-def create_user(question_text, days):
+def create_user(username):
     pass
 
 class IndexViewTests(TestCase):
