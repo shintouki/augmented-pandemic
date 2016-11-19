@@ -19,3 +19,7 @@ def user_detail(request, user_id):
 def leaderboard(request):
     context = {'text': 'Leaderboard goes here'}
     return render(request, 'game/leaderboard.html', context)
+
+def play(request):
+    # context = {'text': 'Leaderboard goes here'}
+    return render(request, 'game/play.html')

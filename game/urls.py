@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^users/$', views.users, name='users'),
     url(r'^user_detail/(?P<user_id>\w+)$', views.user_detail, name='user_detail'),
     url(r'^leaderboard/$', views.leaderboard, name='leaderboard'),
+    url(r'^play/$', views.play, name='play'),
 ]
