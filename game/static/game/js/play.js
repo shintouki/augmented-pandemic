@@ -39,7 +39,9 @@ function initMap() {
     	['NAC', 40.81967160141943, -73.95081460475922],
     	['Architecture Building', 40.81763769349211, -73.95049810409546],
     	['Marshak', 40.819265636754835, -73.9493715763092],
-    	['Sophie Davis Building', 40.82097473120442, -73.9500904083252]
+    	['Sophie Davis Building', 40.82097473120442, -73.9500904083252],
+    	['The Towers(dorm)', 40.81466994350047, -73.95087361335754],
+    	['CUNY Advanced Science Research Center', 40.815666651361695, -73.95009309053421]
     ];
 
     let marker;
@@ -51,6 +53,19 @@ function initMap() {
             map: map,
             title: ccnyMarkers[i][0]
         });
+
+        let infoWindowContent = 
+        	'<div class="info_content">' +
+	        '<h4>' + ccnyMarkers[i][0] + '</h4>' +
+	        '<p>Infection rate: </p>' +
+			'</div>';
+
+	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infoWindow.setContent(infoWindowContent);
+                infoWindow.open(map, marker);
+            }
+        })(marker, i));
     }
 
     // This is for getting coords on mouseclick, only used in development
@@ -59,11 +74,6 @@ function initMap() {
 	    console.log(event.latLng.lng());
 	});
 
-
-    // var marker = new google.maps.Marker({
-    //       position: {lat: 42.8216357, lng: -73.9476224},
-    //       map: map
-    //     });
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
