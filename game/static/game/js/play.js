@@ -38,12 +38,20 @@ function initMap() {
     	['Engineering Building', 40.821591780613375, -73.94790709018707],
     	['NAC', 40.81967160141943, -73.95081460475922],
     	['Architecture Building', 40.81763769349211, -73.95049810409546],
-    	['Marshak', 40.819265636754835, -73.9493715763092]
+    	['Marshak', 40.819265636754835, -73.9493715763092],
+    	['Sophie Davis Building', 40.82097473120442, -73.9500904083252]
     ];
 
     let marker;
 
-    
+    for (let i=0; i<ccnyMarkers.length; i++) {
+    	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
+    	marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: ccnyMarkers[i][0]
+        });
+    }
 
     // This is for getting coords on mouseclick, only used in development
     google.maps.event.addListener(map, 'click', function(event) {
