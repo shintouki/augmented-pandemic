@@ -44,6 +44,7 @@ function initMap() {
     	['CUNY Advanced Science Research Center', 40.815666651361695, -73.95009309053421]
     ];
 
+
     let marker;
 
     for (let i=0; i<ccnyMarkers.length; i++) {
@@ -61,6 +62,39 @@ function initMap() {
 			'</div>';
 
 	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infoWindow.setContent(infoWindowContent);
+                infoWindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+
+
+
+    // Bayside Markers
+    let baysideMarkers = [
+        ['Bayside Fields', 40.771913123811196, -73.7852954864502],
+        ['Bayside Highschool', 40.77160436885864, -73.78072500228882],
+        ['OLBS', 40.76622530236848, -73.78520965576172],
+        ['Bay Terrace Shopping Center', 40.77950154452172, -73.77699136734009],
+        ['Auburndale Station', 40.761609683748404, -73.78986597061157]
+    ]
+
+    for (let i=0; i<baysideMarkers.length; i++) {
+        let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
+        marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: baysideMarkers[i][0]
+        });
+
+        let infoWindowContent = 
+            '<div class="info_content">' +
+            '<h4>' + baysideMarkers[i][0] + '</h4>' +
+            '<p>Infection rate: </p>' +
+            '</div>';
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
                 infoWindow.setContent(infoWindowContent);
                 infoWindow.open(map, marker);
