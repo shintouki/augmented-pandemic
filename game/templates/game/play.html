@@ -8,9 +8,11 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'game/css/play.css' %}" />
 	</head>
 	<body>
+        {% include "game/navigation_bar.html" %}
 		<div id="textArea">Text goes here</div>
 		<div id="map"></div>
-		<script src="{% static 'game/js/play.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I&callback=initMap"></script>
+        <script src="{% static 'game/js/play.js' %}"></script>
 	</body>
 </html>

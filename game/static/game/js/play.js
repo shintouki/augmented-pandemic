@@ -70,7 +70,6 @@ function initMap() {
     }
 
 
-
     // Bayside Markers
     let baysideMarkers = [
         ['Bayside Fields', 40.771913123811196, -73.7852954864502],

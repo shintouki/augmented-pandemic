@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.utils import simplejson
 
 def index(request):
     context = {'text': 'Welcome to our game'}
@@ -23,3 +24,7 @@ def leaderboard(request):
 def play(request):
     # context = {'text': 'Leaderboard goes here'}
     return render(request, 'game/play.html')
+
+def my_ajax_view(request):
+    
+    return HttpResponse(simplejson.dumps(some_data), mimetype='application/json')
