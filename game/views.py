@@ -1,14 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.utils import simplejson
+from django.core import serializers
+import json
+
+from .models import Location
 
 def index(request):
     context = {'text': 'Welcome to our game'}
     return render(request, 'game/index.html', context)
 
-def register(request):
-    context = {'text': 'Register here'}
-    return render(request, 'registration/register.html', context)
+# This isn't used right now
+# def register(request):
+#     context = {'text': 'Register here'}
+#     return render(request, 'registration/register.html', context)
 
 def users(request):
 	context = {'text': 'User list here'}
@@ -25,6 +29,9 @@ def play(request):
     # context = {'text': 'Leaderboard goes here'}
     return render(request, 'game/play.html')
 
-def my_ajax_view(request):
-    
-    return HttpResponse(simplejson.dumps(some_data), mimetype='application/json')
+def infection_rates(request):
+    location_list = Location.objects.all()
+
+    # Infection rates
+    output = serializers.serialize('json', location_list)
+    return HttpResponse(output, content_type='application/json')

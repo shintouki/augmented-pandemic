@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^user_detail/(?P<user_id>\w+)$', views.user_detail, name='user_detail'),
     url(r'^leaderboard/$', views.leaderboard, name='leaderboard'),
     url(r'^play/$', views.play, name='play'),
+    url(r'^database/infection-rates/$', views.infection_rates, name='infection_rates'),
 ]
