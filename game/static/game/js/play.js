@@ -57,15 +57,30 @@ function initMap() {
         // Find infection rate
 
         let marker;
+        let circle;
 
         for (let i=0; i<ccnyMarkers.length; i++) {
         	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
             let locationName = ccnyMarkers[i][0]
+            let ccnyRadius = 80;
+
+            // Create markers
         	marker = new google.maps.Marker({
                 position: position,
                 map: map,
                 title: locationName
             });
+
+            // Create circle around markers
+            circle = new google.maps.Circle({
+                map: map,
+                radius: ccnyRadius,
+                fillColor: '#AA1100',
+                strokeOpacity: '0'
+            });
+            circle.bindTo('center', marker, 'position');
+
+            // Create description boxes
             let infectionRate = data[locationName].fields.infection_rate;
             let infoWindowContent = 
             	'<div class="info_content">' +
@@ -85,12 +100,23 @@ function initMap() {
         // Draw bayside Markers
         for (let i=0; i<baysideMarkers.length; i++) {
             let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
-            let locationName = baysideMarkers[i][0]
+            let locationName = baysideMarkers[i][0];
+            let baysideRadius = 200;
+
             marker = new google.maps.Marker({
                 position: position,
                 map: map,
                 title: locationName
             });
+            
+            circle = new google.maps.Circle({
+                map: map,
+                radius: baysideRadius,
+                fillColor: '#AA1100',
+                strokeOpacity: '0'
+            });
+            circle.bindTo('center', marker, 'position');
+
             let infectionRate = data[locationName].fields.infection_rate;
             let infoWindowContent = 
                 '<div class="info_content">' +
