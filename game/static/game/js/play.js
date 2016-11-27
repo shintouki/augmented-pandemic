@@ -53,27 +53,24 @@ function initMap() {
     ];
 
     $.getJSON('/game/database/infection-rates/', function(data) {
-        console.log(data)
+        // console.log(data)
         // Find infection rate
-
-        for (let i=0; i<data.length; i++) {
-
-        }
 
         let marker;
 
         for (let i=0; i<ccnyMarkers.length; i++) {
         	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
+            let locationName = ccnyMarkers[i][0]
         	marker = new google.maps.Marker({
                 position: position,
                 map: map,
-                title: ccnyMarkers[i][0]
+                title: locationName
             });
-
+            let infectionRate = data[locationName].fields.infection_rate;
             let infoWindowContent = 
             	'<div class="info_content">' +
-    	        '<h4>' + ccnyMarkers[i][0] + '</h4>' +
-    	        '<p>Infection rate: </p>' +
+    	        '<h4>' + locationName + '</h4>' +
+    	        '<p>Infection rate: ' + infectionRate + '</p>' +
     			'</div>';
 
     	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -88,16 +85,17 @@ function initMap() {
         // Draw bayside Markers
         for (let i=0; i<baysideMarkers.length; i++) {
             let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
+            let locationName = baysideMarkers[i][0]
             marker = new google.maps.Marker({
                 position: position,
                 map: map,
-                title: baysideMarkers[i][0]
+                title: locationName
             });
-
+            let infectionRate = data[locationName].fields.infection_rate;
             let infoWindowContent = 
                 '<div class="info_content">' +
-                '<h4>' + baysideMarkers[i][0] + '</h4>' +
-                '<p>Infection rate: </p>' +
+                '<h4>' + locationName + '</h4>' +
+                '<p>Infection rate: ' + infectionRate + '</p>' +
                 '</div>';
 
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
