@@ -17,4 +17,3 @@ Your character has been given a virus by a mad scientist. As time progresses, it
 * Product Owner: Ryan Walters
 * SCRUM: Sharon Huang
 * Developer: Ted Shin
-> sharon/master
