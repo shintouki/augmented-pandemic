@@ -26,6 +26,5 @@ urlpatterns = [
             form_class=UserCreationForm,
             success_url='/game'
     )),
-    url(r'^', include('django.contrib.auth.urls')),
-    
+    url(r'^', include('django.contrib.auth.urls')),    
 ]

@@ -31,7 +31,14 @@ def play(request):
 
 def infection_rates(request):
     location_list = Location.objects.all()
+    locationJSON = serializers.serialize('json', location_list)
+    # Convert JSON to python dict
+    locationObject = json.loads(locationJSON)
 
-    # Infection rates
-    output = serializers.serialize('json', location_list)
-    return HttpResponse(output, content_type='application/json')
+    # Create a new object and make the keys be the location names so it's easier to search later
+    outputObject = {}
+    for location in locationObject:
+        location_text = location['fields']['location_text']
+        outputObject[location_text] = location
+
+    return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
