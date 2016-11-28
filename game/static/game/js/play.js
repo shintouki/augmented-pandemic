@@ -2,7 +2,7 @@
 
 function initMap() {
     let map = new google.maps.Map(document.getElementById('map'), {
-      // center: {lat: 40.82, lng: -73.9493},
+      center: {lat: 40.82, lng: -73.9493},
       zoom: 17
     });
     // var marker = new google.maps.Marker({
@@ -11,28 +11,61 @@ function initMap() {
     // });
     let infoWindow = new google.maps.InfoWindow({map: map});
 
-    // Current location
+    // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
-			// console.log(position.coords.latitude);
-			// console.log(position.coords.longitude);
-			let pos = {
-			  lat: position.coords.latitude,
-			  lng: position.coords.longitude
-		};
+			// let pos = {
+			//     lat: position.coords.latitude,
+		 //        lng: position.coords.longitude
+	  //       };
 
-		infoWindow.setPosition(pos);
-		infoWindow.setContent('You are here.');
-		map.setCenter(pos);
-		}, function() {
-			handleLocationError(true, infoWindow, map.getCenter());
-		});
+            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            let locationName = 'Current Location';
+
+            let marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: locationName
+            });
+
+            // Create circle around markers
+            let circle = new google.maps.Circle({
+                map: map,
+                radius: 20,
+                fillColor: '#0000CD',
+                strokeOpacity: '0'
+            });
+            circle.bindTo('center', marker, 'position');
+
+            // Create description boxes
+            let infoWindowContent = 
+                '<div class="info_content">' +
+                '<h4>' + locationName + '</h4>' +
+                '</div>';
+
+            google.maps.event.addListener(marker, 'click', (function(marker) {
+                return function() {
+                    infoWindow.setContent(infoWindowContent);
+                    infoWindow.open(map, marker);
+                }
+            })(marker));
+
+    		infoWindow.setPosition(pos);
+    		infoWindow.setContent('You are here.');
+    		map.setCenter(pos);
+    		}, function() {
+			    handleLocationError(true, infoWindow, map.getCenter());
+		    });
 	}
 	else {
 		// Browser doesn't support Geolocation
 		handleLocationError(false, infoWindow, map.getCenter());
     }
     
+    // Current location blue marker/circle
+    // let GeoMarker = new GeolocationMarker(map);
+
     let ccnyMarkers = [
     	['Shephard Hall', 40.820536297872856, -73.94823431968689],
     	['Engineering Building', 40.821591780613375, -73.94790709018707],
@@ -53,7 +86,6 @@ function initMap() {
     ];
 
     $.getJSON('/game/database/infection-rates/', function(data) {
-        // console.log(data)
         // Find infection rate
 
         let marker;
