@@ -5,9 +5,11 @@ html, body {
 }
 
 #map {
-  height: 90%;
+  height: 500px !important;
+  width: 700px !important;
+  margin: auto !important;
 }
-   
+
 #textArea {
   height: 10%;
 }
