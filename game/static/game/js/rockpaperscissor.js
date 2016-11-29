@@ -2,9 +2,8 @@
 var user = undefined;
 
 function playGame(choice){
-  user = choice;
-
   var computer = Math.random();
+  user = choice;
 
   if (computer <0.34){
     computer = "rock";
@@ -17,8 +16,7 @@ function playGame(choice){
   }
 
   result = compare(user, computer);
-  document.getElementById("result").innerHTML =
-			"<p>" + result + "</p>";
+  document.getElementById("result").innerHTML = "You: " + user + " Enemy: " + computer + "<br>" + result;
 }
 
 function compare(userSelection, computerSelection){
