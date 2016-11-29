@@ -3,8 +3,14 @@
 $(document).ready(function() {
     $("#checkLocation").click(function() {
         
-    }); 
+    });
+
+    $('#toggleMap').click(function() {
+        $('#map').toggle("fast");
+    });
 });
+
+
 
 function initMap() {
 
@@ -24,7 +30,7 @@ function initMap() {
             $(document).ready(function() {
                 $("#centerMap").click(function() {
                     map.setCenter(pos);
-                }); 
+                });
             });
 
             let locationName = 'Current Location';
