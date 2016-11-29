@@ -2,7 +2,7 @@
 
 function initMap() {
     let map = new google.maps.Map(document.getElementById('map'), {
-      // center: {lat: 40.82, lng: -73.9493},
+      center: {lat: 40.82, lng: -73.9493},
       zoom: 17
     });
     // var marker = new google.maps.Marker({
@@ -11,28 +11,61 @@ function initMap() {
     // });
     let infoWindow = new google.maps.InfoWindow({map: map});
 
-    // Current location
+    // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
-			// console.log(position.coords.latitude);
-			// console.log(position.coords.longitude);
-			let pos = {
-			  lat: position.coords.latitude,
-			  lng: position.coords.longitude
-		};
+			// let pos = {
+			//     lat: position.coords.latitude,
+		 //        lng: position.coords.longitude
+	  //       };
 
-		infoWindow.setPosition(pos);
-		infoWindow.setContent('You are here.');
-		map.setCenter(pos);
-		}, function() {
-			handleLocationError(true, infoWindow, map.getCenter());
-		});
+            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            let locationName = 'Current Location';
+
+            let marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: locationName
+            });
+
+            // Create circle around markers
+            let circle = new google.maps.Circle({
+                map: map,
+                radius: 20,
+                fillColor: '#0000CD',
+                strokeOpacity: '0'
+            });
+            circle.bindTo('center', marker, 'position');
+
+            // Create description boxes
+            let infoWindowContent = 
+                '<div class="info_content">' +
+                '<h4>' + locationName + '</h4>' +
+                '</div>';
+
+            google.maps.event.addListener(marker, 'click', (function(marker) {
+                return function() {
+                    infoWindow.setContent(infoWindowContent);
+                    infoWindow.open(map, marker);
+                }
+            })(marker));
+
+    		infoWindow.setPosition(pos);
+    		infoWindow.setContent('You are here.');
+    		map.setCenter(pos);
+    		}, function() {
+			    handleLocationError(true, infoWindow, map.getCenter());
+		    });
 	}
 	else {
 		// Browser doesn't support Geolocation
 		handleLocationError(false, infoWindow, map.getCenter());
     }
     
+    // Current location blue marker/circle
+    // let GeoMarker = new GeolocationMarker(map);
+
     let ccnyMarkers = [
     	['Shephard Hall', 40.820536297872856, -73.94823431968689],
     	['Engineering Building', 40.821591780613375, -73.94790709018707],
@@ -44,62 +77,93 @@ function initMap() {
     	['CUNY Advanced Science Research Center', 40.815666651361695, -73.95009309053421]
     ];
 
-
-    let marker;
-
-    for (let i=0; i<ccnyMarkers.length; i++) {
-    	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
-    	marker = new google.maps.Marker({
-            position: position,
-            map: map,
-            title: ccnyMarkers[i][0]
-        });
-
-        let infoWindowContent = 
-        	'<div class="info_content">' +
-	        '<h4>' + ccnyMarkers[i][0] + '</h4>' +
-	        '<p>Infection rate: </p>' +
-			'</div>';
-
-	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                infoWindow.setContent(infoWindowContent);
-                infoWindow.open(map, marker);
-            }
-        })(marker, i));
-    }
-
-
-    // Bayside Markers
     let baysideMarkers = [
         ['Bayside Fields', 40.771913123811196, -73.7852954864502],
         ['Bayside Highschool', 40.77160436885864, -73.78072500228882],
         ['OLBS', 40.76622530236848, -73.78520965576172],
         ['Bay Terrace Shopping Center', 40.77950154452172, -73.77699136734009],
         ['Auburndale Station', 40.761609683748404, -73.78986597061157]
-    ]
+    ];
 
-    for (let i=0; i<baysideMarkers.length; i++) {
-        let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
-        marker = new google.maps.Marker({
-            position: position,
-            map: map,
-            title: baysideMarkers[i][0]
-        });
+    $.getJSON('/game/database/infection-rates/', function(data) {
+        // Find infection rate
 
-        let infoWindowContent = 
-            '<div class="info_content">' +
-            '<h4>' + baysideMarkers[i][0] + '</h4>' +
-            '<p>Infection rate: </p>' +
-            '</div>';
+        let marker;
+        let circle;
 
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                infoWindow.setContent(infoWindowContent);
-                infoWindow.open(map, marker);
-            }
-        })(marker, i));
-    }
+        for (let i=0; i<ccnyMarkers.length; i++) {
+        	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
+            let locationName = ccnyMarkers[i][0]
+            let ccnyRadius = 80;
+
+            // Create markers
+        	marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: locationName
+            });
+
+            // Create circle around markers
+            circle = new google.maps.Circle({
+                map: map,
+                radius: ccnyRadius,
+                fillColor: '#AA1100',
+                strokeOpacity: '0'
+            });
+            circle.bindTo('center', marker, 'position');
+
+            // Create description boxes
+            let infectionRate = data[locationName].fields.infection_rate;
+            let infoWindowContent = 
+            	'<div class="info_content">' +
+    	        '<h4>' + locationName + '</h4>' +
+    	        '<p>Infection rate: ' + infectionRate + '</p>' +
+    			'</div>';
+
+    	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infoWindow.setContent(infoWindowContent);
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
+        }
+
+
+        // Draw bayside Markers
+        for (let i=0; i<baysideMarkers.length; i++) {
+            let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
+            let locationName = baysideMarkers[i][0];
+            let baysideRadius = 200;
+
+            marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: locationName
+            });
+            
+            circle = new google.maps.Circle({
+                map: map,
+                radius: baysideRadius,
+                fillColor: '#AA1100',
+                strokeOpacity: '0'
+            });
+            circle.bindTo('center', marker, 'position');
+
+            let infectionRate = data[locationName].fields.infection_rate;
+            let infoWindowContent = 
+                '<div class="info_content">' +
+                '<h4>' + locationName + '</h4>' +
+                '<p>Infection rate: ' + infectionRate + '</p>' +
+                '</div>';
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infoWindow.setContent(infoWindowContent);
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
+        }
+    });
 
     // This is for getting coords on mouseclick, only used in development
     google.maps.event.addListener(map, 'click', function(event) {
