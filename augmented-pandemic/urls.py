@@ -21,10 +21,10 @@ from django.contrib.auth.forms import UserCreationForm
 urlpatterns = [
 	url(r'^game/', include('game.urls')),
     url(r'^admin/', admin.site.urls),
-    url('^register/', CreateView.as_view(
+    url(r'^register/', CreateView.as_view(
             template_name='registration/register.html',
             form_class=UserCreationForm,
             success_url='/game'
     )),
-    url('^', include('django.contrib.auth.urls')),
+    url(r'^', include('django.contrib.auth.urls')),    
 ]
