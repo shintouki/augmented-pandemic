@@ -9,11 +9,23 @@
 	</head>
 	<body>
         {% include "game/navigation_bar.html" %}
-		<div id="textArea">Text goes here</div>
-		<div id="map"></div>
+		<div id="textArea"> Text
+		<div id="game">
+			<h1>Fight the Infection</h1>
+			<div id="userSelection">
+				<button onclick="playGame('rock')">Rock</button>
+				<button onclick="playGame('paper')">Paper</button>
+				<button onclick="playGame('scissors')">Scissors</button>
+			</div>
+			<script src = "{% static 'game/js/rockpaperscissor.js' %}"></script>
+			<div id="result"></div>
+		</div></div><br><br>
+
+		<div id="map">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I&callback=initMap"></script>
         <!-- <script  async defer src="https://cdn.rawgit.com/shintouki/uploaded-files/master/geolocation-marker.js"></script> -->
         <script src="{% static 'game/js/play.js' %}"></script>
+		</div>
 	</body>
 </html>
