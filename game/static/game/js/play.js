@@ -1,5 +1,11 @@
 "use strict";
 
+$(document).ready(function() {
+    $("#centerMap").click(function() {
+        initMap()
+    }); 
+});
+
 function initMap() {
     let map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.82, lng: -73.9493},
