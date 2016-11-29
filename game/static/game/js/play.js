@@ -1,31 +1,31 @@
 "use strict";
 
 $(document).ready(function() {
-    $("#centerMap").click(function() {
-        initMap()
+    $("#checkLocation").click(function() {
+        
     }); 
 });
 
 function initMap() {
+
     let map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.82, lng: -73.9493},
       zoom: 16
-    });
-    // var marker = new google.maps.Marker({
-    //   position: {lat: 40.82, lng: -73.9493},
-    //   map: map
-    // });
+    }); 
+
     let infoWindow = new google.maps.InfoWindow({map: map});
 
     // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
-			// let pos = {
-			//     lat: position.coords.latitude,
-		 //        lng: position.coords.longitude
-	  //       };
-
             let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+            // Button for centering map
+            $(document).ready(function() {
+                $("#centerMap").click(function() {
+                    map.setCenter(pos);
+                }); 
+            });
 
             let locationName = 'Current Location';
 
@@ -68,9 +68,6 @@ function initMap() {
 		// Browser doesn't support Geolocation
 		handleLocationError(false, infoWindow, map.getCenter());
     }
-    
-    // Current location blue marker/circle
-    // let GeoMarker = new GeolocationMarker(map);
 
     let ccnyMarkers = [
     	['Shephard Hall', 40.820536297872856, -73.94823431968689],
