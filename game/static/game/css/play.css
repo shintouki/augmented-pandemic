@@ -5,11 +5,12 @@ html, body {
 }
 
 #map {
-  height: 500px !important;
+    height: 50%;
+  /*height: 500px !important;
   width: 700px !important;
-  margin: auto !important;
+  margin: auto !important;*/
 }
 
-#textArea {
-  height: 10%;
+#game {
+  height: 50%;
 }
