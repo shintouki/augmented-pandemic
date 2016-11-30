@@ -1,17 +1,18 @@
 // rock paper scissor game mechanics
+
 var user = undefined;
 
 function playGame(choice){
   var computer = Math.random();
   user = choice;
 
-  if (computer <0.34){
+  if (computer<0.34 && computer>0){
     computer = "rock";
   }
-  else if(computerOption <=0.67){
+  else if(computer<=0.67 && computer>=0.34){
     computer = "paper";
   }
-  else{
+  else if(computer>.67){
     computer = "scissors";
   }
 
