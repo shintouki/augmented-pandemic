@@ -9,22 +9,19 @@
 	</head>
 	<body>
         {% include "game/navigation_bar.html" %}
-		<div id="textArea">
+        <div id="game">
+            <h1>Fight the Infection</h1>
             <input id="checkLocation" type="button" value="Check Location">
             <input id="centerMap" type="button" value="Center Map">
             <input id="toggleMap" type="button" value="Toggle Map">
-    		<div id="game">
-                
-    			<h1>Fight the Infection</h1>
-    			<div id="userSelection">
-    				<button onclick='playGame("rock")'>Rock</button>
-    				<button onclick='playGame("paper")'>Paper</button>
-    				<button onclick='playGame("scissors")'>Scissors</button>
-    			</div><br>
-    			<script src = "{% static 'game/js/rockpaperscissor.js' %}"></script>
-    			<div id="result">n/a</div>
-    		</div>
-            </div>
+			<div id="userSelection">
+				<button onclick='playGame("rock")'>Rock</button>
+				<button onclick='playGame("paper")'>Paper</button>
+				<button onclick='playGame("scissors")'>Scissors</button>
+			</div><br>
+			<script src = "{% static 'game/js/rockpaperscissor.js' %}"></script>
+			<div id="result">n/a</div>
+    	</div>
 		<div id="map">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I&callback=initMap"></script>
