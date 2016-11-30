@@ -1,0 +1,41 @@
+#game{
+    background-color: #FFCCFF;
+    border-radius: 15px;
+}
+
+#userSelection
+{
+    text-align: center;
+    padding: 30px;
+    margin: 10px;
+}
+
+#result
+{
+    text-align: center;
+    padding: 30px;
+    font-size: 1.2em;
+}
+
+.selection
+{
+	float: left; /* Images float to the left, so they appear in the same line */
+	list-style: none; /* Remove the bullet */
+        border: 5px #F8F8F8  solid;
+        border-radius: 15px;
+        margin: 30px;
+}
+
+.selection img
+{
+	width: 70px; /* All the images have the same size */
+        padding: 10px;
+}
+
+button
+{
+        background-color: #990066;
+        color: white;
+	border-radius: 10px;
+	font-size: 100%;
+}

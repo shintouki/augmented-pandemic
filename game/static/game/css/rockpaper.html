@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+    <title>Chose Wisely </title>
+<LINK REL=StyleSheet HREF="rpaperstyle.css" TYPE="text/css" MEDIA=screen>
+<div id="game">
+  <div id="userSelection">
+   <h1>Select your choice</h1>
+     <ul>
+	<li class="selection" id="toxin">
+	  <img src="toxin.png" alt="toxin" onclick="playWith('toxin')"/>
+	</li>
+	<li class="selection" id="haz">
+	  <img src="haz.png" alt="haz" onclick="playWith('haz')"/>
+	</li>
+	<li class="selection" id="needle">
+	  <img src="needle.png" alt="needle" onclick="playWith('needle')"/>
+	</li>
+     </ul>
+     <button onclick="playGame()">Play</button>
+  </div>
+  <div id="result"></div>
+</div>
+<script type="text/javascript">
+  	    // Global variable for remember wich option has selected the user
+  	   	var userOption = undefined;
+
+  	   	// Function that will be called when the user click on an option
+
+  	 	function playWith(option){
+  	 		// first, we deselect the previous selected element (if exist)
+  	 		if (userOption != undefined)
+  	 		{
+  	 			userSelectionElement = document.getElementById(userOption);
+  	 			// we remove the purple border (if exist)
+  	 			userSelectionElement.style.border = "5px #F8F8F8  solid";
+  	 		}
+
+  	 		// then, we select the user option and we add
+  	 		// a purple border
+  	 		userOption = option;
+  	 		userSelectionElement = document.getElementById(option);
+  	 		userSelectionElement.style.border = "5px #990066 solid";
+  	    }
+
+  	    // Function that execute the game
+  	    function playGame(){
+  	 		var computerOption = Math.random();
+			if (computerOption <0.34){
+				computerOption = "stone";
+			}else if(computerOption <=0.67){
+				computerOption = "paper";
+			}else{
+				computerOption = "scissor";
+			}
+
+			resultMessage = compare(userOption, computerOption);
+
+			document.getElementById("result").innerHTML =
+			"<p>User select: " + userOption + " - Computer select:"
+			+ computerOption + "</p> <p>" + resultMessage + "</p>";
+
+  	    }
+
+  	    // Function that compares the two selections and return a message
+  	    function compare(userSelection, computerSelection)
+		{
+			if(userSelection == undefined)
+			{
+				return "Please, select an option before play"
+			}
+
+		    if (userSelection == computerSelection)
+		    {
+		       return "It is a draw!";
+		    }
+
+		    if (userSelection == "stone")
+		    {
+		        if (computerSelection == "scissor")
+		        {
+		             return "You win.";
+		        } else {
+		            return "The computer win. Try again.";
+		        }
+
+		    } else if (userSelection == "paper") {
+
+		        if (computerSelection == "stone")
+		        {
+		             return "You win." ;
+		        } else if("scissor") {
+		            return "The computer win. Try again." ;
+		        }
+
+		    } else if (userSelection == "scissor") {
+
+		        if (computerSelection == "stone")
+		        {
+		            return "The computer win. Try again.";
+		        }else{
+		            return "You win.";
+		        }
+		    }
+		}
+
+  	 </script>
+
+</head>
+<body>
+
+</body>
+</html>
