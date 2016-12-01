@@ -88,10 +88,16 @@ DATABASES = {
         'NAME': 'augmentedpandemic',
         'USER': 'testuser',
         'PASSWORD': 'augmentedpandemic',
-        'HOST': '127.0.0.1',
+        'HOST': 'augmented-pandemic.herokuapp.com',
         'PORT': '',
     }
 }
+
+import dj_database_url
+DATABASES[‘default’] = dj_database_url.config()
+
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -132,6 +138,3 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = '/game'
 
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
