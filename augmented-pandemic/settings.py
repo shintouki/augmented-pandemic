@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': 'augmentedpandemic',
         'USER': 'testuser',
         'PASSWORD': 'augmentedpandemic',
-        'HOST': 'augmented-pandemic.herokuapp.com',
+        'HOST': '127.0.0.1',
         'PORT': '',
     }
 }
