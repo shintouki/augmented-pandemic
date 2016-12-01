@@ -62,3 +62,8 @@ class LocationTestCase(TestCase):
     def test_total_methods(self):
         ccny = Location.objects.create(location_text="CCNY")
         self.assertEqual(ccny.total_matches(), 100)
+
+    # test infection rate method
+    def test_infection_rate(self):
+        ccny = Location.objects.create(location_text="CCNY")
+        self.assertEqual(ccny.infection_rate(), 30)
