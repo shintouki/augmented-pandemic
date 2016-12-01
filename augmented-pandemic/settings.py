@@ -127,3 +127,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/game'
+
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
