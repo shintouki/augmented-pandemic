@@ -51,6 +51,6 @@ class LocationTestCase(TestCase):
         ccny = Location.objects.create(location_text="CCNY")
         shepard = Location.objects.create(location_text="Shepard", matches_won=10, matches_lost=10)
         shepard_name = "Shepard"
-        self.assertEqual(ccny.matches_won, 0)
+        self.assertEqual(ccny.matches_won, 70)
         self.assertEqual(shepard.matches_lost, 10)
         self.assertEqual(shepard.location_text, shepard_name)
