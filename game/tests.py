@@ -59,6 +59,6 @@ class LocationTestCase(TestCase):
         self.assertEqual(shepard.location_text, shepard_name)
 
     # test total matches method
-    def test_infection_rate(self):
+    def test_total_methods(self):
         ccny = Location.objects.create(location_text="CCNY")
         self.assertEqual(ccny.total_matches(), 100)
