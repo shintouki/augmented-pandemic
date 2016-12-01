@@ -1,6 +1,7 @@
 // rock paper scissor game mechanics
 
 var user = undefined;
+var outcome = undefined;
 
 function playGame(choice){
   var computer = Math.random();
@@ -17,34 +18,42 @@ function playGame(choice){
   }
 
   result = compare(user, computer);
-  document.getElementById("result").innerHTML = "You: " + user + " Enemy: " + computer + "<br>" + result;
+  document.getElementById("result").innerHTML =
+    "You: " + user + " Enemy: " + computer + "<br>" + result;
 }
 
 function compare(userSelection, computerSelection){
   if (userSelection == computerSelection){
+    outcome = 0;
     return "Draw- try again.";
 	}
   if (userSelection == "rock"){
     if (computerSelection == "scissors"){
+      outcome = 1;
       return "You win! Infection rate down.";
     }
     else {
+      outcome = -1;
       return "You lost. Infection rate up.";
 		}
   }
   else if (userSelection == "paper"){
     if (computerSelection == "rock"){
+      outcome = 1;
       return "You win! Infection rate down." ;
     }
     else if("scissors"){
+      outcome = -1;
       return "You lost. Infection rate up." ;
     }
   }
   else if (userSelection == "scissors"){
     if (computerSelection == "rock"){
+      outcome = -1;
       return "You lost. Infection rate up.";
     }
     else {
+      outcome = 1;
       return "You win! Infection rate down.";
     }
 	}
