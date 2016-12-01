@@ -134,4 +134,4 @@ LOGIN_REDIRECT_URL = '/game'
 
 import dj_database_url
 DATABASES['default'] =  dj_database_url.config()
-DATABASES['default'].update(db_from_env)
+# DATABASES['default'].update(db_from_env)
