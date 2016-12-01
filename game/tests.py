@@ -3,6 +3,7 @@ import datetime
 from django.utils import timezone
 from django.test import TestCase
 from django.urls import reverse
+from game.models import Location, Profile
 
 def create_user(username):
     pass
@@ -38,7 +39,18 @@ class LeaderboardViewTests(TestCase):
         response = self.client.get(reverse('game:leaderboard'))
         self.assertEqual(response.status_code, 200)
 
-
-
 class RegistrationTests(TestCase):
     pass
+
+class LocationTestCase(TestCase):
+    def create_locations(location_text, matches_won, matches_lost):
+        return Location.objects.create(location_text="CCNY")
+
+
+    def test_locationfields(self):
+        ccny = Location.objects.create(location_text="CCNY")
+        shepard = Location.objects.create(location_text="Shepard", matches_won=10, matches_lost=10)
+        shepard_name = "Shepard"
+        self.assertEqual(ccny.matches_won, 0)
+        self.assertEqual(shepard.matches_lost, 10)
+        self.assertEqual(shepard.location_text, shepard_name)
