@@ -6,8 +6,8 @@ from django.dispatch import receiver
 class Location(models.Model):
     location_text = models.CharField(max_length=200)
     # infection_rate = models.IntegerField(default=30)
-    matches_lost = models.IntegerField(default=30)
-    matches_won = models.IntegerField(default=70)
+    matches_lost = models.IntegerField(default=0)
+    matches_won = models.IntegerField(default=0)
 
     def total_matches(self):
         won = self.matches_won
@@ -15,7 +15,7 @@ class Location(models.Model):
         return float(won + lost)
 
     def infection_rate(self):
-        "Returns infection rate of location"
+        # "Returns infection rate of location"
         rate = (self.matches_lost / self.total_matches())*100
         return rate
 

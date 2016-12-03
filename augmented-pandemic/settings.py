@@ -135,13 +135,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-<<<<<<< HEAD
-LOGIN_REDIRECT_URL = '/game'
-
-||||||| merged common ancestors
-STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/game'
-=======
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/game/play'
->>>>>>> sharon_bit/master
