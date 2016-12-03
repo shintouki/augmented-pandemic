@@ -15,7 +15,7 @@ class Location(models.Model):
         return float(won + lost)
 
     def infection_rate(self):
-        "Returns infection rate of location"
+        # "Returns infection rate of location"
         rate = (self.matches_lost / self.total_matches())*100
         return rate
 

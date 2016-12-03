@@ -122,11 +122,16 @@ function initMap() {
             circle.bindTo('center', marker, 'position');
 
             // Create description boxes
-            let infectionRate = data[locationName].fields.infection_rate;
+            let matchesWon = data[locationName].fields.matches_won;
+            let matchesLost = data[locationName].fields.matches_lost;
+            let totalMatches = matchesWon + matchesLost;
+            let infectionRate = matchesLost / totalMatches * 100;
             let infoWindowContent = 
             	'<div class="info_content">' +
     	        '<h4>' + locationName + '</h4>' +
     	        '<p>Infection rate: ' + infectionRate + '</p>' +
+                '<p>Matches Won: ' + matchesWon + '</p>' +
+                '<p>Matches Lost: ' + matchesLost + '</p>' +
     			'</div>';
 
     	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -157,12 +162,17 @@ function initMap() {
                 strokeOpacity: '0'
             });
             circle.bindTo('center', marker, 'position');
-
-            let infectionRate = data[locationName].fields.infection_rate;
+            console.log(data[locationName]);
+            let matchesWon = data[locationName].fields.matches_won;
+            let matchesLost = data[locationName].fields.matches_lost;
+            let totalMatches = matchesWon + matchesLost;
+            let infectionRate = matchesLost / totalMatches * 100;
             let infoWindowContent = 
                 '<div class="info_content">' +
                 '<h4>' + locationName + '</h4>' +
                 '<p>Infection rate: ' + infectionRate + '</p>' +
+                '<p>Matches Won: ' + matchesWon + '</p>' +
+                '<p>Matches Lost: ' + matchesLost + '</p>' +
                 '</div>';
 
             google.maps.event.addListener(marker, 'click', (function(marker, i) {

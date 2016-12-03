@@ -5,12 +5,9 @@ html, body {
 }
 
 #map {
-    height: 50%;
-  /*height: 500px !important;
-  width: 700px !important;
-  margin: auto !important;*/
+    height: 70%;
 }
 
 #game {
-  height: 50%;
+  height: 30%;
 }
