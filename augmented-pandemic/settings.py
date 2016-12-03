@@ -15,6 +15,13 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATIC_URL = '/static/'
+# STATICFILES_DIRS = (
+#     os.path.join(PROJECT_ROOT, 'static'),
+# )
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -25,7 +32,6 @@ SECRET_KEY = '1+mtak-391$ad*bxkdb4_etmoq)f@t#^%@^1gp-ti*m#aj+!6q'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -78,15 +84,19 @@ DATABASES = {
     'default': {
         # ENGINE': 'django.db.backends.sqlite3',
         # NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE': 'django.db.backends.postgresql', #switching to postgresql
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'augmentedpandemic',
         'USER': 'testuser',
         'PASSWORD': 'augmentedpandemic',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
-
+        'PORT': '',
     }
 }
+
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
