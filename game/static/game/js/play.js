@@ -188,7 +188,8 @@ function initMap() {
 
             // Check to see if user is inside a circle
             $("#checkLocation").click(function() {
-                console.log(markersAndCirclesList);
+                // console.log(markersAndCirclesList);
+                let locatedInsideACircle = false;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
                     let location = markersAndCirclesList[i]['location'];
                     let marker = markersAndCirclesList[i]['marker'];
@@ -196,9 +197,16 @@ function initMap() {
                     let bounds = circle.getBounds();
                     if (bounds.contains(pos)) {
                         console.log("You are at: " + location);
+                        locatedInsideACircle= true;
                     }
                 }
 
+                if (locatedInsideACircle) {
+                    $('#userSelection').show();
+                }
+                else {
+
+                }
                 
                 // console.log(locationName);
                 // console.log(marker);
@@ -206,6 +214,11 @@ function initMap() {
                 // console.log(pos);
                 // console.log(bounds.contains(pos));
             });
+
+            $(".RPSbutton").click(function() {
+                $('#userSelection').hide();
+            });
+
         });
     });
 

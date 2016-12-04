@@ -11,3 +11,7 @@ html, body {
 #game {
   height: 30%;
 }
+
+#userSelection {
+    display: none;
+}
