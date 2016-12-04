@@ -1,7 +1,7 @@
 "use strict";
 
 $(document).ready(function() {
-    $('#toggleMap').click(function() {
+    $('#toggleMapButton').click(function() {
         $('#map').toggle("fast");
     });
 });
@@ -22,7 +22,7 @@ function initMap() {
             let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
             // Button for centering map
-            $("#centerMap").click(function() {
+            $("#centerMapButton").click(function() {
                 map.setCenter(pos);
             });
 
@@ -187,8 +187,7 @@ function initMap() {
 
 
             // Check to see if user is inside a circle
-            $("#checkLocation").click(function() {
-                // console.log(markersAndCirclesList);
+            $("#fightInfectionButton").click(function() {
                 let locatedInsideACircle = false;
                 let currentLocation;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
@@ -197,7 +196,7 @@ function initMap() {
                     let circle = markersAndCirclesList[i]['circle'];
                     let bounds = circle.getBounds();
                     if (bounds.contains(pos)) {
-                        console.log("You are at: " + location);
+                        // console.log("You are at: " + location);
                         currentLocation = location;
                         locatedInsideACircle = true;
                     }
@@ -205,7 +204,7 @@ function initMap() {
 
                 if (locatedInsideACircle) {
                     $("#userSelection").show();
-                    let locationOutput = "<p>You are at " + currentLocation + "</p";
+                    let locationOutput = "<p>Fighting infection at " + currentLocation + "...</p";
                     $("#infoWindow").append(locationOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
@@ -214,17 +213,26 @@ function initMap() {
                     $("#infoWindow").append(resultOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
-                
-                // console.log(locationName);
-                // console.log(marker);
-                // console.log(bounds);
-                // console.log(pos);
-                // console.log(bounds.contains(pos));
+
+
+
+
+                $(".RPSbutton").click(function() {
+                    $('#userSelection').hide();
+                    // console.log(outcome);
+                    // console.log(currentLocation);
+                    if (outcome == 1) {
+                        // Player won minigame
+                        
+                    }
+                    else if (outcome == -1) {
+                        // Player lost minigame
+                    }
+                    // If draw, do nothing
+                });
             });
 
-            $(".RPSbutton").click(function() {
-                $('#userSelection').hide();
-            });
+
 
         });
     });
