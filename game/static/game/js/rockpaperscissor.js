@@ -19,10 +19,9 @@ function playGame(choice){
 
   result = compare(user, computer);
   var resultOutput = "<p>You: " + user + " Enemy: " + computer + "<br>" + result + "</p>";
-  $("#result").append(resultOutput);
+  //$("#result").append(resultOutput);
 
-  // document.getElementById("result").innerHTML =
-  //   "You: " + user + " Enemy: " + computer + "<br>" + result;
+  document.getElementById("result").innerHTML = result;
 }
 
 function compare(userSelection, computerSelection){

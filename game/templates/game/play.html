@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Play</title>
+		<title>Fight the Infection!</title>
 		<meta name="viewport" content="initial-scale=1.0">
 		<meta charset="utf-8">
 		{% load static %}
@@ -13,22 +13,21 @@
     </div>
     <div id="textArea">
       <div id="leftSide">
-        <div id="generalButtons">
-            <input id="checkLocation" type="button" value="Check Location">
-            <input id="centerMap" type="button" value="Center Map">
-            <input id="toggleMap" type="button" value="Toggle Map">
-        </div>
-  			<div id="userSelection">
+				<div id="userSelection">
     			<button id="rockButton" class="RPSbutton" onclick='playGame("quarantine")'>Quarantine</button>
   				<button id="paperButton" class="RPSbutton" onclick='playGame("cure")'>Cure</button>
   				<button id="scissorsButton" class="RPSbutton" onclick='playGame("rescue")'>Rescue</button>
     		</div>
+        <div id="generalButtons">
+            <input id="checkLocation" type="button" value="Check Location">
+            <input id="centerMap" type="button" value="Center Map">
+            <input id="toggleMap" type="button" value="Toggle Map">
+        </div><br>
       </div>
       <div id="rightSide">
         <div id="infoWindow">
-          <div id="result">
-              <p>Information Window</p>
-          </div>
+					<p>Results</p>
+          <div id="result"></div>
         </div>
       </div>
 		</div>
