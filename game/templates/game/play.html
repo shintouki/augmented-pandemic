@@ -9,23 +9,32 @@
 	</head>
 	<body>
         {% include "game/navigation_bar.html" %}
-        <div id="game">
+        <div id="textArea">
             <h1>Fight the Infection</h1>
-            <input id="checkLocation" type="button" value="Check Location">
-            <input id="centerMap" type="button" value="Center Map">
-            <input id="toggleMap" type="button" value="Toggle Map">
-			<div id="userSelection">
-				<button id="rockButton" class="RPSbutton" onclick='playGame("rock")'>Rock</button>
-				<button id="paperButton" class="RPSbutton" onclick='playGame("paper")'>Paper</button>
-				<button id="scissorsButton" class="RPSbutton" onclick='playGame("scissors")'>Scissors</button>
-			</div>
-			<script src = "{% static 'game/js/rockpaperscissor.js' %}"></script>
-			<div id="result"></div>
-		</div></div>
+            <div id="leftSide">
+                <div id="generalButtons">
+                    <input id="checkLocation" type="button" value="Check Location">
+                    <input id="centerMap" type="button" value="Center Map">
+                    <input id="toggleMap" type="button" value="Toggle Map">
+                </div>
+    			<div id="userSelection">
+    				<button id="rockButton" class="RPSbutton" onclick='playGame("rock")'>Rock</button>
+    				<button id="paperButton" class="RPSbutton" onclick='playGame("paper")'>Paper</button>
+    				<button id="scissorsButton" class="RPSbutton" onclick='playGame("scissors")'>Scissors</button>
+    			</div>
+            </div>
+            <div id="rightSide">
+                <div id="infoWindow">
+                    <div id="result">
+                        <p>Information Window</p>
+                    </div>
+                </div>
+            </div>
+		</div>
 		<div id="map">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I&callback=initMap"></script>
         <script src="{% static 'game/js/play.js' %}"></script>
-		</div>
+        <script src="{% static 'game/js/rockpaperscissor.js' %}"></script>
 	</body>
 </html>

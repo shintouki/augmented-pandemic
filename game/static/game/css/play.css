@@ -8,10 +8,28 @@ html, body {
     height: 70%;
 }
 
-#game {
+#textArea {
   height: 30%;
+  width: 100%;
 }
 
 #userSelection {
     display: none;
+}
+
+#leftSide {
+    width: 50%;
+    float: left;
+}
+
+#rightSide {
+    height: 30%;
+    width: 50%;
+    float: right;
+}
+
+#infoWindow {
+    border: 1px solid black;
+    overflow: auto;
+    height: 100%;
 }

@@ -205,7 +205,7 @@ function initMap() {
                     $('#userSelection').show();
                 }
                 else {
-
+                    
                 }
                 
                 // console.log(locationName);
