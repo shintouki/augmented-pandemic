@@ -8,13 +8,13 @@ function playGame(choice){
   user = choice;
 
   if (computer<0.34 && computer>0){
-    computer = "rock";
+    computer = "quarantine";
   }
   else if(computer<=0.67 && computer>=0.34){
-    computer = "paper";
+    computer = "cure";
   }
   else if(computer>.67){
-    computer = "scissors";
+    computer = "rescue";
   }
 
   result = compare(user, computer);
@@ -25,7 +25,18 @@ function playGame(choice){
 function compare(userSelection, computerSelection){
   if (userSelection == computerSelection){
     outcome = 0;
-    return "Draw- try again.";
+    if (userSelection == "quarantine"){
+      return "You tried to herd some of the infected towards a quarantine zone, " +
+             "but your technique was ineffective and they scattered. Try again.";
+    }
+    else if (userSelection == "cure"){
+      return "You tried to inject the antidote into a nearby infected person, " +
+             "but your aim was off- try again.";
+    }
+    else if(userSelection == "rescue"){
+      return "You attempted to get to the healthy person, "+
+             "but too many infected got in your way, obstructing your path. Try again."
+    }
 	}
   if (userSelection == "rock"){
     if (computerSelection == "scissors"){
