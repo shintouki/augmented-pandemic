@@ -66,19 +66,26 @@
     "model": "game.Location",
     "pk": 10,
     "fields": {
-      "location_text": "OLBS"
+      "location_text": "Bayside Highschool"
     }
   },
   {
     "model": "game.Location",
     "pk": 11,
     "fields": {
-      "location_text": "Bay Terrace Shopping Center"
+      "location_text": "OLBS"
     }
   },
   {
     "model": "game.Location",
     "pk": 12,
+    "fields": {
+      "location_text": "Bay Terrace Shopping Center"
+    }
+  },
+  {
+    "model": "game.Location",
+    "pk": 13,
     "fields": {
       "location_text": "Auburndale Station"
     }
