@@ -205,7 +205,8 @@ function initMap() {
                     $('#userSelection').show();
                 }
                 else {
-                    
+                    var resultOutput = "<p>You are not inside a infected area. Please move inside a red circle and try again.</p>";
+                    $("#result").append(resultOutput);
                 }
                 
                 // console.log(locationName);
