@@ -4,17 +4,17 @@ html, body {
   padding: 0;
 }
 
-#map {
-    height: 70%;
+#navigationBar {
+    height: 5%;
 }
 
 #textArea {
-  height: 30%;
+  height: 25%;
   width: 100%;
 }
 
-#userSelection {
-    display: none;
+#map {
+    height: 70%;
 }
 
 #leftSide {
@@ -22,8 +22,12 @@ html, body {
     float: left;
 }
 
+#userSelection {
+    display: none;
+}
+
 #rightSide {
-    height: 30%;
+    height: 95%;
     width: 50%;
     float: right;
 }
@@ -32,4 +36,8 @@ html, body {
     border: 1px solid black;
     overflow: auto;
     height: 100%;
+}
+
+#gameTitle {
+    display: inline;
 }
