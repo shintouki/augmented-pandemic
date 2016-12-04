@@ -23,7 +23,7 @@ html, body {
 }
 
 #userSelection {
-    display: none;
+   /* display: none; */
 }
 
 #rightSide {

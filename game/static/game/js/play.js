@@ -187,7 +187,7 @@ function initMap() {
 
 
             // Check to see if user is inside a circle
-            $("#fightInfectionButton").click(function() {
+            $("#checkLocationButton").click(function() {
                 let locatedInsideACircle = false;
                 let currentLocation;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
@@ -203,8 +203,8 @@ function initMap() {
                 }
 
                 if (locatedInsideACircle) {
-                    $("#userSelection").show();
-                    let locationOutput = "<p>Fighting infection at " + currentLocation + "...</p";
+                    // $("#userSelection").show();
+                    let locationOutput = "<p>You are at " + currentLocation + "...</p";
                     $("#infoWindow").append(locationOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
@@ -218,12 +218,12 @@ function initMap() {
 
 
                 $(".RPSbutton").click(function() {
-                    $('#userSelection').hide();
+                    // $('#userSelection').hide();
                     // console.log(outcome);
                     // console.log(currentLocation);
                     if (outcome == 1) {
                         // Player won minigame
-                        
+
                     }
                     else if (outcome == -1) {
                         // Player lost minigame
