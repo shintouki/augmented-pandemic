@@ -19,7 +19,8 @@ function playGame(choice){
 
   result = compare(user, computer);
   var resultOutput = "<p>You: " + user + " Enemy: " + computer + "<br>" + result + "</p>";
-  $("#result").append(resultOutput);
+  $("#infoWindow").append(resultOutput);
+  $("#infoWindow").animate({scrollTop: $('#infoWindow').prop("scrollHeight")}, 500);
 
   // document.getElementById("result").innerHTML =
   //   "You: " + user + " Enemy: " + computer + "<br>" + result;

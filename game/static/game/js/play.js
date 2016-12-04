@@ -190,6 +190,7 @@ function initMap() {
             $("#checkLocation").click(function() {
                 // console.log(markersAndCirclesList);
                 let locatedInsideACircle = false;
+                let currentLocation;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
                     let location = markersAndCirclesList[i]['location'];
                     let marker = markersAndCirclesList[i]['marker'];
@@ -197,16 +198,21 @@ function initMap() {
                     let bounds = circle.getBounds();
                     if (bounds.contains(pos)) {
                         console.log("You are at: " + location);
-                        locatedInsideACircle= true;
+                        currentLocation = location;
+                        locatedInsideACircle = true;
                     }
                 }
 
                 if (locatedInsideACircle) {
-                    $('#userSelection').show();
+                    $("#userSelection").show();
+                    let locationOutput = "<p>You are at " + currentLocation + "</p";
+                    $("#infoWindow").append(locationOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
                 else {
-                    var resultOutput = "<p>You are not inside a infected area. Please move inside a red circle and try again.</p>";
-                    $("#result").append(resultOutput);
+                    let resultOutput = "<p>You are not inside a infected area. Please move inside a red circle and try again.</p>";
+                    $("#infoWindow").append(resultOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
                 
                 // console.log(locationName);
