@@ -215,12 +215,35 @@ function initMap() {
                 }
 
 
+            });
 
-
-                $(".RPSbutton").click(function() {
+            $(".RPSButton").click(function() {
                     // $('#userSelection').hide();
                     // console.log(outcome);
                     // console.log(currentLocation);
+                    
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            // console.log("You are at: " + location);
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                        }
+                    }
+
+                    let locationOutput = "<p>Fighting infection at " + currentLocation + "...</p";
+                    $("#infoWindow").append(locationOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+
+                    let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                    let choice = choices[this.id];
+
+                    playGame(choice);
                     if (outcome == 1) {
                         // Player won minigame
 
@@ -230,9 +253,6 @@ function initMap() {
                     }
                     // If draw, do nothing
                 });
-            });
-
-
 
         });
     });
