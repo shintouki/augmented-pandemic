@@ -4,10 +4,40 @@ html, body {
   padding: 0;
 }
 
+#navigationBar {
+    height: 5%;
+}
+
+#textArea {
+  height: 25%;
+  width: 100%;
+}
+
 #map {
     height: 70%;
 }
 
-#game {
-  height: 30%;
+#leftSide {
+    width: 50%;
+    float: left;
+}
+
+#userSelection {
+    display: none;
+}
+
+#rightSide {
+    height: 95%;
+    width: 50%;
+    float: right;
+}
+
+#infoWindow {
+    border: 1px solid black;
+    overflow: auto;
+    height: 100%;
+}
+
+#gameTitle {
+    display: inline;
 }

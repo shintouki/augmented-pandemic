@@ -18,8 +18,11 @@ function playGame(choice){
   }
 
   result = compare(user, computer);
-  document.getElementById("result").innerHTML =
-    "You: " + user + " Enemy: " + computer + "<br>" + result;
+  var resultOutput = "<p>You: " + user + " Enemy: " + computer + "<br>" + result + "</p>";
+  $("#result").append(resultOutput);
+
+  // document.getElementById("result").innerHTML =
+  //   "You: " + user + " Enemy: " + computer + "<br>" + result;
 }
 
 function compare(userSelection, computerSelection){

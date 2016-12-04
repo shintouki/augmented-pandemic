@@ -1,15 +1,10 @@
 "use strict";
 
 $(document).ready(function() {
-    $("#checkLocation").click(function() {
-        
-    });
-
     $('#toggleMap').click(function() {
         $('#map').toggle("fast");
     });
 });
-
 
 
 function initMap() {
@@ -27,10 +22,8 @@ function initMap() {
             let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
             // Button for centering map
-            $(document).ready(function() {
-                $("#centerMap").click(function() {
-                    map.setCenter(pos);
-                });
+            $("#centerMap").click(function() {
+                map.setCenter(pos);
             });
 
             let locationName = 'Current Location';
@@ -96,92 +89,138 @@ function initMap() {
 
     $.getJSON('/game/database/infection-rates/', function(data) {
         // Find infection rate
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let marker;
+            let circle;
+            let markersAndCirclesList = [];
 
-        let marker;
-        let circle;
+            for (let i=0; i<ccnyMarkers.length; i++) {
+            	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
+                let locationName = ccnyMarkers[i][0]
+                let ccnyRadius = 80;
 
-        for (let i=0; i<ccnyMarkers.length; i++) {
-        	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
-            let locationName = ccnyMarkers[i][0]
-            let ccnyRadius = 80;
+                // Create markers
+            	marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: locationName
+                });
 
-            // Create markers
-        	marker = new google.maps.Marker({
-                position: position,
-                map: map,
-                title: locationName
-            });
+                // Create circle around markers
+                circle = new google.maps.Circle({
+                    map: map,
+                    radius: ccnyRadius,
+                    fillColor: '#AA1100',
+                    strokeOpacity: '0'
+                });
+                circle.bindTo('center', marker, 'position');
 
-            // Create circle around markers
-            circle = new google.maps.Circle({
-                map: map,
-                radius: ccnyRadius,
-                fillColor: '#AA1100',
-                strokeOpacity: '0'
-            });
-            circle.bindTo('center', marker, 'position');
+                // Record marker and circle details to use later with check location button
+                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                markersAndCirclesList.push(markerDetails);
 
-            // Create description boxes
-            let matchesWon = data[locationName].fields.matches_won;
-            let matchesLost = data[locationName].fields.matches_lost;
-            let totalMatches = matchesWon + matchesLost;
-            let infectionRate = matchesLost / totalMatches * 100;
-            let infoWindowContent = 
-            	'<div class="info_content">' +
-    	        '<h4>' + locationName + '</h4>' +
-    	        '<p>Infection rate: ' + infectionRate + '</p>' +
-                '<p>Matches Won: ' + matchesWon + '</p>' +
-                '<p>Matches Lost: ' + matchesLost + '</p>' +
-    			'</div>';
+                // Create description boxes
+                let matchesWon = data[locationName].fields.matches_won;
+                let matchesLost = data[locationName].fields.matches_lost;
+                let totalMatches = matchesWon + matchesLost;
+                let infectionRate = matchesLost / totalMatches * 100;
+                let infoWindowContent = 
+                	'<div class="info_content">' +
+        	        '<h4>' + locationName + '</h4>' +
+        	        '<p>Infection rate: ' + infectionRate + '</p>' +
+                    '<p>Matches Won: ' + matchesWon + '</p>' +
+                    '<p>Matches Lost: ' + matchesLost + '</p>' +
+        			'</div>';
 
-    	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    infoWindow.setContent(infoWindowContent);
-                    infoWindow.open(map, marker);
-                }
-            })(marker, i));
-        }
+        	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(map, marker);
+                    }
+                })(marker, i));
+            }
 
-
-        // Draw bayside Markers
-        for (let i=0; i<baysideMarkers.length; i++) {
-            let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
-            let locationName = baysideMarkers[i][0];
-            let baysideRadius = 200;
-
-            marker = new google.maps.Marker({
-                position: position,
-                map: map,
-                title: locationName
-            });
             
-            circle = new google.maps.Circle({
-                map: map,
-                radius: baysideRadius,
-                fillColor: '#AA1100',
-                strokeOpacity: '0'
-            });
-            circle.bindTo('center', marker, 'position');
-            console.log(data[locationName]);
-            let matchesWon = data[locationName].fields.matches_won;
-            let matchesLost = data[locationName].fields.matches_lost;
-            let totalMatches = matchesWon + matchesLost;
-            let infectionRate = matchesLost / totalMatches * 100;
-            let infoWindowContent = 
-                '<div class="info_content">' +
-                '<h4>' + locationName + '</h4>' +
-                '<p>Infection rate: ' + infectionRate + '</p>' +
-                '<p>Matches Won: ' + matchesWon + '</p>' +
-                '<p>Matches Lost: ' + matchesLost + '</p>' +
-                '</div>';
+            // Draw bayside Markers
+            for (let i=0; i<baysideMarkers.length; i++) {
+                let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
+                let locationName = baysideMarkers[i][0];
+                let baysideRadius = 200;
 
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    infoWindow.setContent(infoWindowContent);
-                    infoWindow.open(map, marker);
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: locationName
+                });
+                
+                circle = new google.maps.Circle({
+                    map: map,
+                    radius: baysideRadius,
+                    fillColor: '#AA1100',
+                    strokeOpacity: '0'
+                });
+                circle.bindTo('center', marker, 'position');
+
+                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                markersAndCirclesList.push(markerDetails);
+
+                let matchesWon = data[locationName].fields.matches_won;
+                let matchesLost = data[locationName].fields.matches_lost;
+                let totalMatches = matchesWon + matchesLost;
+                let infectionRate = matchesLost / totalMatches * 100;
+                let infoWindowContent = 
+                    '<div class="info_content">' +
+                    '<h4>' + locationName + '</h4>' +
+                    '<p>Infection rate: ' + infectionRate + '</p>' +
+                    '<p>Matches Won: ' + matchesWon + '</p>' +
+                    '<p>Matches Lost: ' + matchesLost + '</p>' +
+                    '</div>';
+
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(map, marker);
+                    }
+                })(marker, i));
+            }
+
+
+            // Check to see if user is inside a circle
+            $("#checkLocation").click(function() {
+                // console.log(markersAndCirclesList);
+                let locatedInsideACircle = false;
+                for (let i=0; i<markersAndCirclesList.length; i++) {
+                    let location = markersAndCirclesList[i]['location'];
+                    let marker = markersAndCirclesList[i]['marker'];
+                    let circle = markersAndCirclesList[i]['circle'];
+                    let bounds = circle.getBounds();
+                    if (bounds.contains(pos)) {
+                        console.log("You are at: " + location);
+                        locatedInsideACircle= true;
+                    }
                 }
-            })(marker, i));
-        }
+
+                if (locatedInsideACircle) {
+                    $('#userSelection').show();
+                }
+                else {
+                    var resultOutput = "<p>You are not inside a infected area. Please move inside a red circle and try again.</p>";
+                    $("#result").append(resultOutput);
+                }
+                
+                // console.log(locationName);
+                // console.log(marker);
+                // console.log(bounds);
+                // console.log(pos);
+                // console.log(bounds.contains(pos));
+            });
+
+            $(".RPSbutton").click(function() {
+                $('#userSelection').hide();
+            });
+
+        });
     });
 
     // This is for getting coords on mouseclick, only used in development

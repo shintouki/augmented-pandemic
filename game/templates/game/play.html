@@ -8,24 +8,34 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'game/css/play.css' %}" />
 	</head>
 	<body>
-        {% include "game/navigation_bar.html" %}
-        <div id="game">
-            <h1>Fight the Infection</h1>
+		<div id="navigationBar">
+			{% include "game/navigation_bar.html" %}
+    </div>
+    <div id="textArea">
+      <div id="leftSide">
+        <div id="generalButtons">
             <input id="checkLocation" type="button" value="Check Location">
             <input id="centerMap" type="button" value="Center Map">
             <input id="toggleMap" type="button" value="Toggle Map">
-			<div id="userSelection">
-				<button onclick='playGame("quarantine")'>Quarantine</button>
-				<button onclick='playGame("cure")'>Cure</button>
-				<button onclick='playGame("rescue")'>Rescue</button>
-			</div><br>
-			<script src = "{% static 'game/js/rockpaperscissor.js' %}"></script>
-			<div id="result"></div>
-		</div></div>
+        </div>
+  			<div id="userSelection">
+    			<button id="rockButton" class="RPSbutton" onclick='playGame("quarantine")'>Quarantine</button>
+  				<button id="paperButton" class="RPSbutton" onclick='playGame("cure")'>Cure</button>
+  				<button id="scissorsButton" class="RPSbutton" onclick='playGame("rescue")'>Rescue</button>
+    		</div>
+      </div>
+      <div id="rightSide">
+        <div id="infoWindow">
+          <div id="result">
+              <p>Information Window</p>
+          </div>
+        </div>
+      </div>
+		</div>
 		<div id="map">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I&callback=initMap"></script>
         <script src="{% static 'game/js/play.js' %}"></script>
-		</div>
+        <script src="{% static 'game/js/rockpaperscissor.js' %}"></script>
 	</body>
 </html>
