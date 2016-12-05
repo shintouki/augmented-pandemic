@@ -14,6 +14,16 @@
         <div id="textArea">
             <div id="leftSide">
                 <h1 id="gameTitle">Fight the Infection</h1>
+								<div id="CurrentLocation">
+									Current Location:
+									<div id="location"></div>
+								</div><br>
+								<div class="infectionrates" id="GlobalInfectionRate">
+									Global Infection Rate: <div id="global"></div>
+								</div>
+								<div class="infectionrates" id="LocalInfectionRate">
+									Local Infection Rate: <div id="local"></div>
+								</div><br>
                 <div id="userSelection">
                 {% csrf_token %}
                 <button id="rockButton" class="RPSButton">Quarantine</button>
