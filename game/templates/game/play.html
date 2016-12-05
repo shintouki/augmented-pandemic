@@ -15,6 +15,7 @@
             <div id="leftSide">
                 <h1 id="gameTitle">Fight the Infection</h1>
                 <div id="userSelection">
+                {% csrf_token %}
                 <button id="rockButton" class="RPSButton">Quarantine</button>
                 <button id="paperButton" class="RPSButton">Cure</button>
                 <button id="scissorsButton" class="RPSButton">Rescue</button>

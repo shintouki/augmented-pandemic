@@ -244,12 +244,35 @@ function initMap() {
                     let choice = choices[this.id];
 
                     playGame(choice);
+
+                    let minigamePlayedURL = "/game/" + currentLocation + "/";
                     if (outcome == 1) {
                         // Player won minigame
-
+                        minigamePlayedURL += "win/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            data: { csrfmiddlewaretoken: "{{ csrf_token }}"
+                                  },
+                            success: function() {
+                                
+                            }
+                        });
                     }
                     else if (outcome == -1) {
                         // Player lost minigame
+                        minigamePlayedURL += "lose/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            data: { csrfmiddlewaretoken: "{{ csrf_token }}"
+                                  },
+                            success: function() {
+                                
+                            }
+                        });
                     }
                     // If draw, do nothing
                 });
