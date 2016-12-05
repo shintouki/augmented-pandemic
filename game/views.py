@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
@@ -40,5 +41,18 @@ def infection_rates(request):
     for location in locationObject:
         location_text = location['fields']['location_text']
         outputObject[location_text] = location
-
     return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+
+def win(request, location_name):
+    location = get_object_or_404(Location, location_text=location_name)
+    location.matches_won += 1
+    location.save()
+    return HttpResponse("success")
+    # return HttpResponseRedirect(reverse('game:play'))
+
+def lose(request, location_name):
+    location = get_object_or_404(Location, location_text=location_name)
+    location.matches_lost += 1
+    location.save()
+    return HttpResponse("success")
+    # return HttpResponseRedirect(reverse('game:play'))

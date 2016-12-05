@@ -215,24 +215,95 @@ function initMap() {
                 }
 
 
+            });
 
-
-                $(".RPSbutton").click(function() {
+            $(".RPSButton").click(function() {
                     // $('#userSelection').hide();
                     // console.log(outcome);
                     // console.log(currentLocation);
+                    
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            // console.log("You are at: " + location);
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                        }
+                    }
+
+                    let locationOutput = "<p>Fighting infection at " + currentLocation + "...</p";
+                    $("#infoWindow").append(locationOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+
+                    let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                    let choice = choices[this.id];
+
+                    playGame(choice);
+
+                    // Fix crsf issue (403 error)
+                    // using jQuery
+                    function getCookie(name) {
+                        var cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            var cookies = document.cookie.split(';');
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = jQuery.trim(cookies[i]);
+                                // Does this cookie string begin with the name we want?
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+                            }
+                        }
+                        return cookieValue;
+                    }
+                    var csrftoken = getCookie('csrftoken');
+
+                    function csrfSafeMethod(method) {
+                            // these HTTP methods do not require CSRF protection
+                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                    }
+
+                    $.ajaxSetup({
+                        beforeSend: function(xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        }
+                    });
+
+                    let minigamePlayedURL = "/game/" + currentLocation + "/";
                     if (outcome == 1) {
                         // Player won minigame
-
+                        minigamePlayedURL += "win/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
+                                
+                            }
+                        });
                     }
                     else if (outcome == -1) {
                         // Player lost minigame
+                        minigamePlayedURL += "lose/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
+                                
+                            }
+                        });
                     }
                     // If draw, do nothing
                 });
-            });
-
-
 
         });
     });
