@@ -12,13 +12,13 @@ function initMap() {
     let map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.82, lng: -73.9493},
       zoom: 16
-    });
+    }); 
 
     let infoWindow = new google.maps.InfoWindow({map: map});
 
     // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
+		navigator.geolocation.getCurrentPosition(function(position) {
             let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
             // Button for centering map
@@ -44,7 +44,7 @@ function initMap() {
             circle.bindTo('center', marker, 'position');
 
             // Create description boxes
-            let infoWindowContent =
+            let infoWindowContent = 
                 '<div class="info_content">' +
                 '<h4>' + locationName + '</h4>' +
                 '</div>';
@@ -99,11 +99,10 @@ function initMap() {
             let circle;
             let markersAndCirclesList = [];
 
-            // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
-              let locationName = ccnyMarkers[i][0];
-              let ccnyRadius = 80;
+                let locationName = ccnyMarkers[i][0]
+                let ccnyRadius = 80;
 
                 // Create markers
             	marker = new google.maps.Marker({
@@ -121,18 +120,16 @@ function initMap() {
                 });
                 circle.bindTo('center', marker, 'position');
 
+                // Record marker and circle details to use later with check location button
+                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                markersAndCirclesList.push(markerDetails);
+
+                // Create description boxes
                 let matchesWon = data[locationName].fields.matches_won;
                 let matchesLost = data[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
                 let infectionRate = matchesLost / totalMatches * 100;
-
-                // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
-                markersAndCirclesList.push(markerDetails);
-
-                // Create description boxes
-
-                let infoWindowContent =
+                let infoWindowContent = 
                 	'<div class="info_content">' +
         	        '<h4>' + locationName + '</h4>' +
         	        '<p>Infection rate: ' + infectionRate + '</p>' +
@@ -148,7 +145,7 @@ function initMap() {
                 })(marker, i));
             }
 
-
+            
             // Draw bayside Markers
             for (let i=0; i<baysideMarkers.length; i++) {
                 let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
@@ -160,7 +157,7 @@ function initMap() {
                     map: map,
                     title: locationName
                 });
-
+                
                 circle = new google.maps.Circle({
                     map: map,
                     radius: baysideRadius,
@@ -169,22 +166,20 @@ function initMap() {
                 });
                 circle.bindTo('center', marker, 'position');
 
+                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                markersAndCirclesList.push(markerDetails);
+
                 let matchesWon = data[locationName].fields.matches_won;
                 let matchesLost = data[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
                 let infectionRate = matchesLost / totalMatches * 100;
-                let infoWindowContent =
+                let infoWindowContent = 
                     '<div class="info_content">' +
                     '<h4>' + locationName + '</h4>' +
                     '<p>Infection rate: ' + infectionRate + '</p>' +
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +
                     '</div>';
-
-
-                // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
-                markersAndCirclesList.push(markerDetails);
 
                 google.maps.event.addListener(marker, 'click', (function(marker, i) {
                     return function() {
@@ -232,37 +227,6 @@ function initMap() {
                 })(marker, i));
             }
 
-            // Check location on page load
-            $(document).ready(function() {
-                let locatedInsideACircle = false;
-                let currentLocation;
-                let infectionRate;
-                for (let i=0; i<markersAndCirclesList.length; i++) {
-                    let location = markersAndCirclesList[i]['location'];
-                    // let marker = markersAndCirclesList[i]['marker'];
-                    let circle = markersAndCirclesList[i]['circle'];
-                    infectionRate = markersAndCirclesList[i]['infection_rate'];
-
-                    let bounds = circle.getBounds();
-
-                    if (bounds.contains(pos)) {
-                        // console.log("You are at: " + location);
-                        currentLocation = location;
-                        locatedInsideACircle = true;
-                    }
-                  }
-                if (locatedInsideACircle) {
-                    let locationOutput = "You are at " + currentLocation + ".";
-                    let localRate = infectionRate + "%";
-                    $("#location").replaceWith(locationOutput);
-                    $("#local").replaceWith(localRate);
-                }
-                else {
-                    let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
-                    $("#location").replaceWith(resultOutput);
-                }
-            });
-
 
             // Check to see if user is inside a circle
             $("#checkLocationButton").click(function() {
@@ -282,12 +246,12 @@ function initMap() {
 
                 if (locatedInsideACircle) {
                     // $("#userSelection").show();
-                    let locationOutput = "<p>You are at " + currentLocation + "</p>";
+                    let locationOutput = "<p>You are at " + currentLocation + "...</p";
                     $("#infoWindow").append(locationOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
                 else {
-                    let resultOutput = "<p>You are not inside an infected area. Please move inside a red circle and try again.</p>";
+                    let resultOutput = "<p>You are not inside a infected area. Please move inside a red circle and try again.</p>";
                     $("#infoWindow").append(resultOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
@@ -296,6 +260,10 @@ function initMap() {
             });
 
             $(".RPSButton").click(function() {
+                // $('#userSelection').hide();
+                // console.log(outcome);
+                // console.log(currentLocation);
+                
                 let locatedInsideACircle = false;
                 let currentLocation;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
@@ -309,9 +277,8 @@ function initMap() {
                         locatedInsideACircle = true;
                     }
                 }
-            
 
-                let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+                let locationOutput = "<p>Fighting infection at " + currentLocation + "...</p";
                 $("#infoWindow").append(locationOutput);
                 $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
 
@@ -333,12 +300,10 @@ function initMap() {
                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                                 break;
                             }
-
                         }
                     }
                     return cookieValue;
                 }
-
                 var csrftoken = getCookie('csrftoken');
 
                 function csrfSafeMethod(method) {
@@ -375,15 +340,19 @@ function initMap() {
                         type: "POST",
                         url: minigamePlayedURL,
                         success: function() {
-
+                            
                         }
                     });
                 }
                 // If draw, do nothing
 
+
                 // $("#map").load("/game/play #map")
                 // initMap();
             });
+
+            
+
         });
     });
 

@@ -99,7 +99,6 @@ function initMap() {
             let circle;
             let markersAndCirclesList = [];
 
-            // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
               let locationName = ccnyMarkers[i][0];
@@ -194,6 +193,7 @@ function initMap() {
                 })(marker, i));
             }
 
+<<<<<<< HEAD
             // Draw Safe Zone Markers
             for (let i=0; i<safeZoneMarkers.length; i++) {
                 let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
@@ -232,6 +232,8 @@ function initMap() {
                 })(marker, i));
             }
 
+||||||| merged common ancestors
+=======
             // Check location on page load
             $(document).ready(function() {
                 let locatedInsideACircle = false;
@@ -252,17 +254,17 @@ function initMap() {
                     }
                   }
                 if (locatedInsideACircle) {
-                    let locationOutput = "You are at " + currentLocation + ".";
-                    let localRate = infectionRate + "%";
-                    $("#location").replaceWith(locationOutput);
-                    $("#local").replaceWith(localRate);
+                  let locationOutput = "You are at " + currentLocation + ".";
+                  let localRate = infectionRate + "%";
+                  $("#location").replaceWith(locationOutput);
+                  $("#local").replaceWith(localRate);
                 }
                 else {
-                    let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
-                    $("#location").replaceWith(resultOutput);
+                  let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
+                  $("#location").replaceWith(resultOutput);
                 }
             });
-
+>>>>>>> sharon_bit/master
 
             // Check to see if user is inside a circle
             $("#checkLocationButton").click(function() {
@@ -296,6 +298,11 @@ function initMap() {
             });
 
             $(".RPSButton").click(function() {
+<<<<<<< HEAD
+                // $('#userSelection').hide();
+                // console.log(outcome);
+                // console.log(currentLocation);
+                
                 let locatedInsideACircle = false;
                 let currentLocation;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
@@ -307,11 +314,46 @@ function initMap() {
                         // console.log("You are at: " + location);
                         currentLocation = location;
                         locatedInsideACircle = true;
+||||||| merged common ancestors
+                    // $('#userSelection').hide();
+                    // console.log(outcome);
+                    // console.log(currentLocation);
+                    
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            // console.log("You are at: " + location);
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                        }
+=======
+                    // $('#userSelection').hide();
+                    // console.log(outcome);
+                    // console.log(currentLocation);
+
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            // console.log("You are at: " + location);
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                        }
+>>>>>>> sharon_bit/master
                     }
                 }
-            
 
-                let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+<<<<<<< HEAD
+                let locationOutput = "<p>Fighting infection at " + currentLocation + "...</p";
                 $("#infoWindow").append(locationOutput);
                 $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
 
@@ -332,13 +374,58 @@ function initMap() {
                             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                                 break;
-                            }
+||||||| merged common ancestors
+                    let locationOutput = "<p>Fighting infection at " + currentLocation + "...</p";
+                    $("#infoWindow").append(locationOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
 
+                    let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                    let choice = choices[this.id];
+
+                    playGame(choice);
+
+                    // Fix crsf issue (403 error)
+                    // using jQuery
+                    function getCookie(name) {
+                        var cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            var cookies = document.cookie.split(';');
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = jQuery.trim(cookies[i]);
+                                // Does this cookie string begin with the name we want?
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+=======
+                    let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+                    $("#infoWindow").append(locationOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+
+                    let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                    let choice = choices[this.id];
+
+                    playGame(choice);
+
+                    // Fix crsf issue (403 error)
+                    // using jQuery
+                    function getCookie(name) {
+                        var cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            var cookies = document.cookie.split(';');
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = jQuery.trim(cookies[i]);
+                                // Does this cookie string begin with the name we want?
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+>>>>>>> sharon_bit/master
+                            }
                         }
                     }
                     return cookieValue;
                 }
-
                 var csrftoken = getCookie('csrftoken');
 
                 function csrfSafeMethod(method) {
@@ -375,15 +462,77 @@ function initMap() {
                         type: "POST",
                         url: minigamePlayedURL,
                         success: function() {
-
+                            
                         }
                     });
                 }
                 // If draw, do nothing
 
+<<<<<<< HEAD
+
                 // $("#map").load("/game/play #map")
                 // initMap();
             });
+
+            
+||||||| merged common ancestors
+                    let minigamePlayedURL = "/game/" + currentLocation + "/";
+                    if (outcome == 1) {
+                        // Player won minigame
+                        minigamePlayedURL += "win/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
+                                
+                            }
+                        });
+                    }
+                    else if (outcome == -1) {
+                        // Player lost minigame
+                        minigamePlayedURL += "lose/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
+                                
+                            }
+                        });
+                    }
+                    // If draw, do nothing
+                });
+=======
+                    let minigamePlayedURL = "/game/" + currentLocation + "/";
+                    if (outcome == 1) {
+                        // Player won minigame
+                        minigamePlayedURL += "win/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
+                                
+                            }
+                        });
+                    }
+                    else if (outcome == -1) {
+                        // Player lost minigame
+                        minigamePlayedURL += "lose/";
+                        console.log(minigamePlayedURL);
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
+
+                            }
+                        });
+                    }
+                    // If draw, do nothing
+                });
+>>>>>>> sharon_bit/master
+
         });
     });
 
