@@ -89,5 +89,12 @@
     "fields": {
       "location_text": "Auburndale Station"
     }
+  },
+  {
+    "model": "game.SafeZone",
+    "pk": 1,
+    "fields": {
+      "location_text": "Safe Zone 1"
+    }
   }
 ]

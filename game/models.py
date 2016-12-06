@@ -27,6 +27,15 @@ class Location(models.Model):
         """Returns location name"""
         return self.location_text
 
+class SafeZone(models.Model):
+    """Regions of infection"""
+    location_text = models.CharField(max_length=200)
+    antidotes_given_out = models.IntegerField(default=0)
+
+    def __str__(self):
+        """Returns location name"""
+        return self.location_text
+
 class Profile(models.Model):
     """User Profile model"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)

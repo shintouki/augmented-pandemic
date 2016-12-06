@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from django.core import serializers
 import json
 
@@ -47,12 +48,12 @@ def win(request, location_name):
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_won += 1
     location.save()
-    return HttpResponse("success")
+    return HttpResponse("matches_won increased by 1")
     # return HttpResponseRedirect(reverse('game:play'))
 
 def lose(request, location_name):
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_lost += 1
     location.save()
-    return HttpResponse("success")
+    return HttpResponse("matches_lost increased by 1")
     # return HttpResponseRedirect(reverse('game:play'))
