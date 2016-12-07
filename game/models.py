@@ -41,6 +41,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     matches_won = models.IntegerField(default=0)
     matches_lost = models.IntegerField(default=0)
+    num_antidotes = models.IntegerField(default=0)
     # total_matches = models.IntegerField(default=0)
 """
     def success_rate(self):

@@ -88,7 +88,8 @@ function initMap() {
     ];
 
     let safeZoneMarkers = [
-        ['Safe Zone 1', 40.81652125045496, -73.95123839378357]
+        ['Safe Zone 1', 40.81652125045496, -73.95123839378357],
+        ['Safe Zone 2', 40.76880925874281, -73.79186153411865]
     ];
 
     let marker;
@@ -135,7 +136,7 @@ function initMap() {
                 let infoWindowContent =
                 	'<div class="info_content">' +
         	        '<h4>' + locationName + '</h4>' +
-        	        '<p>Infection rate: ' + infectionRate + '</p>' +
+        	        '<p>Infection rate: ' + infectionRate + '%</p>' +
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +
         			'</div>';
@@ -175,7 +176,7 @@ function initMap() {
                 let infoWindowContent =
                     '<div class="info_content">' +
                     '<h4>' + locationName + '</h4>' +
-                    '<p>Infection rate: ' + infectionRate + '</p>' +
+                    '<p>Infection rate: ' + infectionRate + '%</p>' +
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +
                     '</div>';
@@ -223,7 +224,6 @@ function initMap() {
                     $("#location").replaceWith(resultOutput);
                 }
             });
-
 
             // Check to see if user is inside a circle
             $("#checkLocationButton").click(function() {
