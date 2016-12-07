@@ -7,6 +7,7 @@ import json
 from .models import Location
 
 def index(request):
+    """Homepage view"""
     context = {'text': 'Welcome to our game'}
     return render(request, 'game/index.html', context)
 
@@ -16,17 +17,21 @@ def index(request):
 #     return render(request, 'registration/register.html', context)
 
 def users(request):
-	context = {'text': 'User list here'}
-	return render(request, 'game/users.html', context)
+    """User list view"""
+    context = {'text': 'User list here'}
+    return render(request, 'game/users.html', context)
 
 def user_detail(request, user_id):
-	return HttpResponse("This page will have user details")
+    """User profile view"""
+    return HttpResponse("This page will have user details")
 
 def leaderboard(request):
+    """Leaderboard view"""
     context = {'text': 'Leaderboard goes here'}
     return render(request, 'game/leaderboard.html', context)
 
 def play(request):
+    """Game view"""
     # context = {'text': 'Leaderboard goes here'}
     return render(request, 'game/play.html')
 
@@ -41,18 +46,19 @@ def infection_rates(request):
     for location in locationObject:
         location_text = location['fields']['location_text']
         outputObject[location_text] = location
-    return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+        return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
 
 def win(request, location_name):
+    """Saving matches won to database"""
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_won += 1
     location.save()
     return HttpResponse("success")
-    # return HttpResponseRedirect(reverse('game:play'))
 
 def lose(request, location_name):
+    """Saving matches lost to database"""
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_lost += 1
     location.save()
     return HttpResponse("success")
-    # return HttpResponseRedirect(reverse('game:play'))
+    

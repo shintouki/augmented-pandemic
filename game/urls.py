@@ -1,11 +1,14 @@
+"""Mapping URLs to views"""
+
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
 from . import views
 
-app_name = 'game'
-urlpatterns = [
+APP_NAME = 'game'
+
+URL_PATTERNS= [
     url(r'^$', views.index, name='index'),
     url(r'^users/$', views.users, name='users'),
     url(r'^user_detail/(?P<user_id>\w+)$', views.user_detail, name='user_detail'),
