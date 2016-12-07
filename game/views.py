@@ -1,9 +1,8 @@
+"""Game views"""
+import json
 from django.shortcuts import get_object_or_404, render
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
-import json
-
 from .models import Location
 
 def index(request):
@@ -36,17 +35,18 @@ def play(request):
     return render(request, 'game/play.html')
 
 def infection_rates(request):
+    """Retrieving infection rates"""
     location_list = Location.objects.all()
-    locationJSON = serializers.serialize('json', location_list)
+    location_json = serializers.serialize('json', location_list)
     # Convert JSON to python dict
-    locationObject = json.loads(locationJSON)
+    location_object = json.loads(location_json)
 
     # Create a new object and make the keys be the location names so it's easier to search later
-    outputObject = {}
-    for location in locationObject:
+    output_object = {}
+    for location in location_object:
         location_text = location['fields']['location_text']
-        outputObject[location_text] = location
-        return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+        output_object[location_text] = location
+        return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def win(request, location_name):
     """Saving matches won to database"""
@@ -61,4 +61,3 @@ def lose(request, location_name):
     location.matches_lost += 1
     location.save()
     return HttpResponse("success")
-    
