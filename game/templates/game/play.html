@@ -6,32 +6,31 @@
 		<meta charset="utf-8">
 		{% load static %}
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Cousine" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Cousine|Monda" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="{% static 'game/css/play.css' %}" />
 	</head>
 	<body>
-		<div id="navigationBar">
-			{% include "game/navigation_bar.html" %}
-    </div>
+		<div id="navigationBar">{% include "game/navigation_bar.html" %}</div>
 		<h1 id="gameTitle">Fight the Infection</h1>
 		<div id="textArea">
 			<div id="leftSide">
-				<div id="CurrentLocation">
-					Current Location: <div id="location"></div>
-				</div><br>
-				<div class="infectionrates" id="GlobalInfectionRate">
-					Global Infection Rate: <div id="global"></div>
+				<div id="titles">
+					Current Location: <span class="info" id="location"></span>
 				</div>
-				<div class="infectionrates" id="LocalInfectionRate">
-					Local Infection Rate: <div id="local"></div>
+				<br>
+				<div class="titles" id="GlobalInfectionRate">
+					Global Infection Rate: <span id="global"></span>
+					</div>
+				<div class="titles" id="LocalInfectionRate">
+					Local Infection Rate: <span class="info" id="local"></span>
 				</div><br>
-				<div id="userSelection">
+				<div class="buttons" id="userSelection">
 					{% csrf_token %}
 					<button id="rockButton" class="RPSButton">Quarantine</button>
 					<button id="paperButton" class="RPSButton">Cure</button>
 					<button id="scissorsButton" class="RPSButton">Rescue</button>
-				</div>
-				<div id="generalButtons">
+				</div><br>
+				<div class="buttons" id="generalButtons">
 					<input id="checkLocationButton" type="button" value="Check Location">
 					<input id="centerMapButton" type="button" value="Center Map">
 					<input id="toggleMapButton" type="button" value="Toggle Map">

@@ -5,11 +5,12 @@
         <title>Login</title>
         {% load static %}
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="{% static 'game/css/navigation_bar.css' %}" />
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Cousine|Monda" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'game/css/users.css' %}" />
     </head>
     <body>
-        {% include "game/navigation_bar.html" %}
-
+      {% include "game/navigation_bar.html" %}
+      <div class="text">
         {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
         {% endif %}
@@ -42,6 +43,7 @@
 
         {# Assumes you setup the password_reset view in your URLconf #}
         <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+      </div>
 
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </body>
