@@ -19,7 +19,8 @@ function initMap() {
     // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let pos = new google.maps.LatLng(position.coords.latitude,
+                      position.coords.longitude);
 
             // Button for centering map
             $("#centerMapButton").click(function() {
@@ -90,13 +91,15 @@ function initMap() {
     $.getJSON('/game/database/infection-rates/', function(data) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let pos = new google.maps.LatLng(position.coords.latitude,
+                      position.coords.longitude);
             let marker;
             let circle;
             let markersAndCirclesList = [];
 
             for (let i=0; i<ccnyMarkers.length; i++) {
-            	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
+            	let position = new google.maps.LatLng(ccnyMarkers[i][1],
+                             ccnyMarkers[i][2]);
               let locationName = ccnyMarkers[i][0];
               let ccnyRadius = 80;
 
@@ -279,6 +282,20 @@ function initMap() {
 
                     playGame(choice);
 
+                    let randomChance = Math.random();
+                    if (randomChance<.5) {
+                      let event_1 = Math.random();
+                      let eventOutput;
+                      if (event_1<=.25) {
+                        eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                      }
+                      else if (event_1>.25 && event_1<=.5){
+                        eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                      }
+                      $("#infoWindow").append(eventOutput);
+                      $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    }
+
                     // Fix crsf issue (403 error)
                     // using jQuery
                     function getCookie(name) {
@@ -320,7 +337,7 @@ function initMap() {
                             type: "POST",
                             url: minigamePlayedURL,
                             success: function() {
-                                
+
                             }
                         });
                     }
