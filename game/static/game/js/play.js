@@ -91,19 +91,19 @@ function initMap() {
         ['Safe Zone 1', 40.81652125045496, -73.95123839378357]
     ];
 
-    $.getJSON('/game/database/infection-rates/', function(data) {
+    let marker;
+    let circle;
+    $.getJSON('/game/database/location_json/', function(data) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
             let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            let marker;
-            let circle;
             let markersAndCirclesList = [];
 
             // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
-              let locationName = ccnyMarkers[i][0];
-              let ccnyRadius = 80;
+                let locationName = ccnyMarkers[i][0];
+                let ccnyRadius = 80;
 
                 // Create markers
             	marker = new google.maps.Marker({
@@ -148,7 +148,6 @@ function initMap() {
                 })(marker, i));
             }
 
-
             // Draw bayside Markers
             for (let i=0; i<baysideMarkers.length; i++) {
                 let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
@@ -185,44 +184,6 @@ function initMap() {
                 // Record marker and circle details to use later with check location button
                 let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
                 markersAndCirclesList.push(markerDetails);
-
-                google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                    return function() {
-                        infoWindow.setContent(infoWindowContent);
-                        infoWindow.open(map, marker);
-                    }
-                })(marker, i));
-            }
-
-            // Draw Safe Zone Markers
-            for (let i=0; i<safeZoneMarkers.length; i++) {
-                let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
-                let locationName = safeZoneMarkers[i][0];
-                let safeZoneRadius = 50;
-
-                marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                    title: locationName
-                });
-                
-                circle = new google.maps.Circle({
-                    map: map,
-                    radius: safeZoneRadius,
-                    fillColor: '#008000',
-                    strokeOpacity: '0'
-                });
-                circle.bindTo('center', marker, 'position');
-
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
-                markersAndCirclesList.push(markerDetails);
-
-                let antidotesGivenOut = data[locationName].fields.antidotes_given_out;
-                let infoWindowContent = 
-                    '<div class="info_content">' +
-                    '<h4>' + locationName + '</h4>' +
-                    '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
-                    '</div>';
 
                 google.maps.event.addListener(marker, 'click', (function(marker, i) {
                     return function() {
@@ -384,6 +345,50 @@ function initMap() {
                 // $("#map").load("/game/play #map")
                 // initMap();
             });
+        });
+    });
+
+    $.getJSON('/game/database/safezone_json/', function(data) {    
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let safezoneMarkerList = [];
+            // Draw Safe Zone Markers
+            for (let i=0; i<safeZoneMarkers.length; i++) {
+                let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
+                let locationName = safeZoneMarkers[i][0];
+                let safeZoneRadius = 50;
+
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: locationName
+                });
+                
+                circle = new google.maps.Circle({
+                    map: map,
+                    radius: safeZoneRadius,
+                    fillColor: '#008000',
+                    strokeOpacity: '0'
+                });
+                circle.bindTo('center', marker, 'position');
+
+                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                safezoneMarkerList.push(markerDetails);
+
+                let antidotesGivenOut = data[locationName].fields.antidotes_given_out;
+                let infoWindowContent = 
+                    '<div class="info_content">' +
+                    '<h4>' + locationName + '</h4>' +
+                    '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
+                    '</div>';
+
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(map, marker);
+                    }
+                })(marker, i));
+            }
         });
     });
 

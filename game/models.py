@@ -27,7 +27,7 @@ class Location(models.Model):
         """Returns location name"""
         return self.location_text
 
-class SafeZone(models.Model):
+class Safezone(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
     antidotes_given_out = models.IntegerField(default=0)
