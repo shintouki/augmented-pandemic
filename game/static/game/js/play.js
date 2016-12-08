@@ -109,7 +109,7 @@ function initMap() {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1],
                              ccnyMarkers[i][2]);
               let locationName = ccnyMarkers[i][0];
-              let ccnyRadius = 70;
+              let ccnyRadius = 80;
                 // Create markers
             	marker = new google.maps.Marker({
                     position: position,
@@ -197,11 +197,12 @@ function initMap() {
             }
 
             // Check location on page load
-            $(document).ready(function() {
+            // $(document).ready(function() {
                 let locatedInsideACircle = false;
                 let currentLocation;
                 let infectionRate;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
+                    // console.log(infectionRate);
                     let location = markersAndCirclesList[i]['location'];
                     // let marker = markersAndCirclesList[i]['marker'];
                     let circle = markersAndCirclesList[i]['circle'];
@@ -225,7 +226,7 @@ function initMap() {
                     let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
                     $("#location").replaceWith(resultOutput);
                 }
-            });
+            // });
 
             // Check to see if user is inside a circle
             $("#checkLocationButton").click(function() {
