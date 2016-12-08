@@ -1,4 +1,4 @@
-body {
+html, body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -26,10 +26,12 @@ h1 {
   height: 25%;
   width: 100%;
   padding: 1em 1em 1em 1em;
+  margin-bottom: 5%;
 }
 
 #map {
-    height: 70%;
+    height: 60%;
+    width: 100%;
 }
 
 #leftSide {
@@ -49,6 +51,7 @@ h1 {
 
 #infoWindow {
     border: 1px solid black;
+    margin-top: 3%;
     overflow: auto;
     height: 100%;
 }
