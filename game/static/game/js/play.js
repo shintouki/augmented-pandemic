@@ -19,7 +19,8 @@ function initMap() {
     // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let pos = new google.maps.LatLng(position.coords.latitude,
+                      position.coords.longitude);
 
             // Button for centering map
             $("#centerMapButton").click(function() {
@@ -97,15 +98,18 @@ function initMap() {
     $.getJSON('/game/database/location_json/', function(data) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let pos = new google.maps.LatLng(position.coords.latitude,
+                      position.coords.longitude);
+            let marker;
+            let circle;
             let markersAndCirclesList = [];
 
             // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
-            	let position = new google.maps.LatLng(ccnyMarkers[i][1], ccnyMarkers[i][2]);
-                let locationName = ccnyMarkers[i][0];
-                let ccnyRadius = 80;
-
+            	let position = new google.maps.LatLng(ccnyMarkers[i][1],
+                             ccnyMarkers[i][2]);
+              let locationName = ccnyMarkers[i][0];
+              let ccnyRadius = 80;
                 // Create markers
             	marker = new google.maps.Marker({
                     position: position,
@@ -137,9 +141,8 @@ function initMap() {
                 	'<div class="info_content">' +
         	        '<h4>' + locationName + '</h4>' +
         	        '<p>Infection rate: ' + infectionRate + '%</p>' +
-                    '<p>Matches Won: ' + matchesWon + '</p>' +
-                    '<p>Matches Lost: ' + matchesLost + '</p>' +
-        			'</div>';
+                  '<p>Matches Won: ' + matchesWon + '</p>' +
+                  '<p>Matches Lost: ' + matchesLost + '</p>' +'</div>';
 
         	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
                     return function() {
@@ -180,7 +183,6 @@ function initMap() {
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +
                     '</div>';
-
 
                 // Record marker and circle details to use later with check location button
                 let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
@@ -252,8 +254,6 @@ function initMap() {
                     $("#infoWindow").append(resultOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
-
-
             });
 
             $(".RPSButton").click(function() {
@@ -270,7 +270,6 @@ function initMap() {
                         locatedInsideACircle = true;
                     }
                 }
-            
 
                 let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
                 $("#infoWindow").append(locationOutput);
@@ -280,6 +279,20 @@ function initMap() {
                 let choice = choices[this.id];
 
                 playGame(choice);
+
+                let randomChance = Math.random();
+                if (randomChance<.5) {
+                  let event_1 = Math.random();
+                  let eventOutput;
+                  if (event_1<=.25) {
+                    eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                  }
+                  else if (event_1>.25 && event_1<=.5){
+                    eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                  }
+                  $("#infoWindow").append(eventOutput);
+                  $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                }
 
                 // Fix crsf issue (403 error)
                 // using jQuery
@@ -294,7 +307,6 @@ function initMap() {
                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                                 break;
                             }
-
                         }
                     }
                     return cookieValue;
@@ -324,10 +336,10 @@ function initMap() {
                         type: "POST",
                         url: minigamePlayedURL,
                         success: function() {
-                            
+
                         }
                     });
-                }
+                  }
                 else if (outcome == -1) {
                     // Player lost minigame
                     minigamePlayedURL += "lose/";
@@ -339,7 +351,7 @@ function initMap() {
 
                         }
                     });
-                }
+                  }
                 // If draw, do nothing
 
                 // $("#map").load("/game/play #map")
@@ -348,7 +360,7 @@ function initMap() {
         });
     });
 
-    $.getJSON('/game/database/safezone_json/', function(data) {    
+    $.getJSON('/game/database/safezone_json/', function(data) {
         navigator.geolocation.getCurrentPosition(function(position) {
             let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             let safezoneMarkerList = [];
@@ -363,7 +375,7 @@ function initMap() {
                     map: map,
                     title: locationName
                 });
-                
+
                 circle = new google.maps.Circle({
                     map: map,
                     radius: safeZoneRadius,
@@ -376,7 +388,7 @@ function initMap() {
                 safezoneMarkerList.push(markerDetails);
 
                 let antidotesGivenOut = data[locationName].fields.antidotes_given_out;
-                let infoWindowContent = 
+                let infoWindowContent =
                     '<div class="info_content">' +
                     '<h4>' + locationName + '</h4>' +
                     '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +

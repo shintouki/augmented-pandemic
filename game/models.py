@@ -2,8 +2,8 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+#from django.db.models.signals import post_save
+#from django.dispatch import receiver
 
 class Location(models.Model):
     """Regions of infection"""
@@ -43,9 +43,13 @@ class Profile(models.Model):
     matches_lost = models.IntegerField(default=0)
     num_antidotes = models.IntegerField(default=0)
     # total_matches = models.IntegerField(default=0)
-"""
+    def total_matches(self):
+        # Returns total matches played
+        won = self.matches_won
+        lost = self.matches_lost
+        return float(won + lost)
+
     def success_rate(self):
-        "Returns matches won out of total matches"
-        success = (self.matches_won / self.total_matches)*100
+        # Returns matches won out of total matches
+        success = (self.matches_won / self.total_matches())*100
         return success
-"""
