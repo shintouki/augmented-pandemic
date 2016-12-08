@@ -109,7 +109,7 @@ function initMap() {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1],
                              ccnyMarkers[i][2]);
               let locationName = ccnyMarkers[i][0];
-              let ccnyRadius = 80;
+              let ccnyRadius = 70;
                 // Create markers
             	marker = new google.maps.Marker({
                     position: position,
@@ -129,7 +129,7 @@ function initMap() {
                 let matchesWon = data[locationName].fields.matches_won;
                 let matchesLost = data[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
-                let infectionRate = matchesLost / totalMatches * 100;
+                let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
 
                 // Record marker and circle details to use later with check location button
                 let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
@@ -175,7 +175,7 @@ function initMap() {
                 let matchesWon = data[locationName].fields.matches_won;
                 let matchesLost = data[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
-                let infectionRate = matchesLost / totalMatches * 100;
+                let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
                 let infoWindowContent =
                     '<div class="info_content">' +
                     '<h4>' + locationName + '</h4>' +
