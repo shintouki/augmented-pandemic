@@ -88,7 +88,14 @@ function initMap() {
         ['Auburndale Station', 40.761609683748404, -73.78986597061157]
     ];
 
-    $.getJSON('/game/database/infection-rates/', function(data) {
+    let safeZoneMarkers = [
+        ['Safe Zone 1', 40.81652125045496, -73.95123839378357],
+        ['Safe Zone 2', 40.76880925874281, -73.79186153411865]
+    ];
+
+    let marker;
+    let circle;
+    $.getJSON('/game/database/location_json/', function(data) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
             let pos = new google.maps.LatLng(position.coords.latitude,
@@ -97,12 +104,12 @@ function initMap() {
             let circle;
             let markersAndCirclesList = [];
 
+            // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1],
                              ccnyMarkers[i][2]);
               let locationName = ccnyMarkers[i][0];
               let ccnyRadius = 80;
-
                 // Create markers
             	marker = new google.maps.Marker({
                     position: position,
@@ -133,10 +140,9 @@ function initMap() {
                 let infoWindowContent =
                 	'<div class="info_content">' +
         	        '<h4>' + locationName + '</h4>' +
-        	        '<p>Infection rate: ' + infectionRate + '</p>' +
-                    '<p>Matches Won: ' + matchesWon + '</p>' +
-                    '<p>Matches Lost: ' + matchesLost + '</p>' +
-        			'</div>';
+        	        '<p>Infection rate: ' + infectionRate + '%</p>' +
+                  '<p>Matches Won: ' + matchesWon + '</p>' +
+                  '<p>Matches Lost: ' + matchesLost + '</p>' +'</div>';
 
         	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
                     return function() {
@@ -145,7 +151,6 @@ function initMap() {
                     }
                 })(marker, i));
             }
-
 
             // Draw bayside Markers
             for (let i=0; i<baysideMarkers.length; i++) {
@@ -174,11 +179,10 @@ function initMap() {
                 let infoWindowContent =
                     '<div class="info_content">' +
                     '<h4>' + locationName + '</h4>' +
-                    '<p>Infection rate: ' + infectionRate + '</p>' +
+                    '<p>Infection rate: ' + infectionRate + '%</p>' +
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +
                     '</div>';
-
 
                 // Record marker and circle details to use later with check location button
                 let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
@@ -212,14 +216,14 @@ function initMap() {
                     }
                   }
                 if (locatedInsideACircle) {
-                  let locationOutput = "You are at " + currentLocation + ".";
-                  let localRate = infectionRate + "%";
-                  $("#location").replaceWith(locationOutput);
-                  $("#local").replaceWith(localRate);
+                    let locationOutput = "You are at " + currentLocation + ".";
+                    let localRate = infectionRate + "%";
+                    $("#location").replaceWith(locationOutput);
+                    $("#local").replaceWith(localRate);
                 }
                 else {
-                  let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
-                  $("#location").replaceWith(resultOutput);
+                    let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
+                    $("#location").replaceWith(resultOutput);
                 }
             });
 
@@ -250,112 +254,153 @@ function initMap() {
                     $("#infoWindow").append(resultOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
-
-
             });
 
             $(".RPSButton").click(function() {
-                    // $('#userSelection').hide();
-                    // console.log(outcome);
-                    // console.log(currentLocation);
-
-                    let locatedInsideACircle = false;
-                    let currentLocation;
-                    for (let i=0; i<markersAndCirclesList.length; i++) {
-                        let location = markersAndCirclesList[i]['location'];
-                        let marker = markersAndCirclesList[i]['marker'];
-                        let circle = markersAndCirclesList[i]['circle'];
-                        let bounds = circle.getBounds();
-                        if (bounds.contains(pos)) {
-                            // console.log("You are at: " + location);
-                            currentLocation = location;
-                            locatedInsideACircle = true;
-                        }
+                let locatedInsideACircle = false;
+                let currentLocation;
+                for (let i=0; i<markersAndCirclesList.length; i++) {
+                    let location = markersAndCirclesList[i]['location'];
+                    let marker = markersAndCirclesList[i]['marker'];
+                    let circle = markersAndCirclesList[i]['circle'];
+                    let bounds = circle.getBounds();
+                    if (bounds.contains(pos)) {
+                        // console.log("You are at: " + location);
+                        currentLocation = location;
+                        locatedInsideACircle = true;
                     }
+                }
 
-                    let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
-                    $("#infoWindow").append(locationOutput);
-                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+                $("#infoWindow").append(locationOutput);
+                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
 
-                    let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
-                    let choice = choices[this.id];
+                let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                let choice = choices[this.id];
 
-                    playGame(choice);
+                playGame(choice);
 
-                    let randomChance = Math.random();
-                    if (randomChance<.5) {
-                      let event_1 = Math.random();
-                      let eventOutput;
-                      if (event_1<=.25) {
-                        eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
-                      }
-                      else if (event_1>.25 && event_1<=.5){
-                        eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
-                      }
-                      $("#infoWindow").append(eventOutput);
-                      $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-                    }
+                let randomChance = Math.random();
+                if (randomChance<.5) {
+                  let event_1 = Math.random();
+                  let eventOutput;
+                  if (event_1<=.25) {
+                    eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                  }
+                  else if (event_1>.25 && event_1<=.5){
+                    eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                  }
+                  $("#infoWindow").append(eventOutput);
+                  $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                }
 
-                    // Fix crsf issue (403 error)
-                    // using jQuery
-                    function getCookie(name) {
-                        var cookieValue = null;
-                        if (document.cookie && document.cookie !== '') {
-                            var cookies = document.cookie.split(';');
-                            for (var i = 0; i < cookies.length; i++) {
-                                var cookie = jQuery.trim(cookies[i]);
-                                // Does this cookie string begin with the name we want?
-                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                    break;
-                                }
+                // Fix crsf issue (403 error)
+                // using jQuery
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = jQuery.trim(cookies[i]);
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
                             }
                         }
-                        return cookieValue;
                     }
-                    var csrftoken = getCookie('csrftoken');
+                    return cookieValue;
+                }
 
-                    function csrfSafeMethod(method) {
-                            // these HTTP methods do not require CSRF protection
-                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                    }
+                var csrftoken = getCookie('csrftoken');
 
-                    $.ajaxSetup({
-                        beforeSend: function(xhr, settings) {
-                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                            }
+                function csrfSafeMethod(method) {
+                        // these HTTP methods do not require CSRF protection
+                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                }
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
                         }
-                    });
-
-                    let minigamePlayedURL = "/game/" + currentLocation + "/";
-                    if (outcome == 1) {
-                        // Player won minigame
-                        minigamePlayedURL += "win/";
-                        console.log(minigamePlayedURL);
-                        $.ajax({
-                            type: "POST",
-                            url: minigamePlayedURL,
-                            success: function() {
-
-                            }
-                        });
                     }
-                    else if (outcome == -1) {
-                        // Player lost minigame
-                        minigamePlayedURL += "lose/";
-                        console.log(minigamePlayedURL);
-                        $.ajax({
-                            type: "POST",
-                            url: minigamePlayedURL,
-                            success: function() {
-
-                            }
-                        });
-                    }
-                    // If draw, do nothing
                 });
 
+                let minigamePlayedURL = "/game/" + currentLocation + "/";
+                if (outcome == 1) {
+                    // Player won minigame
+                    minigamePlayedURL += "win/";
+                    console.log(minigamePlayedURL);
+                    $.ajax({
+                        type: "POST",
+                        url: minigamePlayedURL,
+                        success: function() {
+
+                        }
+                    });
+                  }
+                else if (outcome == -1) {
+                    // Player lost minigame
+                    minigamePlayedURL += "lose/";
+                    console.log(minigamePlayedURL);
+                    $.ajax({
+                        type: "POST",
+                        url: minigamePlayedURL,
+                        success: function() {
+
+                        }
+                    });
+                  }
+                // If draw, do nothing
+
+                // $("#map").load("/game/play #map")
+                // initMap();
+            });
+        });
+    });
+
+    $.getJSON('/game/database/safezone_json/', function(data) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let safezoneMarkerList = [];
+            // Draw Safe Zone Markers
+            for (let i=0; i<safeZoneMarkers.length; i++) {
+                let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
+                let locationName = safeZoneMarkers[i][0];
+                let safeZoneRadius = 50;
+
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: locationName
+                });
+
+                circle = new google.maps.Circle({
+                    map: map,
+                    radius: safeZoneRadius,
+                    fillColor: '#008000',
+                    strokeOpacity: '0'
+                });
+                circle.bindTo('center', marker, 'position');
+
+                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                safezoneMarkerList.push(markerDetails);
+
+                let antidotesGivenOut = data[locationName].fields.antidotes_given_out;
+                let infoWindowContent =
+                    '<div class="info_content">' +
+                    '<h4>' + locationName + '</h4>' +
+                    '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
+                    '</div>';
+
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(map, marker);
+                    }
+                })(marker, i));
+            }
         });
     });
 

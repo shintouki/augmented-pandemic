@@ -14,16 +14,17 @@
 		<h1 id="gameTitle">Fight the Infection</h1>
 		<div id="textArea">
 			<div id="leftSide">
-				<div id="titles">
+				<p class="titles">
 					Current Location: <span class="info" id="location"></span>
-				</div>
+				</p>
 				<br>
-				<div class="titles" id="GlobalInfectionRate">
-					Global Infection Rate: <span id="global"></span>
-					</div>
-				<div class="titles" id="LocalInfectionRate">
+				<p class="titles" id="GlobalInfectionRate">
+					Global Infection Rate: <span class="info" id="global"></span>
+				</p>
+				<p class="titles" id="LocalInfectionRate">
 					Local Infection Rate: <span class="info" id="local"></span>
-				</div><br>
+				</p>
+				<p id="numAntidotesText">Number of antidotes: 0</p>
 				<div class="buttons" id="userSelection">
 					{% csrf_token %}
 					<button id="rockButton" class="RPSButton">Quarantine</button>
