@@ -295,7 +295,6 @@ function initMap() {
                 }
 
                 // Fix crsf issue (403 error)
-                // using jQuery
                 function getCookie(name) {
                     var cookieValue = null;
                     if (document.cookie && document.cookie !== '') {
@@ -331,7 +330,7 @@ function initMap() {
                 if (outcome == 1) {
                     // Player won minigame
                     minigamePlayedURL += "win/";
-                    console.log(minigamePlayedURL);
+                    // console.log(minigamePlayedURL);
                     $.ajax({
                         type: "POST",
                         url: minigamePlayedURL,
@@ -343,7 +342,7 @@ function initMap() {
                 else if (outcome == -1) {
                     // Player lost minigame
                     minigamePlayedURL += "lose/";
-                    console.log(minigamePlayedURL);
+                    // console.log(minigamePlayedURL);
                     $.ajax({
                         type: "POST",
                         url: minigamePlayedURL,
