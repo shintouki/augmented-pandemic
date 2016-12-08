@@ -46,7 +46,7 @@ def infection_rates(request):
     for location in location_object:
         location_text = location['fields']['location_text']
         output_object[location_text] = location
-        return HttpResponse(json.dumps(output_object), content_type='application/javascript')
+    return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def win(request, location_name):
     """Saving matches won to database"""
