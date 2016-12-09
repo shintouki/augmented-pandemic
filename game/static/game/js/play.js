@@ -7,6 +7,8 @@ $(document).ready(function() {
 
     $.getJSON('/game/database/location_json/', function(data) {
 
+
+
     });
 
 });
@@ -226,14 +228,23 @@ function initMap() {
                         locatedInsideACircle = true;
                         break;
                     }
-                  }
+                }
+
+                let currentZone = data[currentLocation].fields.zone_text;
+                if (currentZone == "ccny") {
+                    currentZone = "City College of New York";
+                }
+                else if (currentZone == "bayside") {
+                    currentZone = "Bayside";
+                }
+                $("#zoneText").replaceWith(currentZone);
                 if (locatedInsideACircle) {
                     let matchesWon = data[currentLocation].fields.matches_won;
                     let matchesLost = data[currentLocation].fields.matches_lost;
                     let totalMatches = matchesWon + matchesLost;
                     let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
 
-                    let locationOutput = "You are at " + currentLocation + ".";
+                    let locationOutput = currentLocation;
                     let localRate = infectionRate + "%";
                     $("#location").replaceWith(locationOutput);
                     $("#local").replaceWith(localRate);

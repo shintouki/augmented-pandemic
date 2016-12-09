@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class Location(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
-    # infection_rate = models.IntegerField(default=30)
+    zone_text = models.CharField(max_length=200, default="")
     matches_lost = models.IntegerField(default=30)
     matches_won = models.IntegerField(default=70)
 
