@@ -103,5 +103,33 @@
     "fields": {
       "location_text": "Safe Zone 2"
     }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 3,
+    "fields": {
+      "location_text": "Safe Zone 3"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 4,
+    "fields": {
+      "location_text": "Safe Zone 4"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 5,
+    "fields": {
+      "location_text": "Safe Zone 5"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 6,
+    "fields": {
+      "location_text": "Safe Zone A"
+    }
   }
 ]

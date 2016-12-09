@@ -4,11 +4,14 @@ $(document).ready(function() {
     $('#toggleMapButton').click(function() {
         $('#map').toggle("fast");
     });
+
+    $.getJSON('/game/database/location_json/', function(data) {
+
+    });
+
 });
 
-
-function initMap() { 
-
+function initMap() {
     let map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.82, lng: -73.9493},
       zoom: 16
@@ -18,9 +21,9 @@ function initMap() {
 
     // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude,
-                      position.coords.longitude);
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let pos = new google.maps.LatLng(position.coords.latitude, 
+                                             position.coords.longitude);
 
             // Button for centering map
             $("#centerMapButton").click(function() {
@@ -90,7 +93,11 @@ function initMap() {
 
     let safeZoneMarkers = [
         ['Safe Zone 1', 40.81652125045496, -73.95123839378357],
-        ['Safe Zone 2', 40.76880925874281, -73.79186153411865]
+        ['Safe Zone 2', 40.82204441518121, -73.94990801811218],
+        ['Safe Zone 3', 40.81866886418722, -73.95164608955383],
+        ['Safe Zone 4', 40.81717487938587, -73.948073387146],
+        ['Safe Zone 5', 40.82123454218155, -73.94617438316345],
+        ['Safe Zone A', 40.76880925874281, -73.79186153411865]
     ];
 
     let marker;
@@ -98,8 +105,8 @@ function initMap() {
     $.getJSON('/game/database/location_json/', function(data) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude,
-                      position.coords.longitude);
+            let pos = new google.maps.LatLng(position.coords.latitude, 
+                                             position.coords.longitude);
             let marker;
             let circle;
             let markersAndCirclesList = [];
@@ -107,9 +114,9 @@ function initMap() {
             // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1],
-                             ccnyMarkers[i][2]);
-              let locationName = ccnyMarkers[i][0];
-              let ccnyRadius = 80;
+                                                      ccnyMarkers[i][2]);
+                let locationName = ccnyMarkers[i][0];
+                let ccnyRadius = 80;
                 // Create markers
             	marker = new google.maps.Marker({
                     position: position,
@@ -132,7 +139,11 @@ function initMap() {
                 let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
 
                 // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
+                let markerDetails = {'location': locationName,
+                                     'marker': marker, 
+                                     'circle': circle,
+                                     'infection_rate': infectionRate
+                                    };
                 markersAndCirclesList.push(markerDetails);
 
                 // Create description boxes
@@ -154,7 +165,8 @@ function initMap() {
 
             // Draw bayside Markers
             for (let i=0; i<baysideMarkers.length; i++) {
-                let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
+                let position = new google.maps.LatLng(baysideMarkers[i][1],
+                                                      baysideMarkers[i][2]);
                 let locationName = baysideMarkers[i][0];
                 let baysideRadius = 200;
 
@@ -185,7 +197,11 @@ function initMap() {
                     '</div>';
 
                 // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
+                let markerDetails = {'location': locationName,
+                                     'marker': marker,
+                                     'circle': circle,
+                                     'infection_rate': infectionRate
+                                    };
                 markersAndCirclesList.push(markerDetails);
 
                 google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -197,26 +213,26 @@ function initMap() {
             }
 
             // Check location on page load
-            // $(document).ready(function() {
+            $(document).ready(function() {
                 let locatedInsideACircle = false;
                 let currentLocation;
-                let infectionRate;
                 for (let i=0; i<markersAndCirclesList.length; i++) {
-                    // console.log(infectionRate);
                     let location = markersAndCirclesList[i]['location'];
-                    // let marker = markersAndCirclesList[i]['marker'];
                     let circle = markersAndCirclesList[i]['circle'];
-                    infectionRate = markersAndCirclesList[i]['infection_rate'];
-
                     let bounds = circle.getBounds();
 
                     if (bounds.contains(pos)) {
-                        // console.log("You are at: " + location);
                         currentLocation = location;
                         locatedInsideACircle = true;
+                        break;
                     }
                   }
                 if (locatedInsideACircle) {
+                    let matchesWon = data[currentLocation].fields.matches_won;
+                    let matchesLost = data[currentLocation].fields.matches_lost;
+                    let totalMatches = matchesWon + matchesLost;
+                    let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+
                     let locationOutput = "You are at " + currentLocation + ".";
                     let localRate = infectionRate + "%";
                     $("#location").replaceWith(locationOutput);
@@ -226,7 +242,7 @@ function initMap() {
                     let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
                     $("#location").replaceWith(resultOutput);
                 }
-            // });
+            });
 
             // Check to see if user is inside a circle
             $("#checkLocationButton").click(function() {
