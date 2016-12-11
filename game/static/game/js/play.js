@@ -1,10 +1,18 @@
 "use strict";
 
 $(document).ready(function() {
-    $('#toggleMapButton').click(function() {
-        $('#map').toggle("fast");
+    $("#toggleMapButton").click(function() {
+        $("#map").toggle("fast");
+        let infoWindowOutput = "<p>Map toggled.</p>";
+        $("#infoWindow").append(infoWindowOutput);
+        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
     });
 
+    $("#helpButton").click(function() {
+        let infoWindowOutput = "<p>How to play game:</p>";
+        $("#infoWindow").append(infoWindowOutput);
+        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+    });
 });
 
 function initMap() {
@@ -21,9 +29,17 @@ function initMap() {
             let pos = new google.maps.LatLng(position.coords.latitude, 
                                              position.coords.longitude);
 
-            // Button for centering map
             $("#centerMapButton").click(function() {
                 map.setCenter(pos);
+                let infoWindowOutput = "<p>Map centered.</p>";
+                $("#infoWindow").append(infoWindowOutput);
+                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+            });
+
+            $("#antidoteButton").click(function() {
+                let infoWindowOutput = "<p>Antidote used.</p>";
+                $("#infoWindow").append(infoWindowOutput);
+                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
             });
 
             let locationName = 'Current Location';
@@ -236,7 +252,6 @@ function initMap() {
                 for (let i=0; i<markersAndCirclesList.length; i++) {
                     let zone = markersAndCirclesList[i]['zone'];
                     let infectionIndiv = markersAndCirclesList[i]['infection_rate'];
-                    // console.log(markersAndCirclesList[i]['infection_rate']);
                     if (currentZone == zone) {
                         infectionSum += infectionIndiv;
                         numSubzones++;
@@ -286,7 +301,7 @@ function initMap() {
                 }
 
                 if (locatedInsideACircle) {
-                    let locationOutput = "<p>You are at " + currentLocation + "</p>";
+                    let locationOutput = "<p>You are at " + currentLocation + ".</p>";
                     $("#infoWindow").append(locationOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
