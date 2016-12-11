@@ -2,8 +2,8 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-#from django.db.models.signals import post_save
-#from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Location(models.Model):
     """Regions of infection"""
@@ -53,3 +53,12 @@ class Profile(models.Model):
         # Returns matches won out of total matches
         success = (self.matches_won / self.total_matches())*100
         return success
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

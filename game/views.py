@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core import serializers
+from django.contrib.auth import logout
+
 from .models import Location
 from .models import Safezone
 
@@ -12,10 +14,9 @@ def index(request):
     context = {'text': 'Welcome to our game'}
     return render(request, 'game/index.html', context)
 
-# This isn't used right now
-# def register(request):
-#     context = {'text': 'Register here'}
-#     return render(request, 'registration/register.html', context)
+def logout_successful(request):
+    context = {'text': 'Logout successful'}
+    return render(request, 'game/logout_successful.html', context)
 
 def users(request):
     """User list view"""
@@ -77,3 +78,4 @@ def lose(request, location_name):
     location.matches_lost += 1
     location.save()
     return HttpResponse("matches_lost increased by 1")
+
