@@ -144,5 +144,13 @@
     "fields": {
       "location_text": "Safe Zone A"
     }
+  },
+  {
+    "model": "game.Announcement",
+    "pk": 1,
+    "fields": {
+      "announcement_text": "Welcome to augmented pandemic! Worldwide announcements will go here.",
+      "pub_date": "2016-12-12T17:20:30-05:00"
+    }
   }
 ]

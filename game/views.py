@@ -8,6 +8,8 @@ from django.contrib.auth import logout
 
 from .models import Location
 from .models import Safezone
+from .models import Announcement
+from .models import Profile
 
 def index(request):
     """Homepage view"""
@@ -79,3 +81,16 @@ def lose(request, location_name):
     location.save()
     return HttpResponse("matches_lost increased by 1")
 
+def announcement_json(request):
+    announcement_list = Announcement.objects.all()
+    announcementJSON = serializers.serialize('json', announcement_list)
+    # Convert JSON to python dict
+    announcementObject = json.loads(announcementJSON)
+    outputObject = {}
+    for announcement in announcementObject:
+        announcement_text = announcement['fields']['announcement_text']
+        outputObject[announcement_text] = announcement
+    return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+
+def profile_json(request):
+    pass
