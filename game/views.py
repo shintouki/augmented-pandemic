@@ -39,9 +39,9 @@ def play(request):
 def location_json(request):
     """Retrieving location information"""
     location_list = Location.objects.all()
-    location_json = serializers.serialize('json', location_list)
+    location_json_list = serializers.serialize('json', location_list)
     # Convert JSON to python dict
-    location_object = json.loads(location_json)
+    location_object = json.loads(location_json_list)
 
     # Create a new object and make the keys be the location names so it's easier to search later
     output_object = {}
@@ -53,16 +53,16 @@ def location_json(request):
 def safezone_json(request):
     """Retrieving safezone locations"""
     safezone_list = Safezone.objects.all()
-    safezoneJSON = serializers.serialize('json', safezone_list)
+    safezone_json_list = serializers.serialize('json', safezone_list)
     # Convert JSON to python dict
-    safezoneObject = json.loads(safezoneJSON)
+    safezone_object = json.loads(safezone_json_list)
 
     # Create a new object and make the keys be the location names so it's easier to search later
-    outputObject = {}
-    for location in safezoneObject:
+    output_object = {}
+    for location in safezone_object:
         location_text = location['fields']['location_text']
-        outputObject[location_text] = location
-    return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+        output_object[location_text] = location
+    return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def win(request, location_name):
     """Saving matches won to database"""

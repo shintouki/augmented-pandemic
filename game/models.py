@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 class Location(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
-    # infection_rate = models.IntegerField(default=30)
     matches_lost = models.IntegerField(default=30)
     matches_won = models.IntegerField(default=70)
 
@@ -44,12 +43,12 @@ class Profile(models.Model):
     num_antidotes = models.IntegerField(default=0)
     # total_matches = models.IntegerField(default=0)
     def total_matches(self):
-        # Returns total matches played
+        """Returns total matches played"""
         won = self.matches_won
         lost = self.matches_lost
         return float(won + lost)
 
     def success_rate(self):
-        # Returns matches won out of total matches
+        """Returns matches won out of total matches"""
         success = (self.matches_won / self.total_matches())*100
         return success
