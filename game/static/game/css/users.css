@@ -9,3 +9,23 @@ body {
 #navbar {
   font-family: 'Monda', sans-serif;
 }
+
+h1 {
+  text-align:center;
+}
+
+table.center {
+  width:70%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+table, th, td {
+  border: 1px solid #626869;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 5px;
+  text-align: left;
+}

@@ -9,7 +9,14 @@
         <link rel="stylesheet" type="text/css" href="{% static 'game/css/users.css' %}" />
     </head>
     <body>
-        {% include "game/navigation_bar.html" %}
+      {% include "game/navigation_bar.html" %}
+      <div class="text">
+        <h1>Users</h1>
+        <form>
+          Find user: <input type="text" name="username">
+          <button type="submit">Search</button>
+        </form>
+      </div>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </body>
 </html>
