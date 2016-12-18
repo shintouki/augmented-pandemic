@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 	url(r'^game/', include('game.urls')),
@@ -26,5 +27,7 @@ urlpatterns = [
             form_class=UserCreationForm,
             success_url='/game'
     )),
+    url(r'^login/', auth_views.login, name='login'),
+    url(r'^logout/', auth_views.logout, {'next_page': '/game/logout_successful/'}),
     url(r'^', include('django.contrib.auth.urls')),    
 ]

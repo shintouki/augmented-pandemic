@@ -15,15 +15,17 @@
 		<div id="textArea">
             <h1 id="gameTitle">Fight the Infection</h1>
 			<div id="leftSide">
+                <p class="titles">
+                    Zone: <span class="info" id="zoneText"></span>
+                </p>
 				<p class="titles">
-					Current Location: <span class="info" id="location"></span>
+					Subzone: <span class="info" id="subzoneText"></span>
 				</p>
-				<br>
 				<p class="titles" id="GlobalInfectionRate">
-					Global Infection Rate: <span class="info" id="global"></span>
+					Zone Infection Rate: <span class="info" id="global"></span>
 				</p>
 				<p class="titles" id="LocalInfectionRate">
-					Local Infection Rate: <span class="info" id="local"></span>
+					Subzone Infection Rate: <span class="info" id="local"></span>
 				</p>
 				<p class="titles" id="numAntidotesText">Number of antidotes: 0</p>
 				<div class="buttons" id="userSelection">
@@ -31,11 +33,13 @@
 					<button id="rockButton" class="RPSButton">Quarantine</button>
 					<button id="paperButton" class="RPSButton">Cure</button>
 					<button id="scissorsButton" class="RPSButton">Rescue</button>
+                    <button id="antidoteButton">Use Antidote</button>
 				</div><br>
 				<div class="buttons" id="generalButtons">
 					<input id="checkLocationButton" type="button" value="Check Location">
 					<input id="centerMapButton" type="button" value="Center Map">
 					<input id="toggleMapButton" type="button" value="Toggle Map">
+                    <input id="helpButton" type="button" value="Help">
 				</div>
 			</div>
             <div id="rightSide">
@@ -44,9 +48,8 @@
 		</div>
 		<div id="map"></div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I&callback=initMap"></script>
-		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 		<script src="{% static 'game/js/play.js' %}"></script>
 		<script src="{% static 'game/js/rockpaperscissor.js' %}"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I&callback=initMap"></script>
 	</body>
 </html>
