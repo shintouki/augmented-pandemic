@@ -9,6 +9,8 @@ class Location(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
     zone_text = models.CharField(max_length=200, default="")
+    matches_lost = models.IntegerField(default=30)
+    matches_won = models.IntegerField(default=70)
 
     def total_matches(self):
         """Returns total matches played in region"""
