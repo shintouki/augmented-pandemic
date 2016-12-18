@@ -3,91 +3,104 @@
     "model": "game.Location",
     "pk": 1,
     "fields": {
-      "location_text": "Shephard Hall"
+      "location_text": "Shephard Hall",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 2,
     "fields": {
-      "location_text": "Engineering Building"
+      "location_text": "Engineering Building",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 3,
     "fields": {
-      "location_text": "NAC"
+      "location_text": "NAC",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 4,
     "fields": {
-      "location_text": "Architecture Building"
+      "location_text": "Architecture Building",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 5,
     "fields": {
-      "location_text": "Marshak"
+      "location_text": "Marshak",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 6,
     "fields": {
-      "location_text": "Sophie Davis Building"
+      "location_text": "Sophie Davis Building",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 7,
     "fields": {
-      "location_text": "The Towers(dorm)"
+      "location_text": "The Towers(dorm)",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 8,
     "fields": {
-      "location_text": "CUNY Advanced Science Research Center"
+      "location_text": "CUNY Advanced Science Research Center",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Location",
     "pk": 9,
     "fields": {
-      "location_text": "Bayside Fields"
+      "location_text": "Bayside Fields",
+      "zone_text": "bayside"
     }
   },
   {
     "model": "game.Location",
     "pk": 10,
     "fields": {
-      "location_text": "Bayside Highschool"
+      "location_text": "Bayside Highschool",
+      "zone_text": "bayside"
     }
   },
   {
     "model": "game.Location",
     "pk": 11,
     "fields": {
-      "location_text": "OLBS"
+      "location_text": "OLBS",
+      "zone_text": "bayside"
     }
   },
   {
     "model": "game.Location",
     "pk": 12,
     "fields": {
-      "location_text": "Bay Terrace Shopping Center"
+      "location_text": "Bay Terrace Shopping Center",
+      "zone_text": "bayside"
     }
   },
   {
     "model": "game.Location",
     "pk": 13,
     "fields": {
-      "location_text": "Auburndale Station"
+      "location_text": "Auburndale Station",
+      "zone_text": "bayside"
     }
   },
   {
@@ -102,6 +115,42 @@
     "pk": 2,
     "fields": {
       "location_text": "Safe Zone 2"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 3,
+    "fields": {
+      "location_text": "Safe Zone 3"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 4,
+    "fields": {
+      "location_text": "Safe Zone 4"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 5,
+    "fields": {
+      "location_text": "Safe Zone 5"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 6,
+    "fields": {
+      "location_text": "Safe Zone A"
+    }
+  },
+  {
+    "model": "game.Announcement",
+    "pk": 1,
+    "fields": {
+      "announcement_text": "Welcome to augmented pandemic! Worldwide announcements will go here.",
+      "pub_date": "2016-12-12T17:20:30-05:00"
     }
   }
 ]

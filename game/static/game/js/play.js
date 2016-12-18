@@ -1,14 +1,21 @@
 "use strict";
 
 $(document).ready(function() {
-    $('#toggleMapButton').click(function() {
-        $('#map').toggle("fast");
+    $("#toggleMapButton").click(function() {
+        $("#map").toggle("fast");
+        let infoWindowOutput = "<p>Map toggled.</p>";
+        $("#infoWindow").append(infoWindowOutput);
+        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+    });
+
+    $("#helpButton").click(function() {
+        let infoWindowOutput = "<p>How to play game:</p>";
+        $("#infoWindow").append(infoWindowOutput);
+        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
     });
 });
 
-
 function initMap() {
-
     let map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.82, lng: -73.9493},
       zoom: 16
@@ -18,13 +25,21 @@ function initMap() {
 
     // Set center to current location and create infowindow for current location
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude,
-                      position.coords.longitude);
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let pos = new google.maps.LatLng(position.coords.latitude, 
+                                             position.coords.longitude);
 
-            // Button for centering map
             $("#centerMapButton").click(function() {
                 map.setCenter(pos);
+                let infoWindowOutput = "<p>Map centered.</p>";
+                $("#infoWindow").append(infoWindowOutput);
+                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+            });
+
+            $("#antidoteButton").click(function() {
+                let infoWindowOutput = "<p>Antidote used.</p>";
+                $("#infoWindow").append(infoWindowOutput);
+                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
             });
 
             let locationName = 'Current Location';
@@ -90,7 +105,11 @@ function initMap() {
 
     let safeZoneMarkers = [
         ['Safe Zone 1', 40.81652125045496, -73.95123839378357],
-        ['Safe Zone 2', 40.76880925874281, -73.79186153411865]
+        ['Safe Zone 2', 40.82204441518121, -73.94990801811218],
+        ['Safe Zone 3', 40.81866886418722, -73.95164608955383],
+        ['Safe Zone 4', 40.81717487938587, -73.948073387146],
+        ['Safe Zone 5', 40.82123454218155, -73.94617438316345],
+        ['Safe Zone A', 40.76880925874281, -73.79186153411865]
     ];
 
     let marker;
@@ -98,8 +117,8 @@ function initMap() {
     $.getJSON('/game/database/location_json/', function(data) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude,
-                      position.coords.longitude);
+            let pos = new google.maps.LatLng(position.coords.latitude, 
+                                             position.coords.longitude);
             let marker;
             let circle;
             let markersAndCirclesList = [];
@@ -107,9 +126,9 @@ function initMap() {
             // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
             	let position = new google.maps.LatLng(ccnyMarkers[i][1],
-                             ccnyMarkers[i][2]);
-              let locationName = ccnyMarkers[i][0];
-              let ccnyRadius = 80;
+                                                      ccnyMarkers[i][2]);
+                let locationName = ccnyMarkers[i][0];
+                let ccnyRadius = 80;
                 // Create markers
             	marker = new google.maps.Marker({
                     position: position,
@@ -129,20 +148,25 @@ function initMap() {
                 let matchesWon = data[locationName].fields.matches_won;
                 let matchesLost = data[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
-                let infectionRate = matchesLost / totalMatches * 100;
+                let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+                let zoneText = data[locationName].fields.zone_text;
 
                 // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
+                let markerDetails = {'location': locationName,
+                                     'zone': zoneText,
+                                     'marker': marker, 
+                                     'circle': circle,
+                                     'infection_rate': infectionRate
+                                    };
                 markersAndCirclesList.push(markerDetails);
 
                 // Create description boxes
-
                 let infoWindowContent =
                 	'<div class="info_content">' +
         	        '<h4>' + locationName + '</h4>' +
         	        '<p>Infection rate: ' + infectionRate + '%</p>' +
-                  '<p>Matches Won: ' + matchesWon + '</p>' +
-                  '<p>Matches Lost: ' + matchesLost + '</p>' +'</div>';
+                    '<p>Matches Won: ' + matchesWon + '</p>' +
+                    '<p>Matches Lost: ' + matchesLost + '</p>' +'</div>';
 
         	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
                     return function() {
@@ -154,7 +178,8 @@ function initMap() {
 
             // Draw bayside Markers
             for (let i=0; i<baysideMarkers.length; i++) {
-                let position = new google.maps.LatLng(baysideMarkers[i][1], baysideMarkers[i][2]);
+                let position = new google.maps.LatLng(baysideMarkers[i][1],
+                                                      baysideMarkers[i][2]);
                 let locationName = baysideMarkers[i][0];
                 let baysideRadius = 200;
 
@@ -175,7 +200,18 @@ function initMap() {
                 let matchesWon = data[locationName].fields.matches_won;
                 let matchesLost = data[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
-                let infectionRate = matchesLost / totalMatches * 100;
+                let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+                let zoneText = data[locationName].fields.zone_text;
+
+                // Record marker and circle details to use later with check location button
+                let markerDetails = {'location': locationName,
+                                     'zone': zoneText,
+                                     'marker': marker,
+                                     'circle': circle,
+                                     'infection_rate': infectionRate
+                                    };
+                markersAndCirclesList.push(markerDetails);
+
                 let infoWindowContent =
                     '<div class="info_content">' +
                     '<h4>' + locationName + '</h4>' +
@@ -183,10 +219,6 @@ function initMap() {
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +
                     '</div>';
-
-                // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle, 'infection_rate': infectionRate };
-                markersAndCirclesList.push(markerDetails);
 
                 google.maps.event.addListener(marker, 'click', (function(marker, i) {
                     return function() {
@@ -200,25 +232,51 @@ function initMap() {
             $(document).ready(function() {
                 let locatedInsideACircle = false;
                 let currentLocation;
-                let infectionRate;
+                
+                // Find current subzone (location)
                 for (let i=0; i<markersAndCirclesList.length; i++) {
                     let location = markersAndCirclesList[i]['location'];
-                    // let marker = markersAndCirclesList[i]['marker'];
                     let circle = markersAndCirclesList[i]['circle'];
-                    infectionRate = markersAndCirclesList[i]['infection_rate'];
-
                     let bounds = circle.getBounds();
 
                     if (bounds.contains(pos)) {
-                        // console.log("You are at: " + location);
                         currentLocation = location;
                         locatedInsideACircle = true;
                     }
-                  }
+                }
+                
+                let currentZone = data[currentLocation].fields.zone_text;
+                let infectionSum = 0;
+                let numSubzones = 0;
+
+                for (let i=0; i<markersAndCirclesList.length; i++) {
+                    let zone = markersAndCirclesList[i]['zone'];
+                    let infectionIndiv = markersAndCirclesList[i]['infection_rate'];
+                    if (currentZone == zone) {
+                        infectionSum += infectionIndiv;
+                        numSubzones++;
+                    }
+                }
+
+                let zoneInfection = Math.round(infectionSum / numSubzones * 100) / 100 + "%";
+                $("#global").replaceWith(zoneInfection);
+
+                if (currentZone == "ccny") {
+                    currentZone = "City College of New York";
+                }
+                else if (currentZone == "bayside") {
+                    currentZone = "Bayside";
+                }
+                $("#zoneText").replaceWith(currentZone);
                 if (locatedInsideACircle) {
-                    let locationOutput = "You are at " + currentLocation + ".";
+                    let matchesWon = data[currentLocation].fields.matches_won;
+                    let matchesLost = data[currentLocation].fields.matches_lost;
+                    let totalMatches = matchesWon + matchesLost;
+                    let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+
+                    let locationOutput = currentLocation;
                     let localRate = infectionRate + "%";
-                    $("#location").replaceWith(locationOutput);
+                    $("#subzoneText").replaceWith(locationOutput);
                     $("#local").replaceWith(localRate);
                 }
                 else {
@@ -237,15 +295,13 @@ function initMap() {
                     let circle = markersAndCirclesList[i]['circle'];
                     let bounds = circle.getBounds();
                     if (bounds.contains(pos)) {
-                        // console.log("You are at: " + location);
                         currentLocation = location;
                         locatedInsideACircle = true;
                     }
                 }
 
                 if (locatedInsideACircle) {
-                    // $("#userSelection").show();
-                    let locationOutput = "<p>You are at " + currentLocation + "</p>";
+                    let locationOutput = "<p>You are at " + currentLocation + ".</p>";
                     $("#infoWindow").append(locationOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
@@ -265,7 +321,6 @@ function initMap() {
                     let circle = markersAndCirclesList[i]['circle'];
                     let bounds = circle.getBounds();
                     if (bounds.contains(pos)) {
-                        // console.log("You are at: " + location);
                         currentLocation = location;
                         locatedInsideACircle = true;
                     }
@@ -282,20 +337,19 @@ function initMap() {
 
                 let randomChance = Math.random();
                 if (randomChance<.5) {
-                  let event_1 = Math.random();
-                  let eventOutput;
-                  if (event_1<=.25) {
-                    eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
-                  }
-                  else if (event_1>.25 && event_1<=.5){
-                    eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
-                  }
-                  $("#infoWindow").append(eventOutput);
-                  $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    let event_1 = Math.random();
+                    let eventOutput;
+                    if (event_1<=.25) {
+                        eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                    }
+                    else if (event_1>.25 && event_1<=.5){
+                        eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                    }
+                    $("#infoWindow").append(eventOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
 
                 // Fix crsf issue (403 error)
-                // using jQuery
                 function getCookie(name) {
                     var cookieValue = null;
                     if (document.cookie && document.cookie !== '') {
@@ -331,7 +385,6 @@ function initMap() {
                 if (outcome == 1) {
                     // Player won minigame
                     minigamePlayedURL += "win/";
-                    console.log(minigamePlayedURL);
                     $.ajax({
                         type: "POST",
                         url: minigamePlayedURL,
@@ -343,7 +396,6 @@ function initMap() {
                 else if (outcome == -1) {
                     // Player lost minigame
                     minigamePlayedURL += "lose/";
-                    console.log(minigamePlayedURL);
                     $.ajax({
                         type: "POST",
                         url: minigamePlayedURL,

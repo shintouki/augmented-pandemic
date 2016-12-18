@@ -1,11 +1,23 @@
-body {
-  font-family: 'Monda', sans-serif;
-}
-
-.text {
-  padding-left: 5%;
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Monda', sans-serif;
 }
 
 #navbar {
-  font-family: 'Monda', sans-serif;
+    font-family: 'Monda', sans-serif;
+}
+
+.mainContent {
+    padding: 0 5% 0 5%;
+    height: 80%;
+}
+
+
+#announcementWindow {
+    border: 1px solid black;
+    margin-top: 3%;
+    overflow: auto;
+    height: 50%;
 }

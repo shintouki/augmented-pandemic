@@ -2,14 +2,13 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-#from django.db.models.signals import post_save
-#from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Location(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
-    matches_lost = models.IntegerField(default=30)
-    matches_won = models.IntegerField(default=70)
+    zone_text = models.CharField(max_length=200, default="")
 
     def total_matches(self):
         """Returns total matches played in region"""
@@ -35,6 +34,13 @@ class Safezone(models.Model):
         """Returns location name"""
         return self.location_text
 
+class Announcement(models.Model):
+    announcement_text = models.CharField(max_length=500)
+    pub_date = models.DateTimeField('date published')
+
+    def __str__(self):
+        return self.announcement_text
+
 class Profile(models.Model):
     """User Profile model"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -52,3 +58,15 @@ class Profile(models.Model):
         """Returns matches won out of total matches"""
         success = (self.matches_won / self.total_matches())*100
         return success
+
+    def __str__(self):
+        return self.user
+
+# @receiver(post_save, sender=User)
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         Profile.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()
