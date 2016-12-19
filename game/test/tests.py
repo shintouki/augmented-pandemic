@@ -74,7 +74,7 @@ class LogInTest(TestCase):
 
 class UserProfileCase(TestCase):
     """Testing User Profile model"""
-    def test_total_matchess(self):
+    def test_total_matches(self):
         """
         Test total matches method,
         combines matches won and matches lost values
@@ -85,3 +85,16 @@ class UserProfileCase(TestCase):
         test_user.profile.save()
 
         self.assertEqual(test_user.profile.total_matches(), 30)
+
+    def test_success_rate(self):
+        """
+        Test success rate method
+        matches won / total matches played
+        """
+        test_user = User.objects.create_user('username', 'user@example.com', 'password')
+        test_user.profile.matches_won = 10
+        test_user.profile.matches_lost = 20
+        test_user.profile.save()
+
+        result = (1/3)*100
+        self.assertEqual(test_user.profile.success_rate(), result)
