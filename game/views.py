@@ -5,8 +5,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core import serializers
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.views import View
 
-from .models import Location
+from .models import Location, User
 from .models import Safezone
 from .models import Announcement
 from .models import Profile
@@ -19,15 +21,42 @@ def index(request):
 def logout_successful(request):
     context = {'text': 'Logout successful'}
     return render(request, 'game/logout_successful.html', context)
+"""
+def ajax_user_search( request ):
 
+    if request.is_ajax():
+        q = request.GET.get( 'q' )
+        if q is not None:
+            results = User.objects.filter(username=q)
+
+            return render_to_response( 'users.html', { 'results': results, },
+                                       context_instance = RequestContext( request ) )
+"""
 def users(request):
-    """User list view"""
-    context = {'text': 'User list here'}
+    """User search"""
+    context = {'text': 'Find a user:'}
     return render(request, 'game/users.html', context)
 
-def user_detail(request, user_id):
+"""
+def user_search(request):
+    # User search
+    query = request.GET.get('q')
+    if query:
+        results = list(User.objects.get(username=query))
+    context = {'text': 'Find a user:'}
+    return render(request, 'game/user_search.html', context)
+"""
+
+@login_required()
+def user_detail(request):
     """User profile view"""
-    return HttpResponse("This page will have user details")
+    current_user = request.user
+    context = {'username': current_user.username,
+               'total_matches': int(current_user.profile.total_matches()),
+               'matches_won': int(current_user.profile.matches_won),
+               'win_rate': current_user.profile.success_rate()
+    }
+    return render(request, 'game/user_detail.html', context)
 
 def leaderboard(request):
     """Leaderboard view"""
@@ -72,6 +101,10 @@ def win(request, location_name):
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_won += 1
     location.save()
+
+    if request.user.is_authenticated:
+        user.profile.matches_won += 1
+
     return HttpResponse("matches_won increased by 1")
 
 def lose(request, location_name):
@@ -79,6 +112,11 @@ def lose(request, location_name):
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_lost += 1
     location.save()
+
+    if request.user.is_authenticated:
+        user.profile.matches_lost += 1
+        user.profile.save()
+
     return HttpResponse("matches_lost increased by 1")
 
 def announcement_json(request):
