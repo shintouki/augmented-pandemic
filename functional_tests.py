@@ -14,11 +14,7 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.quit()
 
     def test_site_startup(self):
-        # Edith has heard about a cool new online to-do app. She goes
-        # to check out its homepage
         self.browser.get('http://localhost:8000/game')
-
-        # She notices the page title and header mention to-do lists
         self.assertIn('Augmented Pandemic Home Page', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Announcements', header_text)
