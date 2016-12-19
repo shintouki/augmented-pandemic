@@ -12,13 +12,16 @@
       {% include "game/navigation_bar.html" %}
       <div class="text">
         <h1>Users</h1>
-        <form id="user_search" method="get">
-          Find a user: <input type="text" name="find_user">
+        <form id="user_search" action="{% url 'game:user_search' %}" method="get">
+          Find a user: <input type="text" name="find_user" placeholder="Searching not possible">
           <button type="submit">Search</button>
-        </form>
+        </form><br>
         <div id="users_found">
-          You searched for: {{ query }}
-          <p>{{ results }}</p></div>
+          You searched for: {{ searched }}<br><br>
+          {% for i in results %}
+          <p>{{ i }}</p>
+          {% endfor %}
+        </div>
       </div>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </body>

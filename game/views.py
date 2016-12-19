@@ -39,12 +39,14 @@ def users(request):
 
 def user_search(request):
     """User search request"""
-    query = request.GET.get('q')
+    query = request.GET.get('user_id')
     if query:
-        results = User.objects.get(username=query)
+        results = User.objects.filter(username__contains=query)
+        if results == None:
+            results = 'No users found.'
         context = {'text': 'Find a user:', 'searched': query,'results': results}
     else:
-        context = {'results': 'No users found.'}
+        context = {'searched': 'No input detected.'}
     return render(request, 'game/search_results.html', context)
 
 @login_required()
