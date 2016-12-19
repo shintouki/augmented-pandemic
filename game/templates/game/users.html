@@ -12,8 +12,8 @@
       {% include "game/navigation_bar.html" %}
       <div class="text">
         <h1>Users</h1>
-        <form id="user_search" method="get">
-          {{ text }} <input type="text" name="find_user">
+        <form id="user_search" action="{% url 'game:user_search' %}" method="get">
+          {{ text }} <input type="text" name="user_id">
           <button type="submit">Search</button>
         </form>
         <div id="users_found"></div>

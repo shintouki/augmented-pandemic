@@ -33,19 +33,19 @@ def ajax_user_search( request ):
                                        context_instance = RequestContext( request ) )
 """
 def users(request):
-    """User search"""
+    """User search home"""
     context = {'text': 'Find a user:'}
     return render(request, 'game/users.html', context)
 
-"""
 def user_search(request):
-    # User search
+    """User search request"""
     query = request.GET.get('q')
     if query:
-        results = list(User.objects.get(username=query))
-    context = {'text': 'Find a user:'}
-    return render(request, 'game/user_search.html', context)
-"""
+        results = User.objects.get(username=query)
+        context = {'text': 'Find a user:', 'searched': query,'results': results}
+    else:
+        context = {'results': 'No users found.'}
+    return render(request, 'game/search_results.html', context)
 
 @login_required()
 def user_detail(request):
@@ -60,6 +60,7 @@ def user_detail(request):
 
 def leaderboard(request):
     """Leaderboard view"""
+
     context = {'text': 'Leaderboard goes here'}
     return render(request, 'game/leaderboard.html', context)
 
