@@ -5,6 +5,13 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+class Profile(models.Model):
+    """User Profile model"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    matches_won = models.IntegerField(default=0)
+    matches_lost = models.IntegerField(default=0)
+    num_antidotes = models.IntegerField(default=0)
+
 class Location(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
@@ -49,7 +56,7 @@ class Profile(models.Model):
     matches_won = models.IntegerField(default=0)
     matches_lost = models.IntegerField(default=0)
     num_antidotes = models.IntegerField(default=0)
-    # total_matches = models.IntegerField(default=0)
+
     def total_matches(self):
         """Returns total matches played"""
         won = self.matches_won
@@ -64,11 +71,11 @@ class Profile(models.Model):
     def __str__(self):
         return self.user
 
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         Profile.objects.create(user=instance)
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
 
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     instance.profile.save()
+    #@receiver(post_save, sender=User)
+    #def save_user_profile(sender, instance, **kwargs):
+    #    instance.profile.save()
