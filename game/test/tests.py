@@ -1,16 +1,15 @@
 """Game application tests"""
 
-#import datetime
+import datetime
 #from django.utils import timezone
 from django.test import TestCase
 from django.urls import reverse
 from django.test.client import Client
 from django.contrib.auth.models import User
-from game.models import Location, Profile
+from game.models import Location, Profile, Announcement, Safezone
 
 class IndexViewTests(TestCase):
     """Testing index view"""
-
     def test_index_view_exists(self):
         """Test view works"""
         response = self.client.get(reverse('game:index'))
@@ -67,13 +66,23 @@ class LocationTestCase(TestCase):
 
 class LogInTest(TestCase):
     def setup(self):
-        test_user = User.objects.create_user('username', 'user@example.com', 'password')
+        test_user = User.objects.create_user('username',
+                    'user@example.com', 'password')
+
 
     def test_login(self):
         pass
 
-class UserProfileCase(TestCase):
+class UserProfileTestCase(TestCase):
     """Testing User Profile model"""
+    def test_return_user(self):
+        """
+        Return User attributed to Profile
+        """
+        test_user = User.objects.create_user('username', 'user@example.com', 'password')
+        test_id = str(test_user.profile.__str__())
+        self.assertEqual(test_id, 'username')
+
     def test_total_matches(self):
         """
         Test total matches method,
@@ -98,3 +107,23 @@ class UserProfileCase(TestCase):
 
         result = (1/3)*100
         self.assertEqual(test_user.profile.success_rate(), result)
+
+class SafezoneTestCase(TestCase):
+    """Testing Safezone model"""
+    def test_return_safezone(self):
+        """
+        Return  Safezone name
+        """
+        test_zone = Safezone.objects.create(location_text="ccny", antidotes_given_out="0")
+        test_id = str(test_zone.__str__())
+        self.assertEqual(test_id, "ccny")
+
+class AnnouncementTestCase(TestCase):
+    """Testing Announcement model"""
+    def test_return_safezone(self):
+        """
+        Return Announcement contents
+        """
+        test_announcement = Announcement.objects.create(announcement_text="Hello!", pub_date=datetime.date(2016, 12, 1))
+        test_text = str(test_announcement.__str__())
+        self.assertEqual(test_text, "Hello!")
