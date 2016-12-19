@@ -54,7 +54,7 @@ def user_detail(request):
     context = {'username': current_user.username,
                'total_matches': int(current_user.profile.total_matches()),
                'matches_won': int(current_user.profile.matches_won),
-               'win_rate': current_user.profile.success_rate()
+               'win_rate': round(current_user.profile.success_rate(), 2)
     }
     return render(request, 'game/user_detail.html', context)
 
@@ -103,7 +103,9 @@ def win(request, location_name):
     location.save()
 
     if request.user.is_authenticated:
-        user.profile.matches_won += 1
+        current_user = request.user
+        current_user.profile.matches_won += 1
+        current_user.profile.save()
 
     return HttpResponse("matches_won increased by 1")
 
@@ -114,8 +116,9 @@ def lose(request, location_name):
     location.save()
 
     if request.user.is_authenticated:
-        user.profile.matches_lost += 1
-        user.profile.save()
+        current_user = request.user
+        current_user.profile.matches_lost += 1
+        current_user.profile.save()
 
     return HttpResponse("matches_lost increased by 1")
 

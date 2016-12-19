@@ -65,8 +65,12 @@ class Profile(models.Model):
 
     def success_rate(self):
         """Returns matches won out of total matches"""
-        success = (self.matches_won / self.total_matches())*100
-        return success
+        if self.total_matches() == 0:
+            success = 0
+            return success
+        else:
+            success = (self.matches_won / self.total_matches())*100
+            return success
 
     def __str__(self):
         return self.user
