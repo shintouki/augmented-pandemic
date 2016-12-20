@@ -18,8 +18,8 @@
         </form><br>
         <div id="users_found">
           You searched for: {{ searched }}<br><br>
-          {% for i in results %}
-          <p>{{ i }}</p>
+          {% for i,j in results %}
+          <p>{{ i }} | Success rate: {{ j }}%</p>
           {% endfor %}
         </div>
       </div>

@@ -44,7 +44,13 @@ def user_search(request):
         results = User.objects.filter(username__contains=query)
         if results == None:
             results = 'No users found.'
-        context = {'text': 'Find a user:', 'searched': query,'results': results}
+        rates = []
+        for i in results:
+            curr_user = i
+            rates.append(i.profile.success_rate())
+        results = zip(results, rates)
+        context = {'text': 'Find a user:', 'searched': query,
+        'results': results}
     else:
         context = {'searched': 'No input detected.'}
     return render(request, 'game/search_results.html', context)

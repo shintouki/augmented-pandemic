@@ -70,7 +70,7 @@ class Profile(models.Model):
             return success
         else:
             success = (self.matches_won / self.total_matches())*100
-            return success
+            return round(success, 2)
 
     def __str__(self):
         return self.user
