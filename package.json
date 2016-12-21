@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "description": "This is a game that combines augmented reality and the idea of escaping from a pandemic.",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "rewire": "~2.5.2"
+  },
   "devDependencies": {
-    "mocha": "~3.2.0"
+    "mocha": "~3.2.0",
+    "chai": "~3.5.0"
   },
   "scripts": {
     "test": "mocha"

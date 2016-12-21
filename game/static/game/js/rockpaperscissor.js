@@ -1,18 +1,20 @@
 // Modified rock paper scissors; Quarantine = Rock, Cure = Paper, Rescue = Scissors
 
+// var exports = module.exports = {};
+
 var outcome = undefined;
 
-function playGame(choice){
+playGame = function(choice){
   var computer = Math.random();
   let user = choice;
 
   if (computer<0.34 && computer>0){
     computer = "quarantine";
   }
-  else if(computer<=0.67 && computer>=0.34){
+  else if (computer<=0.67 && computer>=0.34){
     computer = "cure";
   }
-  else if(computer>0.67){
+  else if (computer>0.67){
     computer = "rescue";
   }
 
@@ -38,6 +40,9 @@ function compare(userSelection, computerSelection){
     else if(userSelection == "rescue"){
       return "You attempted to get to the healthy person, but too many " +
              "infected got in your way, obstructing your path. Try again.";
+    }
+    else {
+      return "Error"
     }
 	}
   if (userSelection == "quarantine"){
@@ -78,4 +83,7 @@ function compare(userSelection, computerSelection){
              "infected. Infection rate up.";
     }
   }
+  else {
+      return "Error"
+    }
 }
