@@ -20,7 +20,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                    <li><a>Welcome {{ user.username }}</a></li>       
+                    <li><a href = "{% url 'game:user_detail' %}">Welcome {{ user.username }}</a></li>
                     <li><a href="/logout">Logout</a></li>
                 {% else %}
         			<li><a href="/register">Register</a></li>

@@ -5,8 +5,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core import serializers
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.views import View
 
-from .models import Location
+from .models import Location, User
 from .models import Safezone
 from .models import Announcement
 from .models import Profile
@@ -19,18 +21,54 @@ def index(request):
 def logout_successful(request):
     context = {'text': 'Logout successful'}
     return render(request, 'game/logout_successful.html', context)
+"""
+def ajax_user_search( request ):
 
+    if request.is_ajax():
+        q = request.GET.get( 'q' )
+        if q is not None:
+            results = User.objects.filter(username=q)
+
+            return render_to_response( 'users.html', { 'results': results, },
+                                       context_instance = RequestContext( request ) )
+"""
 def users(request):
-    """User list view"""
-    context = {'text': 'User list here'}
+    """User search home"""
+    context = {'text': 'Find a user:'}
     return render(request, 'game/users.html', context)
 
-def user_detail(request, user_id):
+def user_search(request):
+    """User search request"""
+    query = request.GET.get('user_id')
+    if query:
+        results = User.objects.filter(username__contains=query)
+        if results == None:
+            results = 'No users found.'
+        rates = []
+        for i in results:
+            curr_user = i
+            rates.append(i.profile.success_rate())
+        results = zip(results, rates)
+        context = {'text': 'Find a user:', 'searched': query,
+        'results': results}
+    else:
+        context = {'searched': 'No input detected.'}
+    return render(request, 'game/search_results.html', context)
+
+@login_required()
+def user_detail(request):
     """User profile view"""
-    return HttpResponse("This page will have user details")
+    current_user = request.user
+    context = {'username': current_user.username,
+               'total_matches': int(current_user.profile.total_matches()),
+               'matches_won': int(current_user.profile.matches_won),
+               'win_rate': round(current_user.profile.success_rate(), 2)
+    }
+    return render(request, 'game/user_detail.html', context)
 
 def leaderboard(request):
     """Leaderboard view"""
+
     context = {'text': 'Leaderboard goes here'}
     return render(request, 'game/leaderboard.html', context)
 
@@ -42,9 +80,9 @@ def play(request):
 def location_json(request):
     """Retrieving location information"""
     location_list = Location.objects.all()
-    location_json = serializers.serialize('json', location_list)
+    location_json_list = serializers.serialize('json', location_list)
     # Convert JSON to python dict
-    location_object = json.loads(location_json)
+    location_object = json.loads(location_json_list)
 
     # Create a new object and make the keys be the location names so it's easier to search later
     output_object = {}
@@ -56,22 +94,28 @@ def location_json(request):
 def safezone_json(request):
     """Retrieving safezone locations"""
     safezone_list = Safezone.objects.all()
-    safezoneJSON = serializers.serialize('json', safezone_list)
+    safezone_json_list = serializers.serialize('json', safezone_list)
     # Convert JSON to python dict
-    safezoneObject = json.loads(safezoneJSON)
+    safezone_object = json.loads(safezone_json_list)
 
     # Create a new object and make the keys be the location names so it's easier to search later
-    outputObject = {}
-    for location in safezoneObject:
+    output_object = {}
+    for location in safezone_object:
         location_text = location['fields']['location_text']
-        outputObject[location_text] = location
-    return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+        output_object[location_text] = location
+    return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def win(request, location_name):
     """Saving matches won to database"""
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_won += 1
     location.save()
+
+    if request.user.is_authenticated:
+        current_user = request.user
+        current_user.profile.matches_won += 1
+        current_user.profile.save()
+
     return HttpResponse("matches_won increased by 1")
 
 def lose(request, location_name):
@@ -79,6 +123,12 @@ def lose(request, location_name):
     location = get_object_or_404(Location, location_text=location_name)
     location.matches_lost += 1
     location.save()
+
+    if request.user.is_authenticated:
+        current_user = request.user
+        current_user.profile.matches_lost += 1
+        current_user.profile.save()
+
     return HttpResponse("matches_lost increased by 1")
 
 def announcement_json(request):
