@@ -21,17 +21,7 @@ def index(request):
 def logout_successful(request):
     context = {'text': 'Logout successful'}
     return render(request, 'game/logout_successful.html', context)
-"""
-def ajax_user_search( request ):
 
-    if request.is_ajax():
-        q = request.GET.get( 'q' )
-        if q is not None:
-            results = User.objects.filter(username=q)
-
-            return render_to_response( 'users.html', { 'results': results, },
-                                       context_instance = RequestContext( request ) )
-"""
 def users(request):
     """User search home"""
     context = {'text': 'Find a user:'}
@@ -62,19 +52,28 @@ def user_detail(request):
     context = {'username': current_user.username,
                'total_matches': int(current_user.profile.total_matches()),
                'matches_won': int(current_user.profile.matches_won),
-               'win_rate': round(current_user.profile.success_rate(), 2)
+               'win_rate': current_user.profile.success_rate()
     }
     return render(request, 'game/user_detail.html', context)
 
 def leaderboard(request):
     """Leaderboard view"""
-
-    context = {'text': 'Leaderboard goes here'}
+    ranking = Profile.objects.order_by('-matches_won')[:5]
+    rates = []
+    users = []
+    for i in ranking:
+        current_user = i.user
+        users.append(current_user.username)
+        rates.append(i.success_rate)
+    ranking = zip(users, rates)
+    context = {'text': 'Leaderboard goes here',
+    'ranking': ranking}
     return render(request, 'game/leaderboard.html', context)
 
 def play(request):
     """Game view"""
-    # context = {'text': 'Leaderboard goes here'}
+    #location = get_object_or_404(Location, location_text=location_name)
+    #context = {'location': location}
     return render(request, 'game/play.html')
 
 def location_json(request):
