@@ -13,7 +13,7 @@ $(document).ready(function() {
                 $("#announcementWindow").append(infoWindowOutput);
                 $("#announcementWindow").animate({scrollTop: $("#announcementWindow").prop("scrollHeight")}, 500);
             }
-        }
+        }``
         
     });
 });
