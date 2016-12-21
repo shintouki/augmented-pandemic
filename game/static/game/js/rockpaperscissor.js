@@ -42,6 +42,7 @@ function compare(userSelection, computerSelection){
              "infected got in your way, obstructing your path. Try again.";
     }
     else {
+      outcome = -1;
       return "Error"
     }
 	}
