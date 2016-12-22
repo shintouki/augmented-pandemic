@@ -1,7 +1,7 @@
 var assert = chai.assert;
 
-describe('rockpaperscissor.js', function() {
-    describe('compareFunction', function() {
+describe('Testing rockpaperscissor.js', function() {
+    describe('compare function', function() {
         describe('userAndCompEqual', function() {
             it('should return outcome 0 if both quarantine', function() {
                 var userSelection = "quarantine";
@@ -181,9 +181,7 @@ describe('rockpaperscissor.js', function() {
 
     });
 
-    describe('playGameFunction', function() {
-        
-
+    describe('playGame function', function() {
         describe('computerVariable', function() {
             it('computer var should be a floating point number from 0 (inclusive) to 1 (exclusive)', function() {
                 playGame();
@@ -202,23 +200,16 @@ describe('rockpaperscissor.js', function() {
 
     describe('checkVars', function() {
         it('outcome should exist and be a variable', function() {
-                assert.isDefined(outcome);
+            assert.isDefined(outcome);
         });
 
         it('computer should exist and be a variable', function() {
-                assert.isDefined(computer);
+            assert.isDefined(computer);
         });
 
         it('randNum should exist and be a variable', function() {
-                assert.isDefined(randNum);
+            assert.isDefined(randNum);
         });
     });
 
 });
-
-
-
-// template for it
-// it('', function() {
-//       assert.equal(0, 0);
-// });
