@@ -172,7 +172,48 @@ describe('rockpaperscissor.js', function() {
                 assert.equal(actualResult, expectedResult);
             });
         });
+
+        describe('checkFunction', function() {
+            it('compare should exist and be function', function() {
+                assert.isFunction(compare);
+            });
+        });
+
     });
+
+    describe('playGameFunction', function() {
+        
+
+        describe('computerVariable', function() {
+            it('computer var should be a floating point number from 0 (inclusive) to 1 (exclusive)', function() {
+                playGame();
+                assert.isAtLeast(randNum, 0);
+                assert.isBelow(randNum, 1);
+            });
+        });
+
+        describe('checkFunction', function() {
+            it('playGame should exist and be function', function() {
+                assert.isFunction(playGame);
+            });
+        });
+
+    });
+
+    describe('checkVars', function() {
+        it('outcome should exist and be a variable', function() {
+                assert.isDefined(outcome);
+        });
+
+        it('computer should exist and be a variable', function() {
+                assert.isDefined(computer);
+        });
+
+        it('randNum should exist and be a variable', function() {
+                assert.isDefined(randNum);
+        });
+    });
+
 });
 
 
