@@ -24,13 +24,6 @@ describe('rockpaperscissor.js', function() {
                 assert.equal(outcome, 0);
             });
 
-            it('should return outcome Err if not quarantine, cure, or rescue', function() {
-                var userSelection = "pizza";
-                var computerSelection = "pizza";
-                var actualResult = compare(userSelection, computerSelection);
-                assert.equal(outcome, "Err");
-            });
-
             it('should return correct message', function() {
                 var userSelection = "quarantine";
                 var computerSelection = "quarantine";
@@ -70,7 +63,7 @@ describe('rockpaperscissor.js', function() {
 
             it('should return outcome -1 if user selects quarantine and computer selects something other than rescue', function() {
                 var userSelection = "quarantine";
-                var computerSelection = "pizza";
+                var computerSelection = "run";
                 var actualResult = compare(userSelection, computerSelection);
                 assert.equal(outcome, -1);
             });
@@ -85,7 +78,7 @@ describe('rockpaperscissor.js', function() {
             });
             it('should return correct message', function() {
                 var userSelection = "quarantine";
-                var computerSelection = "pizza";
+                var computerSelection = "run";
                 var actualResult = compare(userSelection, computerSelection);
                 var expectedResult = "While trying to attract the attention of one of the infected, " +
                                      "one of your colleagues was dragged away by a different group " +
@@ -102,23 +95,81 @@ describe('rockpaperscissor.js', function() {
                 assert.equal(outcome, 1);
             });
 
-            it('should return outcome 1 if user selects cure and computer selects something other than quarantine', function() {
+            it('should return outcome -1 if user selects cure and computer selects something other than quarantine', function() {
                 var userSelection = "cure";
-                var computerSelection = "pizza";
+                var computerSelection = "run";
                 var actualResult = compare(userSelection, computerSelection);
                 assert.equal(outcome, -1);
             });
-        });
 
-        describe('', function() {
-            it('', function() {
-                assert.equal(0, 0);
+            it('should return correct message', function() {
+                var userSelection = "cure";
+                var computerSelection = "quarantine";
+                var actualResult = compare(userSelection, computerSelection);
+                var expectedResult = "You successfully injected the antidote into one of the infected!"+
+                                     " Infection rate down.";
+                assert.equal(actualResult, expectedResult);
+            });
+
+            it('should return correct message', function() {
+                var userSelection = "cure";
+                var computerSelection = "run";
+                var actualResult = compare(userSelection, computerSelection);
+                var expectedResult = "You tried to inject the antidote into one of the infected, " +
+                                     "but it saw you coming. A colleague comes to defend you but " +
+                                     "gets bitten! Infection rate up.";
+                assert.equal(actualResult, expectedResult);
             });
         });
 
-        describe('', function() {
-            it('', function() {
-                assert.equal(0, 0);
+        describe('userSelectRescue', function() {
+            it('should return outcome 1 if user selects rescue and computer selects quarantine', function() {
+                var userSelection = "rescue";
+                var computerSelection = "quarantine";
+                var actualResult = compare(userSelection, computerSelection);
+                assert.equal(outcome, 1);
+            });
+
+            it('should return outcome -1 if user selects rescue and computer selects something other than quarantine', function() {
+                var userSelection = "rescue";
+                var computerSelection = "run";
+                var actualResult = compare(userSelection, computerSelection);
+                assert.equal(outcome, -1);
+            });
+
+            it('should return correct message', function() {
+                var userSelection = "rescue";
+                var computerSelection = "quarantine";
+                var actualResult = compare(userSelection, computerSelection);
+                var expectedResult = "You successfully brought a healthy person into the safe zone! " +
+                                     "Infection rate down.";
+                assert.equal(actualResult, expectedResult);
+            });
+
+            it('should return correct message', function() {
+                var userSelection = "rescue";
+                var computerSelection = "run";
+                var actualResult = compare(userSelection, computerSelection);
+                var expectedResult = "You heard a scream as someone was overtaken by a group of " +
+                                     "infected. Infection rate up.";
+                assert.equal(actualResult, expectedResult);
+            });
+        });
+
+        describe('userSelectError', function() {
+            it('should return outcome Err if not quarantine, cure, or rescue', function() {
+                var userSelection = "run";
+                var computerSelection = "run";
+                var actualResult = compare(userSelection, computerSelection);
+                assert.equal(outcome, "Err");
+            });
+
+            it('should return error message if userSelection has error', function() {
+                var userSelection = "run";
+                var computerSelection = "run";
+                var actualResult = compare(userSelection, computerSelection);
+                var expectedResult = "Error";
+                assert.equal(actualResult, expectedResult);
             });
         });
     });
