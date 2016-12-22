@@ -41,10 +41,6 @@ function compare(userSelection, computerSelection){
       return "You attempted to get to the healthy person, but too many " +
              "infected got in your way, obstructing your path. Try again.";
     }
-    else {
-      outcome = -1;
-      return "Error"
-    }
 	}
   if (userSelection == "quarantine"){
     if (computerSelection == "rescue"){
@@ -85,6 +81,7 @@ function compare(userSelection, computerSelection){
     }
   }
   else {
+      outcome = "Err";
       return "Error"
     }
 }
