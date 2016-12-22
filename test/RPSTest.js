@@ -1,6 +1,6 @@
 var assert = chai.assert;
 
-describe('RPS', function() {
+describe('rockpaperscissor.js', function() {
     describe('compareFunction', function() {
         describe('userAndCompEqual', function() {
             it('should return outcome 0 if both quarantine', function() {
@@ -31,7 +31,7 @@ describe('RPS', function() {
                 assert.equal(outcome, "Err");
             });
 
-            it('should return quarantine message', function() {
+            it('should return correct message', function() {
                 var userSelection = "quarantine";
                 var computerSelection = "quarantine";
                 var actualResult = compare(userSelection, computerSelection);
@@ -41,7 +41,7 @@ describe('RPS', function() {
                 assert.equal(actualResult, expectedResult);
             });
 
-            it('should return cure message', function() {
+            it('should return correct message', function() {
                 var userSelection = "cure";
                 var computerSelection = "cure";
                 var actualResult = compare(userSelection, computerSelection);
@@ -50,7 +50,7 @@ describe('RPS', function() {
                 assert.equal(actualResult, expectedResult);
             });
 
-            it('should return rescue message', function() {
+            it('should return correct message', function() {
                 var userSelection = "rescue";
                 var computerSelection = "rescue";
                 var actualResult = compare(userSelection, computerSelection);
@@ -74,11 +74,39 @@ describe('RPS', function() {
                 var actualResult = compare(userSelection, computerSelection);
                 assert.equal(outcome, -1);
             });
+
+            it('should return correct message', function() {
+                var userSelection = "quarantine";
+                var computerSelection = "rescue";
+                var actualResult = compare(userSelection, computerSelection);
+                var expectedResult = "You successfully lured some infected into a vehicle " +
+                                     "to transport them to a quarantine zone! Infection rate down.";
+                assert.equal(actualResult, expectedResult);
+            });
+            it('should return correct message', function() {
+                var userSelection = "quarantine";
+                var computerSelection = "pizza";
+                var actualResult = compare(userSelection, computerSelection);
+                var expectedResult = "While trying to attract the attention of one of the infected, " +
+                                     "one of your colleagues was dragged away by a different group " +
+                                     "of the infected. Infection rate up.";
+                assert.equal(actualResult, expectedResult);
+            });
         });
 
-        describe('', function() {
-            it('', function() {
-                assert.equal(0, 0);
+        describe('userSelectCure', function() {
+            it('should return outcome 1 if user selects cure and computer selects quarantine', function() {
+                var userSelection = "cure";
+                var computerSelection = "quarantine";
+                var actualResult = compare(userSelection, computerSelection);
+                assert.equal(outcome, 1);
+            });
+
+            it('should return outcome 1 if user selects cure and computer selects something other than quarantine', function() {
+                var userSelection = "cure";
+                var computerSelection = "pizza";
+                var actualResult = compare(userSelection, computerSelection);
+                assert.equal(outcome, -1);
             });
         });
 

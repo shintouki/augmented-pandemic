@@ -65,7 +65,7 @@ function compare(userSelection, computerSelection){
       outcome = -1;
       return "You tried to inject the antidote into one of the infected, " +
              "but it saw you coming. A colleague comes to defend you but " +
-             "gets bitten! Infection rate up." ;
+             "gets bitten! Infection rate up.";
     }
   }
   else if (userSelection == "rescue"){
