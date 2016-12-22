@@ -129,12 +129,12 @@ function initMap() {
 
             // Draw ccny markers
             for (let i=0; i<ccnyMarkers.length; i++) {
-              let position = new google.maps.LatLng(ccnyMarkers[i][1],
+                let position = new google.maps.LatLng(ccnyMarkers[i][1],
                                                       ccnyMarkers[i][2]);
                 let locationName = ccnyMarkers[i][0];
                 let ccnyRadius = 80;
                 // Create markers
-              marker = new google.maps.Marker({
+                marker = new google.maps.Marker({
                     position: position,
                     map: map,
                     title: locationName
@@ -172,7 +172,7 @@ function initMap() {
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +'</div>';
 
-              google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
                     return function() {
                         infoWindow.setContent(infoWindowContent);
                         infoWindow.open(map, marker);
@@ -408,10 +408,7 @@ function initMap() {
                         }
                     });
                   }
-                // If draw, do nothing
 
-                // $("#map").load("/game/play #map")
-                // initMap();
             });
         });
     });

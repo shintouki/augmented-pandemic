@@ -10,7 +10,7 @@ describe('Testing play.js', function() {
         });
 
         describe('checkFunction', function() {
-            it('should return geolation failed if handleLocationError is called', function() {
+            it('should return geolocation failed if handleLocationError is called', function() {
                 var actualResult = handleLocationError();
                 var expectedResult = "Geolocation failed.";
                 assert.equal(actualResult, expectedResult);
