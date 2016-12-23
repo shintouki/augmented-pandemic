@@ -3,7 +3,7 @@
 $(document).ready(function() {
     $.getJSON('/game/database/announcement_json/', function(data) {
 
-        for (var key in data) {
+        for (let key in data) {
             if (data.hasOwnProperty(key)) {
                 let currentAnnouncement = data[key]["fields"]["announcement_text"];
                 let announcementDate = data[key]["fields"]["pub_date"];

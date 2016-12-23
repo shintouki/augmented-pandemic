@@ -1,4 +1,4 @@
-#game{
+#game {
     background-color: #FFCCFF;
     border-radius: 15px;
 }
@@ -21,21 +21,21 @@
 {
 	float: left; /* Images float to the left, so they appear in the same line */
 	list-style: none; /* Remove the bullet */
-        border: 5px #F8F8F8  solid;
-        border-radius: 15px;
-        margin: 30px;
+    border: 5px #F8F8F8  solid;
+    border-radius: 15px;
+    margin: 30px;
 }
 
 .selection img
 {
 	width: 70px; /* All the images have the same size */
-        padding: 10px;
+    padding: 10px;
 }
 
 button
 {
-        background-color: #990066;
-        color: white;
+    background-color: #990066;
+    color: white;
 	border-radius: 10px;
 	font-size: 100%;
 }

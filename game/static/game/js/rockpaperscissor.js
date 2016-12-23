@@ -1,18 +1,20 @@
 // Modified rock paper scissors; Quarantine = Rock, Cure = Paper, Rescue = Scissors
 
 var outcome = undefined;
+var computer;
+var randNum;
 
 function playGame(choice){
-  var computer = Math.random();
+  randNum = Math.random();
   let user = choice;
 
-  if (computer<0.34 && computer>0){
+  if (randNum<0.34 && randNum>0){
     computer = "quarantine";
   }
-  else if(computer<=0.67 && computer>=0.34){
+  else if (randNum<=0.67 && randNum>=0.34){
     computer = "cure";
   }
-  else if(computer>0.67){
+  else if (randNum>0.67){
     computer = "rescue";
   }
 
@@ -63,7 +65,7 @@ function compare(userSelection, computerSelection){
       outcome = -1;
       return "You tried to inject the antidote into one of the infected, " +
              "but it saw you coming. A colleague comes to defend you but " +
-             "gets bitten! Infection rate up." ;
+             "gets bitten! Infection rate up.";
     }
   }
   else if (userSelection == "rescue"){
@@ -78,4 +80,8 @@ function compare(userSelection, computerSelection){
              "infected. Infection rate up.";
     }
   }
+  else {
+      outcome = "Err";
+      return "Error"
+    }
 }
