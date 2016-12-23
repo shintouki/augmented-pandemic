@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.urls import reverse
 from django.test.client import Client
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
 from game.models import Location, Profile, Announcement, Safezone
 
 class RegistrationTests(TestCase):
@@ -65,14 +64,25 @@ class LeaderboardViewTests(TestCase):
         response = self.client.get(reverse('game:leaderboard'))
         self.assertEqual(response.status_code, 200)
 
-    def test_play_view_data_retrieval_with_no_antidote(self):
-        """Tests that the data retrieved is correct
-        when the user has no antidotes"""
+    def test_ranking(self):
+        """Test ranking variable returns user"""
         test_user = User.objects.create_user('username',
                                              'user@example.com', 'password')
+        test_user.profile.matches_won = 30
+        test_user.profile.matches_lost = 20
         self.client.login(username='username', password='password')
-        response = self.client.get(reverse('game:play'))
-        self.assertEqual(response.context['antidotes'], test_user.profile.num_antidotes)
+
+        response = self.client.get(reverse('game:leaderboard'))
+        ranking = response.context['ranking']
+
+        for i, j, k in ranking:
+            user_id = i
+            rate = j
+            total = k
+
+        self.assertEqual(user_id, test_user.username)
+        self.assertEqual(rate, test_user.profile.success_rate())
+        self.assertEqual(total, test_user.profile.total_matches())
 
 class PlayViewTests(TestCase):
     """Testing play view"""
@@ -80,3 +90,24 @@ class PlayViewTests(TestCase):
         """Test view exists"""
         response = self.client.get(reverse('game:play'))
         self.assertEqual(response.status_code, 200)
+
+    def test_play_view_data_retrieval_no_user(self):
+        response = self.client.get(reverse('game:play'))
+        self.assertEqual(response.context['antidotes'],
+                         "Please log in to save your progress!")
+
+    def test_play_view_data_retrieval_with_no_antidote(self):
+        test_user = User.objects.create_user('username',
+                                             'user@example.com', 'password')
+        self.client.login(username='username', password='password')
+        response = self.client.get(reverse('game:play'))
+        self.assertEqual(response.context['antidotes'], test_user.profile.num_antidotes)
+
+    def test_play_view_data_retrieval_with_two_antidotes(self):
+        test_user = User.objects.create_user('username',
+                                             'user@example.com', 'password')
+        self.client.login(username='username', password='password')
+        test_user.profile.num_antidotes = 2
+        test_user.profile.save()
+        response = self.client.get(reverse('game:play'))
+        self.assertEqual(response.context['antidotes'], test_user.profile.num_antidotes)
