@@ -14,12 +14,14 @@
         <table class="center">
           <tr>
             <th>USERNAME</th>
-            <th>CURE RATE</th>
+            <th>Cure Rate</th>
+            <th>Total Matches Played</th>
           </tr>
-          {% for i, j in ranking %}
+          {% for i, j, z in ranking %}
           <tr>
             <td>{{ i }}</td>
             <td>{{ j }}%</td>
+            <td>{{ z }}</td>
           </tr>
           {% endfor %}
         </table>
