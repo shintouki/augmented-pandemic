@@ -5,3 +5,5 @@ staticfiles
 node_module
 coverages
 ~
+node_modules
+npm-debug.log

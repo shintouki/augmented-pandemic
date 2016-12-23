@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="node_modules/mocha/mocha.css">
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script src="node_modules/mocha/mocha.js"></script>
+    <script src="node_modules/chai/chai.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- load code you want to test here -->
+    <script src="./game/static/game/js/rockpaperscissor.js"></script>
+    <script src="./game/static/game/js/play.js"></script>
+    <!-- load your test files here -->
+    <script src="game/test/javascriptTests/RPSTest.js"></script>
+    <script src="game/test/javascriptTests/playTest.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7lpJkNjlPd3Cl6UJAr7nAyM1U0eMTH6I"></script>
+    <script>
+      mocha.run();
+    </script>
+  </body>
+</html>
