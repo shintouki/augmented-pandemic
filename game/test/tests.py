@@ -28,6 +28,13 @@ class LoginTestCase(TestCase):
     def test_login_works(self):
         pass
 
+class LogoutViewTests(TestCase):
+    """Testing register view"""
+    def test_register_view_exists(self):
+        """Test view works"""
+        response = self.client.get(reverse('game:logout_successful'))
+        self.assertEqual(response.status_code, 200)
+
 class UserViewTests(TestCase):
     """Testing users view"""
     def test_users_view_exists(self):
@@ -51,6 +58,14 @@ class PlayViewTests(TestCase):
 
 class LocationTestCase(TestCase):
     """Testing location model"""
+    def test_return_location(self):
+        """
+        Return Location name
+        """
+        ccny = Location.objects.create(location_text="CCNY", matches_won=70, matches_lost=30)
+        test_text = str(ccny.__str__())
+        self.assertEqual(test_text, "CCNY")
+
     def test_total_methods(self):
         """
         Test total matches method,
