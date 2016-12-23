@@ -37,6 +37,7 @@ class Safezone(models.Model):
         return self.location_text
 
 class Announcement(models.Model):
+    """Stores announcements/update to game"""
     announcement_text = models.CharField(max_length=500)
     pub_date = models.DateTimeField('date published')
 

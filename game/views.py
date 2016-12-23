@@ -2,11 +2,10 @@
 import json
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+#from django.urls import reverse
 from django.core import serializers
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-from django.views import View
+#from django.contrib.auth import logout
+#from django.views import View
 
 from .models import Location, User
 from .models import Safezone
@@ -19,6 +18,7 @@ def index(request):
     return render(request, 'game/index.html', context)
 
 def logout_successful(request):
+    """Displays logout sucess message when user log out"""
     context = {'text': 'Logout successful'}
     return render(request, 'game/logout_successful.html', context)
 
@@ -36,25 +36,25 @@ def user_search(request):
             results = 'No users found.'
         rates = []
         for i in results:
-            curr_user = i
             rates.append(i.profile.success_rate())
         results = zip(results, rates)
-        context = {'text': 'Find a user:', 'searched': query,
-        'results': results}
+        context = {'text': 'Find a user:', 'searched': query, 'results': results}
     else:
         context = {'searched': 'No input detected.'}
     return render(request, 'game/search_results.html', context)
 
-@login_required()
 def user_detail(request):
     """User profile view"""
-    current_user = request.user
-    context = {'username': current_user.username,
-               'total_matches': int(current_user.profile.total_matches()),
-               'matches_won': int(current_user.profile.matches_won),
-               'win_rate': current_user.profile.success_rate()
-    }
-    return render(request, 'game/user_detail.html', context)
+    if request.user.is_authenticated:
+        current_user = request.user
+        context = {'username': current_user.username,
+                   'total_matches': int(current_user.profile.total_matches()),
+                   'matches_won': int(current_user.profile.matches_won),
+                   'win_rate': current_user.profile.success_rate()
+                   }
+        return render(request, 'game/user_detail.html', context)
+    else:
+        return HttpResponseRedirect('/login')
 
 def leaderboard(request):
     """Leaderboard view"""
@@ -73,6 +73,10 @@ def leaderboard(request):
 
 def play(request):
     """Game view"""
+    #if request == "GET":
+    #    current_user = request.user
+    #    num_antidotes = current_user.profile.num_antidotes
+    #    return HttpResponse(num_antidotes)
     #location = get_object_or_404(Location, location_text=location_name)
     #context = {'location': location}
     return render(request, 'game/play.html')
@@ -132,12 +136,17 @@ def lose(request, location_name):
     return HttpResponse("matches_lost increased by 1")
 
 def announcement_json(request):
+    """Retrieving announcements"""
     announcement_list = Announcement.objects.all()
-    announcementJSON = serializers.serialize('json', announcement_list)
+    announcement_json = serializers.serialize('json', announcement_list)
     # Convert JSON to python dict
-    announcementObject = json.loads(announcementJSON)
-    outputObject = {}
-    for announcement in announcementObject:
+    announcement_object = json.loads(announcement_json)
+    output_object = {}
+    for announcement in announcement_object:
         announcement_text = announcement['fields']['announcement_text']
-        outputObject[announcement_text] = announcement
-    return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+        output_object[announcement_text] = announcement
+    return HttpResponse(json.dumps(output_object), content_type='application/javascript')
+
+def profile_json(request):
+    """Retrieving user profile data"""
+    pass
