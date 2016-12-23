@@ -9,53 +9,6 @@ from django.contrib.auth.models import User
 from game.models import Location, Profile, Announcement, Safezone
 #from unittest import mock
 
-class RegistrationTests(TestCase):
-    pass
-
-class IndexViewTests(TestCase):
-    """Testing index view"""
-    def test_index_view_exists(self):
-        """Test view works"""
-        response = self.client.get(reverse('game:index'))
-        self.assertEqual(response.status_code, 200)
-
-class LoginTestCase(TestCase):
-    def test_login_view_exists(self):
-        """Login view exists"""
-        response = self.client.get('/login/')
-        self.assertEqual(response.status_code, 200)
-
-    def test_login_works(self):
-        pass
-
-class LogoutViewTests(TestCase):
-    """Testing register view"""
-    def test_register_view_exists(self):
-        """Test view works"""
-        response = self.client.get(reverse('game:logout_successful'))
-        self.assertEqual(response.status_code, 200)
-
-class UserViewTests(TestCase):
-    """Testing users view"""
-    def test_users_view_exists(self):
-        """Test view exists"""
-        response = self.client.get(reverse('game:users'))
-        self.assertEqual(response.status_code, 200)
-
-class LeaderboardViewTests(TestCase):
-    """Testing leaderboard view"""
-    def test_leaderboard_view_exists(self):
-        """Test view exists"""
-        response = self.client.get(reverse('game:leaderboard'))
-        self.assertEqual(response.status_code, 200)
-
-class PlayViewTests(TestCase):
-    """Testing play view"""
-    def test_play_view_exists(self):
-        """Test view exists"""
-        response = self.client.get(reverse('game:play'))
-        self.assertEqual(response.status_code, 200)
-
 class LocationTestCase(TestCase):
     """Testing location model"""
     def test_return_location(self):
@@ -84,6 +37,14 @@ class LocationTestCase(TestCase):
 
 class UserProfileTestCase(TestCase):
     """Testing User Profile model"""
+    def test_user_profile_created(self):
+        """
+        Test profile created when user created
+        """
+        test_user = User.objects.create_user('username', 'user@example.com', 'password')
+        profile = test_user.profile
+        self.assertEqual(True, hasattr(test_user, 'profile'))
+
     def test_return_user(self):
         """
         Return User attributed to Profile
