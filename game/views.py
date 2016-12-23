@@ -65,8 +65,7 @@ def leaderboard(request):
     user_list = []
     matches = []
     for i in ranking:
-        current_user = i.user
-        user_list.append(current_user.username)
+        user_list.append(i.username)
         rates.append(i.success_rate())
         matches.append(int(i.total_matches()))
     rates = sorted(rates, reverse=True)

@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.test.client import Client
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from game.models import Location, Profile, Announcement, Safezone
 
 class RegistrationTests(TestCase):
     pass
@@ -14,13 +16,18 @@ class IndexViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 class LoginTestCase(TestCase):
+    """Testing Login Views"""
     def test_login_view_exists(self):
         """Login view exists"""
         response = self.client.get('/login/')
         self.assertEqual(response.status_code, 200)
 
     def test_login_works(self):
-        pass
+        """User is authenticated after logging in"""
+        test_user = User.objects.create_user('username',
+                                             'user@example.com', 'password')
+        self.client.login(username='username', password='password')
+        self.assertEqual(test_user.is_authenticated, True)
 
 class LogoutViewTests(TestCase):
     """Testing register view"""
@@ -42,14 +49,14 @@ class UserProfileViewTests(TestCase):
         """Test logged in user can access view"""
         test_user = User.objects.create_user('username',
                                              'user@example.com', 'password')
-        c = Client()
-        c.login(username='username', password='password')
+        self.client.login(username='username', password='password')
         response = self.client.get(reverse('game:user_detail'))
         self.assertEqual(response.status_code, 200)
+
     def test__view_when_not_logged_in(self):
         """Test view cannot be accessed"""
         response = self.client.get(reverse('game:user_detail'))
-        self.assertRedirects(response, '/login')
+        self.assertEqual(response.status_code, 302)
 
 class LeaderboardViewTests(TestCase):
     """Testing leaderboard view"""
@@ -57,6 +64,15 @@ class LeaderboardViewTests(TestCase):
         """Test view exists"""
         response = self.client.get(reverse('game:leaderboard'))
         self.assertEqual(response.status_code, 200)
+
+    def test_play_view_data_retrieval_with_no_antidote(self):
+        """Tests that the data retrieved is correct
+        when the user has no antidotes"""
+        test_user = User.objects.create_user('username',
+                                             'user@example.com', 'password')
+        self.client.login(username='username', password='password')
+        response = self.client.get(reverse('game:play'))
+        self.assertEqual(response.context['antidotes'], test_user.profile.num_antidotes)
 
 class PlayViewTests(TestCase):
     """Testing play view"""
