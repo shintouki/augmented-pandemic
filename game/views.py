@@ -76,13 +76,13 @@ def leaderboard(request):
 
 def play(request):
     """Game view"""
-    #if request == "GET":
-    #    current_user = request.user
-    #    num_antidotes = current_user.profile.num_antidotes
-    #    return HttpResponse(num_antidotes)
-    #location = get_object_or_404(Location, location_text=location_name)
-    #context = {'location': location}
-    return render(request, 'game/play.html')
+    current_user = request.user
+    if current_user.is_anonymous():
+        num_antidotes = "Please log in to save your progress!"
+    else:
+        num_antidotes = current_user.profile.num_antidotes
+    context = {'antidotes': num_antidotes}
+    return render(request, 'game/play.html', context)
 
 def location_json(request):
     """Retrieving location information"""

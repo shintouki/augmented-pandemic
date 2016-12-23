@@ -285,7 +285,7 @@ function initMap() {
                 }
                 else {
                     let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
-                    $("#location").replaceWith(resultOutput);
+                    $("#zoneText").replaceWith(resultOutput);
                 }
             });
 

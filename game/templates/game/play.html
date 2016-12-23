@@ -27,7 +27,7 @@
 				<p class="titles" id="LocalInfectionRate">
 					Subzone Infection Rate: <span class="info" id="local"></span>
 				</p>
-				<p class="titles" id="numAntidotesText">Number of antidotes: 0</p>
+				<p class="titles" id="numAntidotesText">Number of antidotes: {{ antidotes }}</p>
 				<div class="buttons" id="userSelection">
 					{% csrf_token %}
 					<button id="rockButton" class="RPSButton">Quarantine</button>
