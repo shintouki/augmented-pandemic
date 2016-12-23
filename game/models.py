@@ -5,13 +5,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-class Profile(models.Model):
-    """User Profile model"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    matches_won = models.IntegerField(default=0)
-    matches_lost = models.IntegerField(default=0)
-    num_antidotes = models.IntegerField(default=0)
-
 class Location(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
@@ -70,7 +63,8 @@ class Profile(models.Model):
             return success
         else:
             success = (self.matches_won / self.total_matches())*100
-            return round(success, 2)
+            success = round(success, 2)
+            return success
 
     def __str__(self):
         return self.user

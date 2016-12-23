@@ -15,7 +15,7 @@ from .models import Profile
 
 def index(request):
     """Homepage view"""
-    context = {'text': 'Welcome to our game'}
+    context = {'text': 'Welcome to our game. Click "Fight the Infection" above to play!'}
     return render(request, 'game/index.html', context)
 
 def logout_successful(request):
@@ -64,7 +64,8 @@ def leaderboard(request):
     for i in ranking:
         current_user = i.user
         users.append(current_user.username)
-        rates.append(i.success_rate)
+        rates.append(i.success_rate())
+    rates = sorted(rates, reverse=True)
     ranking = zip(users, rates)
     context = {'text': 'Leaderboard goes here',
     'ranking': ranking}
@@ -140,6 +141,3 @@ def announcement_json(request):
         announcement_text = announcement['fields']['announcement_text']
         outputObject[announcement_text] = announcement
     return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
-
-def profile_json(request):
-    pass
