@@ -31,14 +31,16 @@ def user_search(request):
     """User search request"""
     query = request.GET.get('user_id')
     if query:
-        results = User.objects.filter(username__contains=query)
-        if results == None:
-            results = 'No users found.'
-        rates = []
-        for i in results:
-            rates.append(i.profile.success_rate())
-        results = zip(results, rates)
-        context = {'text': 'Find a user:', 'searched': query, 'results': results}
+        users_found = User.objects.filter(username__contains=query)
+        if not users_found:
+            none = 'No users found.'
+            context = {'searched': query, 'none': none}
+        else:
+            rates = []
+            for i in users_found:
+                rates.append(i.profile.success_rate())
+                results = zip(users_found, rates)
+            context = {'searched': query, 'results': results}
     else:
         context = {'searched': 'No input detected.'}
     return render(request, 'game/search_results.html', context)
@@ -51,7 +53,7 @@ def user_detail(request):
                    'total_matches': int(current_user.profile.total_matches()),
                    'matches_won': int(current_user.profile.matches_won),
                    'win_rate': current_user.profile.success_rate()
-                   }
+                  }
         return render(request, 'game/user_detail.html', context)
     else:
         return HttpResponseRedirect('/login')
@@ -60,15 +62,16 @@ def leaderboard(request):
     """Leaderboard view"""
     ranking = Profile.objects.order_by('-matches_won')[:5]
     rates = []
-    users = []
+    user_list = []
+    matches = []
     for i in ranking:
         current_user = i.user
-        users.append(current_user.username)
+        user_list.append(current_user.username)
         rates.append(i.success_rate())
+        matches.append(int(i.total_matches()))
     rates = sorted(rates, reverse=True)
-    ranking = zip(users, rates)
-    context = {'text': 'Leaderboard goes here',
-    'ranking': ranking}
+    ranking = zip(user_list, rates, matches)
+    context = {'text': 'Leaderboard goes here', 'ranking': ranking}
     return render(request, 'game/leaderboard.html', context)
 
 def play(request):
@@ -138,9 +141,9 @@ def lose(request, location_name):
 def announcement_json(request):
     """Retrieving announcements"""
     announcement_list = Announcement.objects.all()
-    announcement_json = serializers.serialize('json', announcement_list)
+    announcement_json_list = serializers.serialize('json', announcement_list)
     # Convert JSON to python dict
-    announcement_object = json.loads(announcement_json)
+    announcement_object = json.loads(announcement_json_list)
     output_object = {}
     for announcement in announcement_object:
         announcement_text = announcement['fields']['announcement_text']
