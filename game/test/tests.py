@@ -7,6 +7,10 @@ from django.urls import reverse
 from django.test.client import Client
 from django.contrib.auth.models import User
 from game.models import Location, Profile, Announcement, Safezone
+#from unittest import mock
+
+class RegistrationTests(TestCase):
+    pass
 
 class IndexViewTests(TestCase):
     """Testing index view"""
@@ -15,15 +19,14 @@ class IndexViewTests(TestCase):
         response = self.client.get(reverse('game:index'))
         self.assertEqual(response.status_code, 200)
 
-class RegisterViewTests(TestCase):
-    """Testing register view"""
-    def test_register_view_exists(self):
-        """Test view works"""
-        response = self.client.get('registration:register')
-        self.assertTemplateUsed(response, 'registration.html')
+class LoginTestCase(TestCase):
+    def test_login_view_exists(self):
+        """Login view exists"""
+        response = self.client.get('/login/')
+        self.assertEqual(response.status_code, 200)
 
-class RegistrationTests(TestCase):
-    pass
+    def test_login_works(self):
+        pass
 
 class UserViewTests(TestCase):
     """Testing users view"""
@@ -64,15 +67,6 @@ class LocationTestCase(TestCase):
         ccny = Location.objects.create(location_text="CCNY", matches_won=70, matches_lost=30)
         self.assertEqual(ccny.infection_rate(), 30)
 
-class LogInTest(TestCase):
-    def setup(self):
-        test_user = User.objects.create_user('username',
-                    'user@example.com', 'password')
-
-
-    def test_login(self):
-        pass
-
 class UserProfileTestCase(TestCase):
     """Testing User Profile model"""
     def test_return_user(self):
@@ -95,7 +89,7 @@ class UserProfileTestCase(TestCase):
 
         self.assertEqual(test_user.profile.total_matches(), 30)
 
-    def test_success_rate(self):
+    def test_success_rate_with_matches(self):
         """
         Test success rate method
         matches won / total matches played
@@ -106,6 +100,15 @@ class UserProfileTestCase(TestCase):
         test_user.profile.save()
 
         result = (1/3)*100
+        result = round(result, 2)
+        self.assertEqual(test_user.profile.success_rate(), result)
+
+    def test_success_rate_with_no_matches(self):
+        """
+        Test success rate method with no matches played
+        """
+        test_user = User.objects.create_user('username', 'user@example.com', 'password')
+        result = 0
         self.assertEqual(test_user.profile.success_rate(), result)
 
 class SafezoneTestCase(TestCase):
