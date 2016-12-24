@@ -28,6 +28,12 @@ class LoginTestCase(TestCase):
         self.client.login(username='username', password='password')
         self.assertEqual(test_user.is_authenticated, True)
 
+#    def test_redirects_to_home_page(self):
+#        response = self.client.post('/login/', data={
+#            'username': 'username', 'password': 'password'
+#        })
+#        self.assertRedirects(response, '/game/play')
+
 class LogoutViewTests(TestCase):
     """Testing register view"""
     def test_register_view_exists(self):
@@ -92,23 +98,23 @@ class LeaderboardViewTests(TransactionTestCase):
         """Test ranking variable returns user"""
         test_user = User.objects.create_user('username',
                                              'user@example.com', 'password')
-        test_user.profile.matches_won = 30
-        test_user.profile.matches_lost = 20
+        test_user.profile.matches_won = 10
+        test_user.profile.matches_lost = 30
         test_user.profile.save()
         test_user = User.objects.create_user('user',
                                              'user@example.com', 'password')
-        test_user.profile.matches_won = 40
-        test_user.profile.matches_lost = 30
+        test_user.profile.matches_won = 30
+        test_user.profile.matches_lost = 20
         test_user.profile.save()
         test_user = User.objects.create_user('user1',
                                              'user@example.com', 'password')
-        test_user.profile.matches_won = 100
-        test_user.profile.matches_lost = 150
+        test_user.profile.matches_won = 40
+        test_user.profile.matches_lost = 10
         test_user.profile.save()
         response = self.client.get(reverse('game:leaderboard'))
 
         ranking = response.context['ranking']
-        self.assertEqual(ranking, [('user1', 40.0, 250), ('user', 57.14, 70), ('username', 60.0, 50)])
+        self.assertEqual(ranking, [('user1', 80.0, 50), ('user', 60.0, 50), ('username', 25.0, 40)])
 
 class PlayViewTests(TestCase):
     """Testing play view"""
