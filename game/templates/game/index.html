@@ -6,13 +6,13 @@
 		{% load static %}
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="{% static 'game/css/index.css' %}" />
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Cousine|Monda" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Monda" rel="stylesheet">
 	</head>
 	<body>
 		<div id="navbar">{% include "game/navigation_bar.html" %}</div>
 		<div class="mainContent">
 			<p>{{ text }}</p>
-			<p><h1>Announcements</h1></p>
+			<h1>Announcements</h1>
 			<div id="announcementWindow"></div>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
