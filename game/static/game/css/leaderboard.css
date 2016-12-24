@@ -1,31 +1,32 @@
 body {
-  font-family: 'Monda', sans-serif;
+    font-family: 'Monda', sans-serif;
 }
 
 .text {
-  padding-left: 5%;
+    padding-left: 5%;
 }
 
 #navbar {
-  font-family: 'Monda', sans-serif;
+    font-family: 'Monda', sans-serif;
 }
 
 h1 {
-  text-align:center;
+    text-align:center;
 }
 
 table.center {
-  width:70%;
-  margin-left:auto;
-  margin-right:auto;
+    width:70%;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 table, th, td {
-  border: 1px solid #626869;
-  border-collapse: collapse;
+    border: 1px solid #626869;
+    border-collapse: collapse;
+    table-layout: fixed;
+    text-align: center;
 }
 
-th, td {
-  padding: 5px;
-  text-align: left;
+th {
+    font-weight: bold;
 }

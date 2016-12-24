@@ -12,12 +12,9 @@
       {% include "game/navigation_bar.html" %}
       <div class="text">
         <h1>Users</h1>
-        <form id="user_search" action="{% url 'game:user_search' %}" method="get">
-          Find a user: <input type="text" name="find_user" placeholder="Searching not possible">
-          <button type="submit">Search</button>
-        </form><br>
         <div id="users_found">
           You searched for: {{ searched }}<br><br>
+          {{ none }}
           {% for i,j in results %}
           <p>{{ i }} | Success rate: {{ j }}%</p>
           {% endfor %}

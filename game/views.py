@@ -2,11 +2,10 @@
 import json
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+#from django.urls import reverse
 from django.core import serializers
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-from django.views import View
+#from django.contrib.auth import logout
+#from django.views import View
 
 from .models import Location, User
 from .models import Safezone
@@ -15,23 +14,14 @@ from .models import Profile
 
 def index(request):
     """Homepage view"""
-    context = {'text': 'Welcome to our game'}
+    context = {'text': 'Welcome to our game. Click "Fight the Infection" above to play!'}
     return render(request, 'game/index.html', context)
 
 def logout_successful(request):
+    """Displays logout sucess message when user log out"""
     context = {'text': 'Logout successful'}
     return render(request, 'game/logout_successful.html', context)
-"""
-def ajax_user_search( request ):
 
-    if request.is_ajax():
-        q = request.GET.get( 'q' )
-        if q is not None:
-            results = User.objects.filter(username=q)
-
-            return render_to_response( 'users.html', { 'results': results, },
-                                       context_instance = RequestContext( request ) )
-"""
 def users(request):
     """User search home"""
     context = {'text': 'Find a user:'}
@@ -41,41 +31,61 @@ def user_search(request):
     """User search request"""
     query = request.GET.get('user_id')
     if query:
-        results = User.objects.filter(username__contains=query)
-        if results == None:
-            results = 'No users found.'
-        rates = []
-        for i in results:
-            curr_user = i
-            rates.append(i.profile.success_rate())
-        results = zip(results, rates)
-        context = {'text': 'Find a user:', 'searched': query,
-        'results': results}
+        users_found = User.objects.filter(username__contains=query)
+        if not users_found:
+            none = 'No users found.'
+            context = {'searched': query, 'none': none}
+        else:
+            rates = []
+            for i in users_found:
+                rates.append(i.profile.success_rate())
+                results = zip(users_found, rates)
+            context = {'searched': query, 'results': results}
     else:
         context = {'searched': 'No input detected.'}
     return render(request, 'game/search_results.html', context)
 
-@login_required()
 def user_detail(request):
     """User profile view"""
-    current_user = request.user
-    context = {'username': current_user.username,
-               'total_matches': int(current_user.profile.total_matches()),
-               'matches_won': int(current_user.profile.matches_won),
-               'win_rate': round(current_user.profile.success_rate(), 2)
-    }
-    return render(request, 'game/user_detail.html', context)
+    if request.user.is_authenticated:
+        current_user = request.user
+        context = {'username': current_user.username,
+                   'total_matches': int(current_user.profile.total_matches()),
+                   'matches_won': int(current_user.profile.matches_won),
+                   'win_rate': current_user.profile.success_rate()
+                  }
+        return render(request, 'game/user_detail.html', context)
+    else:
+        return HttpResponseRedirect('/login')
 
 def leaderboard(request):
-    """Leaderboard view"""
-
-    context = {'text': 'Leaderboard goes here'}
+    """Leaderboard view *Noted naive sorting logic to not risk breaking app"""
+    get_users = Profile.objects.order_by('-matches_won')[:5]
+    #get_users = Profile.objects.order_by('-success_rate')[:5]
+    text = ""
+    if not get_users:
+        text = "No users in database yet."
+    rates = []
+    user_list = []
+    matches = []
+    for i in get_users:
+        current_user = i.user
+        user_list.append(current_user.username)
+        rates.append(i.success_rate())
+        matches.append(int(i.total_matches()))
+    ranking = zip(user_list, rates, matches)
+    context = {'text': text, 'ranking': ranking, 'get_users': get_users}
     return render(request, 'game/leaderboard.html', context)
 
 def play(request):
     """Game view"""
-    # context = {'text': 'Leaderboard goes here'}
-    return render(request, 'game/play.html')
+    current_user = request.user
+    if current_user.is_anonymous():
+        num_antidotes = "Please log in to save your progress!"
+    else:
+        num_antidotes = current_user.profile.num_antidotes
+    context = {'antidotes': num_antidotes}
+    return render(request, 'game/play.html', context)
 
 def location_json(request):
     """Retrieving location information"""
@@ -132,15 +142,17 @@ def lose(request, location_name):
     return HttpResponse("matches_lost increased by 1")
 
 def announcement_json(request):
+    """Retrieving announcements"""
     announcement_list = Announcement.objects.all()
-    announcementJSON = serializers.serialize('json', announcement_list)
+    announcement_json_list = serializers.serialize('json', announcement_list)
     # Convert JSON to python dict
-    announcementObject = json.loads(announcementJSON)
-    outputObject = {}
-    for announcement in announcementObject:
+    announcement_object = json.loads(announcement_json_list)
+    output_object = {}
+    for announcement in announcement_object:
         announcement_text = announcement['fields']['announcement_text']
-        outputObject[announcement_text] = announcement
-    return HttpResponse(json.dumps(outputObject), content_type='application/javascript')
+        output_object[announcement_text] = announcement
+    return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def profile_json(request):
+    """Retrieving user profile data"""
     pass

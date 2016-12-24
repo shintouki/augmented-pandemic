@@ -9,11 +9,11 @@ $(document).ready(function() {
     });
 
     $("#helpButton").click(function() {
-        let tutorial = "<p>How to play game:</p>" +
+        let tutorial = "<p>How to play:</p>" +
         "Choose one of 3 actions: Attempt to quarantine the infected, " +
         "cure one of the infected, or rescue stranded passerby.<br>" +
-        "Your action can decrease the infection rate or decrease" +
-        "the infection rate depending on the outcome.";
+        "<p>Your action can increase the infection rate or decrease " +
+        "the infection rate depending on the outcome!</p><br>";
         $("#infoWindow").append(tutorial);
         $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
     });
@@ -285,7 +285,7 @@ function initMap() {
                 }
                 else {
                     let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
-                    $("#location").replaceWith(resultOutput);
+                    $("#zoneText").replaceWith(resultOutput);
                 }
             });
 
