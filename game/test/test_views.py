@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.urls import reverse
 from django.test.client import Client
 from django.contrib.auth.models import User
@@ -57,7 +57,7 @@ class UserProfileViewTests(TestCase):
         response = self.client.get(reverse('game:user_detail'))
         self.assertEqual(response.status_code, 302)
 
-class LeaderboardViewTests(TestCase):
+class LeaderboardViewTests(TransactionTestCase):
     """Testing leaderboard view"""
     def test_leaderboard_view_exists(self):
         """Test view exists"""
@@ -70,19 +70,19 @@ class LeaderboardViewTests(TestCase):
                                              'user@example.com', 'password')
         test_user.profile.matches_won = 30
         test_user.profile.matches_lost = 20
-        self.client.login(username='username', password='password')
-
+        test_user.profile.save()
         response = self.client.get(reverse('game:leaderboard'))
+
         ranking = response.context['ranking']
+        get_users = response.context['get_users']
+        result = list(get_users)
+        for i in result:
+            user_name = i.user
+            user_name = user_name.username
+        self.assertEqual(user_name, 'username')
 
-        for i, j, k in ranking:
-            user_id = i
-            rate = j
-            total = k
-
-        self.assertEqual(user_id, test_user.username)
-        self.assertEqual(rate, test_user.profile.success_rate())
-        self.assertEqual(total, test_user.profile.total_matches())
+        ranking = list(ranking)
+        self.assertEqual(ranking, [test_user.username, test_user.profile.success_rate(), test_user.profile.total_matches()])
 
 class PlayViewTests(TestCase):
     """Testing play view"""

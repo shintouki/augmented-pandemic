@@ -59,18 +59,22 @@ def user_detail(request):
         return HttpResponseRedirect('/login')
 
 def leaderboard(request):
-    """Leaderboard view"""
-    ranking = Profile.objects.order_by('-matches_won')[:5]
+    """Leaderboard view *Noted naive sorting logic to not risk breaking app"""
+    get_users = Profile.objects.order_by('-matches_won')[:5]
+    #get_users = Profile.objects.order_by('-success_rate')[:5]
+    text = ""
+    if not get_users:
+        text = "No users in database yet."
     rates = []
     user_list = []
     matches = []
-    for i in ranking:
-        user_list.append(i.username)
+    for i in get_users:
+        current_user = i.user
+        user_list.append(current_user.username)
         rates.append(i.success_rate())
         matches.append(int(i.total_matches()))
-    rates = sorted(rates, reverse=True)
     ranking = zip(user_list, rates, matches)
-    context = {'text': 'Leaderboard goes here', 'ranking': ranking}
+    context = {'text': text, 'ranking': ranking, 'get_users': get_users}
     return render(request, 'game/leaderboard.html', context)
 
 def play(request):

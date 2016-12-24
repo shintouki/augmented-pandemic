@@ -42,7 +42,7 @@ class UserProfileTestCase(TestCase):
         Test profile created when user created
         """
         test_user = User.objects.create_user('username', 'user@example.com', 'password')
-        profile = test_user.profile
+        #profile = test_user.profile
         self.assertEqual(True, hasattr(test_user, 'profile'))
 
     def test_return_user(self):
