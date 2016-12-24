@@ -86,8 +86,29 @@ class LeaderboardViewTests(TransactionTestCase):
         matches = response.context['matches']
         self.assertEqual(matches, [50])
 
-        #ranking = list(ranking)
         self.assertEqual(ranking, [(test_user.username, test_user.profile.success_rate(), int(test_user.profile.total_matches()))])
+
+    def test_ranking_with_multiple_users(self):
+        """Test ranking variable returns user"""
+        test_user = User.objects.create_user('username',
+                                             'user@example.com', 'password')
+        test_user.profile.matches_won = 30
+        test_user.profile.matches_lost = 20
+        test_user.profile.save()
+        test_user = User.objects.create_user('user',
+                                             'user@example.com', 'password')
+        test_user.profile.matches_won = 40
+        test_user.profile.matches_lost = 30
+        test_user.profile.save()
+        test_user = User.objects.create_user('user1',
+                                             'user@example.com', 'password')
+        test_user.profile.matches_won = 100
+        test_user.profile.matches_lost = 150
+        test_user.profile.save()
+        response = self.client.get(reverse('game:leaderboard'))
+
+        ranking = response.context['ranking']
+        self.assertEqual(ranking, [('user1', 40.0, 250), ('user', 57.14, 70), ('username', 60.0, 50)])
 
 class PlayViewTests(TestCase):
     """Testing play view"""
