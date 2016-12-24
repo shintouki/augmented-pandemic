@@ -146,6 +146,28 @@
     }
   },
   {
+    "model": "game.Safezone",
+    "pk": 7,
+    "fields": {
+      "location_text": "Safe Zone B"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 8,
+    "fields": {
+      "location_text": "Safe Zone C"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 9,
+    "fields": {
+      "location_text": "Safe Zone Test"
+    }
+  },
+
+  {
     "model": "game.Announcement",
     "pk": 1,
     "fields": {

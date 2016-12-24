@@ -44,7 +44,10 @@ let safeZoneMarkers = [
     ['Safe Zone 3', 40.81866886418722, -73.95164608955383],
     ['Safe Zone 4', 40.81717487938587, -73.948073387146],
     ['Safe Zone 5', 40.82123454218155, -73.94617438316345],
-    ['Safe Zone A', 40.76880925874281, -73.79186153411865]
+    ['Safe Zone A', 40.76880925874281, -73.79186153411865],
+    ['Safe Zone B', 40.77625179166222, -73.77057552337646],
+    ['Safe Zone C', 40.77348937673562, -73.77469539642334],
+    ['Safe Zone Test', 40.771612494007364, -73.78711938858032]
 ];
 
 function initMap() {
@@ -110,15 +113,16 @@ function initMap() {
         }, function() {
           handleLocationError(true, infoWindow, map.getCenter());
         });
-  }
-  else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
+    }
+    else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
     }
 
     let marker;
     let circle;
     $.getJSON('/game/database/location_json/', function(data) {
+    $.getJSON('/game/database/safezone_json/', function(safezoneData) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
             let pos = new google.maps.LatLng(position.coords.latitude,
@@ -185,7 +189,8 @@ function initMap() {
                 let position = new google.maps.LatLng(baysideMarkers[i][1],
                                                       baysideMarkers[i][2]);
                 let locationName = baysideMarkers[i][0];
-                let baysideRadius = 200;
+                // let baysideRadius = 200;
+                let baysideRadius = 100;
 
                 marker = new google.maps.Marker({
                     position: position,
@@ -222,6 +227,47 @@ function initMap() {
                     '<p>Infection rate: ' + infectionRate + '%</p>' +
                     '<p>Matches Won: ' + matchesWon + '</p>' +
                     '<p>Matches Lost: ' + matchesLost + '</p>' +
+                    '</div>';
+
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(map, marker);
+                    }
+                })(marker, i));
+            }
+
+            // Draw Safe Zone Markers
+            let safezoneMarkerList = [];
+            for (let i=0; i<safeZoneMarkers.length; i++) {
+                let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
+                let locationName = safeZoneMarkers[i][0];
+                let safeZoneRadius = 50;
+
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: locationName
+                });
+
+                circle = new google.maps.Circle({
+                    map: map,
+                    radius: safeZoneRadius,
+                    fillColor: '#008000',
+                    strokeOpacity: '0'
+                });
+                circle.bindTo('center', marker, 'position');
+
+                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                safezoneMarkerList.push(markerDetails);
+
+                let antidotesInStock = safezoneData[locationName].fields.antidotes_in_stock;
+                let antidotesGivenOut = safezoneData[locationName].fields.antidotes_given_out;
+                let infoWindowContent =
+                    '<div class="info_content">' +
+                    '<h4>' + locationName + '</h4>' +
+                    '<p>Antidotes In Stock: ' + antidotesInStock + '</p>' +
+                    '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
                     '</div>';
 
                 google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -412,56 +458,59 @@ function initMap() {
             });
         });
     });
-
-    $.getJSON('/game/database/safezone_json/', function(data) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            let safezoneMarkerList = [];
-            // Draw Safe Zone Markers
-            for (let i=0; i<safeZoneMarkers.length; i++) {
-                let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
-                let locationName = safeZoneMarkers[i][0];
-                let safeZoneRadius = 50;
-
-                marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                    title: locationName
-                });
-
-                circle = new google.maps.Circle({
-                    map: map,
-                    radius: safeZoneRadius,
-                    fillColor: '#008000',
-                    strokeOpacity: '0'
-                });
-                circle.bindTo('center', marker, 'position');
-
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
-                safezoneMarkerList.push(markerDetails);
-
-                let antidotesGivenOut = data[locationName].fields.antidotes_given_out;
-                let infoWindowContent =
-                    '<div class="info_content">' +
-                    '<h4>' + locationName + '</h4>' +
-                    '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
-                    '</div>';
-
-                google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                    return function() {
-                        infoWindow.setContent(infoWindowContent);
-                        infoWindow.open(map, marker);
-                    }
-                })(marker, i));
-            }
-        });
     });
 
-    // This is for getting coords on mouseclick, only used in development
-    google.maps.event.addListener(map, 'click', function(event) {
-      console.log(event.latLng.lat());
-      console.log(event.latLng.lng());
-  });
+  //   $.getJSON('/game/database/safezone_json/', function(safezoneData) {
+  //       navigator.geolocation.getCurrentPosition(function(position) {
+  //           let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  //           let safezoneMarkerList = [];
+  //           // Draw Safe Zone Markers
+  //           for (let i=0; i<safeZoneMarkers.length; i++) {
+  //               let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
+  //               let locationName = safeZoneMarkers[i][0];
+  //               let safeZoneRadius = 50;
+
+  //               marker = new google.maps.Marker({
+  //                   position: position,
+  //                   map: map,
+  //                   title: locationName
+  //               });
+
+  //               circle = new google.maps.Circle({
+  //                   map: map,
+  //                   radius: safeZoneRadius,
+  //                   fillColor: '#008000',
+  //                   strokeOpacity: '0'
+  //               });
+  //               circle.bindTo('center', marker, 'position');
+
+  //               let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+  //               safezoneMarkerList.push(markerDetails);
+
+  //               let antidotesInStock = safezoneData[locationName].fields.antidotes_in_stock;
+  //               let antidotesGivenOut = safezoneData[locationName].fields.antidotes_given_out;
+  //               let infoWindowContent =
+  //                   '<div class="info_content">' +
+  //                   '<h4>' + locationName + '</h4>' +
+  //                   '<p>Antidotes In Stock: ' + antidotesInStock + '</p>' +
+  //                   '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
+  //                   '</div>';
+
+  //               google.maps.event.addListener(marker, 'click', (function(marker, i) {
+  //                   return function() {
+  //                       infoWindow.setContent(infoWindowContent);
+  //                       infoWindow.open(map, marker);
+  //                   }
+  //               })(marker, i));
+  //           }
+  //       });
+  //   });
+
+  //   // This is for getting coords on mouseclick, only used in development
+  //   google.maps.event.addListener(map, 'click', function(event) {
+  //     console.log(event.latLng.lat());
+  //     console.log(event.latLng.lng());
+  // });
 
 }
 
