@@ -47,6 +47,7 @@ let safeZoneMarkers = [
     ['Safe Zone A', 40.76880925874281, -73.79186153411865],
     ['Safe Zone B', 40.77625179166222, -73.77057552337646],
     ['Safe Zone C', 40.77348937673562, -73.77469539642334],
+    ['Safe Zone D', 40.77469185382073, -73.78598213195801],
     ['Safe Zone Test', 40.771612494007364, -73.78711938858032]
 ];
 
@@ -317,7 +318,7 @@ function initMap() {
                 if (typeLocation == "infectedZone") {
                     currentZone = locationData[currentLocation].fields.zone_text;
                 }
-                else {
+                else if (typeLocation == "safeZone") {
                     currentZone = safezoneData[currentLocation].fields.zone_text;
                 }
                 let infectionSum = 0;
@@ -343,13 +344,23 @@ function initMap() {
                 }
                 $("#zoneText").replaceWith(currentZone);
                 if (locatedInsideACircle) {
-                    let matchesWon = locationData[currentLocation].fields.matches_won;
-                    let matchesLost = locationData[currentLocation].fields.matches_lost;
-                    let totalMatches = matchesWon + matchesLost;
-                    let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
-
-                    let locationOutput = currentLocation;
-                    let localRate = infectionRate + "%";
+                    let matchesWon;
+                    let matchesLost;
+                    let locationOutput;
+                    let localRate;
+                    if (typeLocation == "infectedZone") {
+                        matchesWon = locationData[currentLocation].fields.matches_won;
+                        matchesLost = locationData[currentLocation].fields.matches_lost;
+                        let totalMatches = matchesWon + matchesLost;
+                        let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+                        localRate = infectionRate + "%";
+                    }
+                    else if (typeLocation == "safeZone") {
+                        matchesWon = safezoneData[currentLocation].fields.matches_won;
+                        matchesLost = safezoneData[currentLocation].fields.matches_lost;
+                        localRate = "You are in a safe zone";
+                    }
+                    locationOutput = currentLocation;
                     $("#subzoneText").replaceWith(locationOutput);
                     $("#local").replaceWith(localRate);
                 }
@@ -490,57 +501,11 @@ function initMap() {
     });
     });
 
-  //   $.getJSON('/game/database/safezone_json/', function(safezoneData) {
-  //       navigator.geolocation.getCurrentPosition(function(position) {
-  //           let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  //           let safezoneMarkerList = [];
-  //           // Draw Safe Zone Markers
-  //           for (let i=0; i<safeZoneMarkers.length; i++) {
-  //               let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
-  //               let locationName = safeZoneMarkers[i][0];
-  //               let safeZoneRadius = 50;
-
-  //               marker = new google.maps.Marker({
-  //                   position: position,
-  //                   map: map,
-  //                   title: locationName
-  //               });
-
-  //               circle = new google.maps.Circle({
-  //                   map: map,
-  //                   radius: safeZoneRadius,
-  //                   fillColor: '#008000',
-  //                   strokeOpacity: '0'
-  //               });
-  //               circle.bindTo('center', marker, 'position');
-
-  //               let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
-  //               safezoneMarkerList.push(markerDetails);
-
-  //               let antidotesInStock = safezoneData[locationName].fields.antidotes_in_stock;
-  //               let antidotesGivenOut = safezoneData[locationName].fields.antidotes_given_out;
-  //               let infoWindowContent =
-  //                   '<div class="info_content">' +
-  //                   '<h4>' + locationName + '</h4>' +
-  //                   '<p>Antidotes In Stock: ' + antidotesInStock + '</p>' +
-  //                   '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
-  //                   '</div>';
-
-  //               google.maps.event.addListener(marker, 'click', (function(marker, i) {
-  //                   return function() {
-  //                       infoWindow.setContent(infoWindowContent);
-  //                       infoWindow.open(map, marker);
-  //                   }
-  //               })(marker, i));
-  //           }
-  //       });
-  //   });
-
-  //   // This is for getting coords on mouseclick, only used in development
-  //   google.maps.event.addListener(map, 'click', function(event) {
-  //     console.log(event.latLng.lat());
-  //     console.log(event.latLng.lng());
-  // });
+    // This is for getting coords on mouseclick, only used in development
+    google.maps.event.addListener(map, 'click', function(event) {
+      console.log(event.latLng.lat());
+      console.log(event.latLng.lng());
+  });
 
 }
 

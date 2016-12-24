@@ -171,6 +171,14 @@
     "model": "game.Safezone",
     "pk": 9,
     "fields": {
+      "location_text": "Safe Zone D",
+      "zone_text": "bayside"
+    }
+  },
+  {
+    "model": "game.Safezone",
+    "pk": 10,
+    "fields": {
       "location_text": "Safe Zone Test",
       "zone_text": "bayside"
     }
