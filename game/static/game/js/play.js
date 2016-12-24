@@ -77,12 +77,6 @@ function initMap() {
                 $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
             });
 
-            $("#antidoteButton").click(function() {
-                let infoWindowOutput = "<p>Antidote used.</p>";
-                $("#infoWindow").append(infoWindowOutput);
-                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-            });
-
             let locationName = 'Current Location';
 
             let marker = new google.maps.Marker({
@@ -516,6 +510,48 @@ function initMap() {
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                 }
             });
+            
+            $("#antidoteButton").click(function() {
+                let locatedInsideACircle = false;
+                let currentLocation;
+                let typeLocation = "";
+                for (let i=0; i<markersAndCirclesList.length; i++) {
+                    let location = markersAndCirclesList[i]['location'];
+                    let marker = markersAndCirclesList[i]['marker'];
+                    let circle = markersAndCirclesList[i]['circle'];
+                    let bounds = circle.getBounds();
+                    if (bounds.contains(pos)) {
+                        currentLocation = location;
+                        locatedInsideACircle = true;
+                        if ("infection_rate" in markersAndCirclesList[i]) {
+                            typeLocation = "infectedZone";
+                        }
+                        else {
+                            typeLocation = "safeZone";
+                        }
+                    }
+                }
+
+                if (locatedInsideACircle) {
+                    if (typeLocation == "infectedZone") {
+                        let infoWindowOutput = "<p>Antidote used.</p>";
+                        $("#infoWindow").append(infoWindowOutput);
+                        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    }
+                    else if (typeLocation == "safeZone") {
+                        let resultOutput = "<p>You are in a safezone. You cannot use an antidote in a safezone.</p>";
+                        $("#infoWindow").append(resultOutput);
+                        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    }
+                }
+                else {
+                    let resultOutput = "<p>You are not inside an infected area. You cannot use an antidote here.</p>";
+                    $("#infoWindow").append(resultOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                }
+            });
+
+
         });
     });
     });
