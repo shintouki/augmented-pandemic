@@ -73,8 +73,8 @@ def leaderboard(request):
         user_list.append(current_user.username)
         rates.append(i.success_rate())
         matches.append(int(i.total_matches()))
-    ranking = zip(user_list, rates, matches)
-    context = {'text': text, 'ranking': ranking, 'get_users': get_users}
+    ranking = list(zip(user_list, rates, matches))
+    context = {'text': text, 'ranking': ranking, 'get_users': get_users, 'matches': matches, 'rates': rates}
     return render(request, 'game/leaderboard.html', context)
 
 def play(request):

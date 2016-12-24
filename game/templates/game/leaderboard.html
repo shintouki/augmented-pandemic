@@ -12,18 +12,21 @@
         {% include "game/navigation_bar.html" %}
         <h1>Leaderboard</h1>
         <table class="center">
-          <tr>
-            <th>USERNAME</th>
-            <th>Cure Rate</th>
-            <th>Total Matches Played</th>
-          </tr>
-          {% for i, j, k in ranking %}
-          <tr>
-            <td>{{ i }}</td>
-            <td>{{ j }}%</td>
-            <td>{{ k }}</td>
-          </tr>
-          {% endfor %}
+            {{ text }}
+            {% if ranking %}
+            <tr>
+                <th>USERNAME</th>
+                <th>Cure Rate</th>
+                <th>Total Matches Played</th>
+            </tr>
+            {% for list in ranking %}
+            <tr>
+                {% for i in list %}
+                <td>{{ i }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            {% endif %}
         </table>
         <br>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>

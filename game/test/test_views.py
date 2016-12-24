@@ -81,8 +81,13 @@ class LeaderboardViewTests(TransactionTestCase):
             user_name = user_name.username
         self.assertEqual(user_name, 'username')
 
-        ranking = list(ranking)
-        self.assertEqual(ranking, [test_user.username, test_user.profile.success_rate(), test_user.profile.total_matches()])
+        rates = response.context['rates']
+        self.assertEqual(rates, [60.0])
+        matches = response.context['matches']
+        self.assertEqual(matches, [50])
+
+        #ranking = list(ranking)
+        self.assertEqual(ranking, [(test_user.username, test_user.profile.success_rate(), int(test_user.profile.total_matches()))])
 
 class PlayViewTests(TestCase):
     """Testing play view"""
