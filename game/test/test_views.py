@@ -1,8 +1,8 @@
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase
 from django.urls import reverse
-from django.test.client import Client
+# from django.test.client import Client
 from django.contrib.auth.models import User
-from game.models import Location, Profile, Announcement, Safezone
+# from game.models import Location, Profile, Announcement, Safezone
 
 class RegistrationTests(TestCase):
     pass
@@ -58,12 +58,12 @@ class UserProfileViewTests(TestCase):
         response = self.client.get(reverse('game:user_detail'))
         self.assertEqual(response.status_code, 200)
 
-    def test__view_when_not_logged_in(self):
+    def test_view_when_not_logged_in(self):
         """Test view cannot be accessed"""
         response = self.client.get(reverse('game:user_detail'))
         self.assertEqual(response.status_code, 302)
 
-class LeaderboardViewTests(TransactionTestCase):
+class LeaderboardViewTests(TestCase):
     """Testing leaderboard view"""
     def test_leaderboard_view_exists(self):
         """Test view exists"""

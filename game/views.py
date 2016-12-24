@@ -93,7 +93,7 @@ def play(request):
 
 def location_json(request):
     """Retrieving location information from db"""
-    if request.method == "POST":
+    if request.method == "GET":
         location_list = Location.objects.all()
         location_json_list = serializers.serialize('json', location_list)
         location_object = json.loads(location_json_list) # Convert JSON to python dict
@@ -108,7 +108,7 @@ def location_json(request):
 
 def safezone_json(request):
     """Retrieving safezone locations from db"""
-    if request.method == "POST":
+    if request.method == "GET":
         safezone_list = Safezone.objects.all()
         safezone_json_list = serializers.serialize('json', safezone_list)
         safezone_object = json.loads(safezone_json_list) # Convert JSON to python dict
@@ -153,7 +153,7 @@ def lose(request, location_name):
 
 def announcement_json(request):
     """Retrieving announcements from db"""
-    if request.method == "POST":
+    if request.method == "GET":
         announcement_list = Announcement.objects.all()
         announcement_json_list = serializers.serialize('json', announcement_list)
         announcement_object = json.loads(announcement_json_list) # Convert JSON to python dict
