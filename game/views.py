@@ -31,24 +31,24 @@ def user_search(request):
     """Receive search input and search database for user"""
     query = request.GET.get('user_id') # receive user input
     if query:
-        users_found = User.objects.filter(username__contains=query)
-        if not users_found:
+        users_found = User.objects.filter(username__contains=query) # find users based on input
+        if not users_found: # if no users found based on user input
             none = 'No users found.'
-            context = {'searched': query, 'none': none} # no users found based on user input
+            context = {'searched': query, 'none': none}
         else:
             rates = []
-            for i in users_found:
-                rates.append(i.profile.success_rate())
-                results = zip(users_found, rates)
-            context = {'searched': query, 'results': results} # users found based on user input
+            for i in users_found: # if users found based on user input
+                rates.append(i.profile.success_rate()) # get user success rates from user's profile
+                results = zip(users_found, rates) # zip lists for easy iteration
+            context = {'searched': query, 'results': results}
     else:
-        context = {'searched': 'No input detected.'} # no input sent
+        context = {'searched': 'No input detected.'} # if no input sent
 
     return render(request, 'game/search_results.html', context)
 
 def user_detail(request):
     """User profile view"""
-    if request.user.is_authenticated:
+    if request.user.is_authenticated: # get user profile info if logged in
         current_user = request.user
         context = {'username': current_user.username,
                    'total_matches': int(current_user.profile.total_matches()),
@@ -69,12 +69,12 @@ def leaderboard(request):
     rates = []
     user_list = []
     matches = []
-    for i in get_users:
+    for i in get_users: # get 3 lists with username, succes rate, and total matches played
         current_user = i.user
         user_list.append(current_user.username)
         rates.append(i.success_rate())
         matches.append(int(i.total_matches()))
-    ranking = list(zip(user_list, rates, matches))
+    ranking = list(zip(user_list, rates, matches)) # zip for easy iteration
     context = {'text': text, 'ranking': ranking, 'get_users': get_users, 'matches': matches,
                'rates': rates}
 
@@ -83,7 +83,7 @@ def leaderboard(request):
 def play(request):
     """Game view"""
     current_user = request.user
-    if current_user.is_anonymous():
+    if current_user.is_anonymous(): # user must be logged in to get data
         num_antidotes = "Please log in to save your progress!"
     else:
         num_antidotes = current_user.profile.num_antidotes
@@ -92,7 +92,7 @@ def play(request):
     return render(request, 'game/play.html', context)
 
 def location_json(request):
-    """Retrieving location information"""
+    """Retrieving location information from db"""
     if request.method == "POST":
         location_list = Location.objects.all()
         location_json_list = serializers.serialize('json', location_list)
@@ -107,7 +107,7 @@ def location_json(request):
         return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def safezone_json(request):
-    """Retrieving safezone locations"""
+    """Retrieving safezone locations from db"""
     if request.method == "POST":
         safezone_list = Safezone.objects.all()
         safezone_json_list = serializers.serialize('json', safezone_list)
@@ -122,7 +122,7 @@ def safezone_json(request):
         return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def win(request, location_name):
-    """Saving matches won to database"""
+    """Saving matches won to db"""
     if request.method == "POST":
         location = get_object_or_404(Location, location_text=location_name) #get current location
         location.matches_won += 1
@@ -137,7 +137,7 @@ def win(request, location_name):
     return HttpResponse("matches_won increased by 1")
 
 def lose(request, location_name):
-    """Saving matches lost to database"""
+    """Saving matches lost to db"""
     if request.method == "POST":
         location = get_object_or_404(Location, location_text=location_name)
         location.matches_lost += 1
@@ -152,7 +152,7 @@ def lose(request, location_name):
         return HttpResponse("matches_lost increased by 1")
 
 def announcement_json(request):
-    """Retrieving announcements"""
+    """Retrieving announcements from db"""
     if request.method == "POST":
         announcement_list = Announcement.objects.all()
         announcement_json_list = serializers.serialize('json', announcement_list)
@@ -167,6 +167,6 @@ def announcement_json(request):
         return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
 def profile_json(request):
-    """Retrieving user profile data"""
+    """Retrieving user profile data from db"""
 
     pass
