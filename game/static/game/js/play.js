@@ -121,7 +121,7 @@ function initMap() {
 
     let marker;
     let circle;
-    $.getJSON('/game/database/location_json/', function(data) {
+    $.getJSON('/game/database/location_json/', function(locationData) {
     $.getJSON('/game/database/safezone_json/', function(safezoneData) {
         // Find infection rate
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -153,11 +153,11 @@ function initMap() {
                 });
                 circle.bindTo('center', marker, 'position');
 
-                let matchesWon = data[locationName].fields.matches_won;
-                let matchesLost = data[locationName].fields.matches_lost;
+                let matchesWon = locationData[locationName].fields.matches_won;
+                let matchesLost = locationData[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
                 let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
-                let zoneText = data[locationName].fields.zone_text;
+                let zoneText = locationData[locationName].fields.zone_text;
 
                 // Record marker and circle details to use later with check location button
                 let markerDetails = {'location': locationName,
@@ -206,11 +206,11 @@ function initMap() {
                 });
                 circle.bindTo('center', marker, 'position');
 
-                let matchesWon = data[locationName].fields.matches_won;
-                let matchesLost = data[locationName].fields.matches_lost;
+                let matchesWon = locationData[locationName].fields.matches_won;
+                let matchesLost = locationData[locationName].fields.matches_lost;
                 let totalMatches = matchesWon + matchesLost;
                 let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
-                let zoneText = data[locationName].fields.zone_text;
+                let zoneText = locationData[locationName].fields.zone_text;
 
                 // Record marker and circle details to use later with check location button
                 let markerDetails = {'location': locationName,
@@ -263,6 +263,16 @@ function initMap() {
 
                 let antidotesInStock = safezoneData[locationName].fields.antidotes_in_stock;
                 let antidotesGivenOut = safezoneData[locationName].fields.antidotes_given_out;
+
+                markerDetails = {'location': locationName,
+                                     'zone': zoneText,
+                                     'marker': marker,
+                                     'circle': circle,
+                                     'infection_rate': infectionRate
+                                    };
+
+                markersAndCirclesList.push(markerDetails);
+
                 let infoWindowContent =
                     '<div class="info_content">' +
                     '<h4>' + locationName + '</h4>' +
@@ -295,7 +305,7 @@ function initMap() {
                     }
                 }
 
-                let currentZone = data[currentLocation].fields.zone_text;
+                let currentZone = locationData[currentLocation].fields.zone_text;
                 let infectionSum = 0;
                 let numSubzones = 0;
 
@@ -319,8 +329,8 @@ function initMap() {
                 }
                 $("#zoneText").replaceWith(currentZone);
                 if (locatedInsideACircle) {
-                    let matchesWon = data[currentLocation].fields.matches_won;
-                    let matchesLost = data[currentLocation].fields.matches_lost;
+                    let matchesWon = locationData[currentLocation].fields.matches_won;
+                    let matchesLost = locationData[currentLocation].fields.matches_lost;
                     let totalMatches = matchesWon + matchesLost;
                     let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
 
@@ -376,85 +386,91 @@ function initMap() {
                     }
                 }
 
-                let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
-                $("#infoWindow").append(locationOutput);
-                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-
-                let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
-                let choice = choices[this.id];
-
-                playGame(choice);
-
-                let randomChance = Math.random();
-                if (randomChance<.5) {
-                    let event_1 = Math.random();
-                    let eventOutput;
-                    if (event_1<=.25) {
-                        eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
-                    }
-                    else if (event_1>.25 && event_1<=.5){
-                        eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
-                    }
-                    $("#infoWindow").append(eventOutput);
+                if (locatedInsideACircle) {
+                    let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+                    $("#infoWindow").append(locationOutput);
                     $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-                }
 
-                // Fix crsf issue (403 error)
-                function getCookie(name) {
-                    var cookieValue = null;
-                    if (document.cookie && document.cookie !== '') {
-                        var cookies = document.cookie.split(';');
-                        for (var i = 0; i < cookies.length; i++) {
-                            var cookie = jQuery.trim(cookies[i]);
-                            // Does this cookie string begin with the name we want?
-                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                break;
+                    let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                    let choice = choices[this.id];
+
+                    playGame(choice);
+
+                    let randomChance = Math.random();
+                    if (randomChance<.5) {
+                        let event_1 = Math.random();
+                        let eventOutput;
+                        if (event_1<=.25) {
+                            eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                        }
+                        else if (event_1>.25 && event_1<=.5){
+                            eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                        }
+                        $("#infoWindow").append(eventOutput);
+                        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    }
+
+                    // Fix crsf issue (403 error)
+                    function getCookie(name) {
+                        var cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            var cookies = document.cookie.split(';');
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = jQuery.trim(cookies[i]);
+                                // Does this cookie string begin with the name we want?
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
                             }
                         }
+                        return cookieValue;
                     }
-                    return cookieValue;
-                }
 
-                var csrftoken = getCookie('csrftoken');
+                    var csrftoken = getCookie('csrftoken');
 
-                function csrfSafeMethod(method) {
-                        // these HTTP methods do not require CSRF protection
-                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                }
-
-                $.ajaxSetup({
-                    beforeSend: function(xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                        }
+                    function csrfSafeMethod(method) {
+                            // these HTTP methods do not require CSRF protection
+                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
                     }
-                });
 
-                let minigamePlayedURL = "/game/" + currentLocation + "/";
-                if (outcome == 1) {
-                    // Player won minigame
-                    minigamePlayedURL += "win/";
-                    $.ajax({
-                        type: "POST",
-                        url: minigamePlayedURL,
-                        success: function() {
-
+                    $.ajaxSetup({
+                        beforeSend: function(xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
                         }
                     });
-                  }
-                else if (outcome == -1) {
-                    // Player lost minigame
-                    minigamePlayedURL += "lose/";
-                    $.ajax({
-                        type: "POST",
-                        url: minigamePlayedURL,
-                        success: function() {
 
-                        }
-                    });
-                  }
+                    let minigamePlayedURL = "/game/" + currentLocation + "/";
+                    if (outcome == 1) {
+                        // Player won minigame
+                        minigamePlayedURL += "win/";
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
 
+                            }
+                        });
+                      }
+                    else if (outcome == -1) {
+                        // Player lost minigame
+                        minigamePlayedURL += "lose/";
+                        $.ajax({
+                            type: "POST",
+                            url: minigamePlayedURL,
+                            success: function() {
+
+                            }
+                        });
+                    }
+                }
+                else {
+                    let resultOutput = "<p>You are not inside an infected area. Please move inside a red circle and try again.</p>";
+                    $("#infoWindow").append(resultOutput);
+                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                }
             });
         });
     });
