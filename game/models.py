@@ -30,6 +30,7 @@ class Location(models.Model):
 class Safezone(models.Model):
     """Regions of infection"""
     location_text = models.CharField(max_length=200)
+    zone_text = models.CharField(max_length=200, default="")
     antidotes_in_stock = models.IntegerField(default=25)
     antidotes_given_out = models.IntegerField(default=0)
 

@@ -107,63 +107,72 @@
     "model": "game.Safezone",
     "pk": 1,
     "fields": {
-      "location_text": "Safe Zone 1"
+      "location_text": "Safe Zone 1",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 2,
     "fields": {
-      "location_text": "Safe Zone 2"
+      "location_text": "Safe Zone 2",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 3,
     "fields": {
-      "location_text": "Safe Zone 3"
+      "location_text": "Safe Zone 3",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 4,
     "fields": {
-      "location_text": "Safe Zone 4"
+      "location_text": "Safe Zone 4",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 5,
     "fields": {
-      "location_text": "Safe Zone 5"
+      "location_text": "Safe Zone 5",
+      "zone_text": "ccny"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 6,
     "fields": {
-      "location_text": "Safe Zone A"
+      "location_text": "Safe Zone A",
+      "zone_text": "bayside"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 7,
     "fields": {
-      "location_text": "Safe Zone B"
+      "location_text": "Safe Zone B",
+      "zone_text": "bayside"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 8,
     "fields": {
-      "location_text": "Safe Zone C"
+      "location_text": "Safe Zone C",
+      "zone_text": "bayside"
     }
   },
   {
     "model": "game.Safezone",
     "pk": 9,
     "fields": {
-      "location_text": "Safe Zone Test"
+      "location_text": "Safe Zone Test",
+      "zone_text": "bayside"
     }
   },
 

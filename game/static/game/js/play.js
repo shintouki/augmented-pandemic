@@ -268,7 +268,8 @@ function initMap() {
                                      'zone': zoneText,
                                      'marker': marker,
                                      'circle': circle,
-                                     'infection_rate': infectionRate
+                                     'antidotes_in_stock': antidotesInStock,
+                                     'antidotes_given_out': antidotesGivenOut
                                     };
 
                 markersAndCirclesList.push(markerDetails);
@@ -292,6 +293,7 @@ function initMap() {
             $(document).ready(function() {
                 let locatedInsideACircle = false;
                 let currentLocation;
+                let typeLocation = "";
 
                 // Find current subzone (location)
                 for (let i=0; i<markersAndCirclesList.length; i++) {
@@ -302,10 +304,22 @@ function initMap() {
                     if (bounds.contains(pos)) {
                         currentLocation = location;
                         locatedInsideACircle = true;
+                        if ("infection_rate" in markersAndCirclesList[i]) {
+                            typeLocation = "infectedZone";
+                        }
+                        else {
+                            typeLocation = "safeZone";
+                        }
                     }
                 }
 
-                let currentZone = locationData[currentLocation].fields.zone_text;
+                let currentZone;
+                if (typeLocation == "infectedZone") {
+                    currentZone = locationData[currentLocation].fields.zone_text;
+                }
+                else {
+                    currentZone = safezoneData[currentLocation].fields.zone_text;
+                }
                 let infectionSum = 0;
                 let numSubzones = 0;
 
