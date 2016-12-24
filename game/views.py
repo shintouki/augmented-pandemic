@@ -81,7 +81,7 @@ def play(request):
     """Game view"""
     current_user = request.user
     if current_user.is_anonymous():
-        num_antidotes = "Please log in to save your progress!"
+        num_antidotes = "Please log in to use antidotes!"
     else:
         num_antidotes = current_user.profile.num_antidotes
     context = {'antidotes': num_antidotes}

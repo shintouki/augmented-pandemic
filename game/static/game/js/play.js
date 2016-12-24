@@ -17,6 +17,11 @@ $(document).ready(function() {
         $("#infoWindow").append(tutorial);
         $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
     });
+
+    $("#clearInfoWindowButton").click(function() {
+        $("#infoWindow").empty();
+    });
+
 });
 
 let ccnyMarkers = [
@@ -400,6 +405,7 @@ function initMap() {
             $(".RPSButton").click(function() {
                 let locatedInsideACircle = false;
                 let currentLocation;
+                let typeLocation = "";
                 for (let i=0; i<markersAndCirclesList.length; i++) {
                     let location = markersAndCirclesList[i]['location'];
                     let marker = markersAndCirclesList[i]['marker'];
@@ -408,87 +414,100 @@ function initMap() {
                     if (bounds.contains(pos)) {
                         currentLocation = location;
                         locatedInsideACircle = true;
+                        if ("infection_rate" in markersAndCirclesList[i]) {
+                            typeLocation = "infectedZone";
+                        }
+                        else {
+                            typeLocation = "safeZone";
+                        }
                     }
                 }
 
                 if (locatedInsideACircle) {
-                    let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
-                    $("#infoWindow").append(locationOutput);
-                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-
-                    let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
-                    let choice = choices[this.id];
-
-                    playGame(choice);
-
-                    let randomChance = Math.random();
-                    if (randomChance<.5) {
-                        let event_1 = Math.random();
-                        let eventOutput;
-                        if (event_1<=.25) {
-                            eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
-                        }
-                        else if (event_1>.25 && event_1<=.5){
-                            eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
-                        }
-                        $("#infoWindow").append(eventOutput);
+                    if (typeLocation == "infectedZone") {
+                        let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+                        $("#infoWindow").append(locationOutput);
                         $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-                    }
 
-                    // Fix crsf issue (403 error)
-                    function getCookie(name) {
-                        var cookieValue = null;
-                        if (document.cookie && document.cookie !== '') {
-                            var cookies = document.cookie.split(';');
-                            for (var i = 0; i < cookies.length; i++) {
-                                var cookie = jQuery.trim(cookies[i]);
-                                // Does this cookie string begin with the name we want?
-                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                    break;
+                        let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                        let choice = choices[this.id];
+
+                        playGame(choice);
+
+                        let randomChance = Math.random();
+                        if (randomChance<.5) {
+                            let event_1 = Math.random();
+                            let eventOutput;
+                            if (event_1<=.25) {
+                                eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                            }
+                            else if (event_1>.25 && event_1<=.5){
+                                eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                            }
+                            $("#infoWindow").append(eventOutput);
+                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                        }
+
+                        // Fix crsf issue (403 error)
+                        function getCookie(name) {
+                            var cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                var cookies = document.cookie.split(';');
+                                for (var i = 0; i < cookies.length; i++) {
+                                    var cookie = jQuery.trim(cookies[i]);
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                    }
                                 }
                             }
+                            return cookieValue;
                         }
-                        return cookieValue;
-                    }
 
-                    var csrftoken = getCookie('csrftoken');
+                        var csrftoken = getCookie('csrftoken');
 
-                    function csrfSafeMethod(method) {
-                            // these HTTP methods do not require CSRF protection
-                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                    }
-
-                    $.ajaxSetup({
-                        beforeSend: function(xhr, settings) {
-                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                            }
+                        function csrfSafeMethod(method) {
+                                // these HTTP methods do not require CSRF protection
+                                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
                         }
-                    });
 
-                    let minigamePlayedURL = "/game/" + currentLocation + "/";
-                    if (outcome == 1) {
-                        // Player won minigame
-                        minigamePlayedURL += "win/";
-                        $.ajax({
-                            type: "POST",
-                            url: minigamePlayedURL,
-                            success: function() {
-
+                        $.ajaxSetup({
+                            beforeSend: function(xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                }
                             }
                         });
-                      }
-                    else if (outcome == -1) {
-                        // Player lost minigame
-                        minigamePlayedURL += "lose/";
-                        $.ajax({
-                            type: "POST",
-                            url: minigamePlayedURL,
-                            success: function() {
 
-                            }
-                        });
+                        let minigamePlayedURL = "/game/" + currentLocation + "/";
+                        if (outcome == 1) {
+                            // Player won minigame
+                            minigamePlayedURL += "win/";
+                            $.ajax({
+                                type: "POST",
+                                url: minigamePlayedURL,
+                                success: function() {
+
+                                }
+                            });
+                          }
+                        else if (outcome == -1) {
+                            // Player lost minigame
+                            minigamePlayedURL += "lose/";
+                            $.ajax({
+                                type: "POST",
+                                url: minigamePlayedURL,
+                                success: function() {
+
+                                }
+                            });
+                        }
+                    }
+                    else if (typeLocation == "safeZone") {
+                        let resultOutput = "<p>You are in a safezone. There is no infection to fight here.</p>";
+                        $("#infoWindow").append(resultOutput);
+                        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                     }
                 }
                 else {
