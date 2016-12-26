@@ -122,438 +122,481 @@ function initMap() {
     let marker;
     let circle;
     $.getJSON('/game/database/location_json/', function(locationData) {
-    $.getJSON('/game/database/safezone_json/', function(safezoneData) {
-        // Find infection rate
-        navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = new google.maps.LatLng(position.coords.latitude,
-                                             position.coords.longitude);
-            let marker;
-            let circle;
-            let markersAndCirclesList = [];
+        $.getJSON('/game/database/safezone_json/', function(safezoneData) {
+            // Find infection rate
+            navigator.geolocation.getCurrentPosition(function(position) {
+                let pos = new google.maps.LatLng(position.coords.latitude,
+                                                 position.coords.longitude);
+                let marker;
+                let circle;
+                let markersAndCirclesList = [];
 
-            // Draw ccny markers
-            for (let i=0; i<ccnyMarkers.length; i++) {
-                let position = new google.maps.LatLng(ccnyMarkers[i][1],
-                                                      ccnyMarkers[i][2]);
-                let locationName = ccnyMarkers[i][0];
-                let ccnyRadius = 80;
-                // Create markers
-                marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                    title: locationName
-                });
+                // Draw ccny markers
+                for (let i=0; i<ccnyMarkers.length; i++) {
+                    let position = new google.maps.LatLng(ccnyMarkers[i][1],
+                                                          ccnyMarkers[i][2]);
+                    let locationName = ccnyMarkers[i][0];
+                    let ccnyRadius = 80;
+                    // Create markers
+                    marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: locationName
+                    });
 
-                // Create circle around markers
-                circle = new google.maps.Circle({
-                    map: map,
-                    radius: ccnyRadius,
-                    fillColor: '#AA1100',
-                    strokeOpacity: '0'
-                });
-                circle.bindTo('center', marker, 'position');
+                    // Create circle around markers
+                    circle = new google.maps.Circle({
+                        map: map,
+                        radius: ccnyRadius,
+                        fillColor: '#AA1100',
+                        strokeOpacity: '0'
+                    });
+                    circle.bindTo('center', marker, 'position');
 
-                let matchesWon = locationData[locationName].fields.matches_won;
-                let matchesLost = locationData[locationName].fields.matches_lost;
-                let totalMatches = matchesWon + matchesLost;
-                let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
-                let zoneText = locationData[locationName].fields.zone_text;
+                    let matchesWon = locationData[locationName].fields.matches_won;
+                    let matchesLost = locationData[locationName].fields.matches_lost;
+                    let totalMatches = matchesWon + matchesLost;
+                    let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+                    let zoneText = locationData[locationName].fields.zone_text;
 
-                // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName,
-                                     'zone': zoneText,
-                                     'marker': marker,
-                                     'circle': circle,
-                                     'infection_rate': infectionRate
-                                    };
-                markersAndCirclesList.push(markerDetails);
+                    // Record marker and circle details to use later with check location button
+                    let markerDetails = {'location': locationName,
+                                         'zone': zoneText,
+                                         'marker': marker,
+                                         'circle': circle,
+                                         'infection_rate': infectionRate
+                                        };
+                    markersAndCirclesList.push(markerDetails);
 
-                // Create description boxes
-                let infoWindowContent =
-                  '<div class="info_content">' +
-                  '<h4>' + locationName + '</h4>' +
-                  '<p>Infection rate: ' + infectionRate + '%</p>' +
-                    '<p>Matches Won: ' + matchesWon + '</p>' +
-                    '<p>Matches Lost: ' + matchesLost + '</p>' +'</div>';
+                    // Create description boxes
+                    let infoWindowContent =
+                      '<div class="info_content">' +
+                      '<h4>' + locationName + '</h4>' +
+                      '<p>Infection rate: ' + infectionRate + '%</p>' +
+                        '<p>Matches Won: ' + matchesWon + '</p>' +
+                        '<p>Matches Lost: ' + matchesLost + '</p>' +'</div>';
 
-                google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                    return function() {
-                        infoWindow.setContent(infoWindowContent);
-                        infoWindow.open(map, marker);
-                    }
-                })(marker, i));
-            }
-
-            // Draw bayside Markers
-            for (let i=0; i<baysideMarkers.length; i++) {
-                let position = new google.maps.LatLng(baysideMarkers[i][1],
-                                                      baysideMarkers[i][2]);
-                let locationName = baysideMarkers[i][0];
-                // let baysideRadius = 200;
-                let baysideRadius = 100;
-
-                marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                    title: locationName
-                });
-
-                circle = new google.maps.Circle({
-                    map: map,
-                    radius: baysideRadius,
-                    fillColor: '#AA1100',
-                    strokeOpacity: '0'
-                });
-                circle.bindTo('center', marker, 'position');
-
-                let matchesWon = locationData[locationName].fields.matches_won;
-                let matchesLost = locationData[locationName].fields.matches_lost;
-                let totalMatches = matchesWon + matchesLost;
-                let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
-                let zoneText = locationData[locationName].fields.zone_text;
-
-                // Record marker and circle details to use later with check location button
-                let markerDetails = {'location': locationName,
-                                     'zone': zoneText,
-                                     'marker': marker,
-                                     'circle': circle,
-                                     'infection_rate': infectionRate
-                                    };
-                markersAndCirclesList.push(markerDetails);
-
-                let infoWindowContent =
-                    '<div class="info_content">' +
-                    '<h4>' + locationName + '</h4>' +
-                    '<p>Infection rate: ' + infectionRate + '%</p>' +
-                    '<p>Matches Won: ' + matchesWon + '</p>' +
-                    '<p>Matches Lost: ' + matchesLost + '</p>' +
-                    '</div>';
-
-                google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                    return function() {
-                        infoWindow.setContent(infoWindowContent);
-                        infoWindow.open(map, marker);
-                    }
-                })(marker, i));
-            }
-
-            // Draw Safe Zone Markers
-            let safezoneMarkerList = [];
-            for (let i=0; i<safeZoneMarkers.length; i++) {
-                let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
-                let locationName = safeZoneMarkers[i][0];
-                let safeZoneRadius = 50;
-
-                marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                    title: locationName
-                });
-
-                circle = new google.maps.Circle({
-                    map: map,
-                    radius: safeZoneRadius,
-                    fillColor: '#008000',
-                    strokeOpacity: '0'
-                });
-                circle.bindTo('center', marker, 'position');
-
-                let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
-                safezoneMarkerList.push(markerDetails);
-
-                let antidotesInStock = safezoneData[locationName].fields.antidotes_in_stock;
-                let antidotesGivenOut = safezoneData[locationName].fields.antidotes_given_out;
-
-                markerDetails = {'location': locationName,
-                                     'zone': zoneText,
-                                     'marker': marker,
-                                     'circle': circle,
-                                     'antidotes_in_stock': antidotesInStock,
-                                     'antidotes_given_out': antidotesGivenOut
-                                    };
-
-                markersAndCirclesList.push(markerDetails);
-
-                let infoWindowContent =
-                    '<div class="info_content">' +
-                    '<h4>' + locationName + '</h4>' +
-                    '<p>Antidotes In Stock: ' + antidotesInStock + '</p>' +
-                    '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
-                    '</div>';
-
-                google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                    return function() {
-                        infoWindow.setContent(infoWindowContent);
-                        infoWindow.open(map, marker);
-                    }
-                })(marker, i));
-            }
-
-            // Check location on page load
-            $(document).ready(function() {
-                let locatedInsideACircle = false;
-                let currentLocation;
-                let typeLocation = "";
-
-                // Find current subzone (location)
-                for (let i=0; i<markersAndCirclesList.length; i++) {
-                    let location = markersAndCirclesList[i]['location'];
-                    let circle = markersAndCirclesList[i]['circle'];
-                    let bounds = circle.getBounds();
-
-                    if (bounds.contains(pos)) {
-                        currentLocation = location;
-                        locatedInsideACircle = true;
-                        if ("infection_rate" in markersAndCirclesList[i]) {
-                            typeLocation = "infectedZone";
+                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                        return function() {
+                            infoWindow.setContent(infoWindowContent);
+                            infoWindow.open(map, marker);
                         }
-                        else {
-                            typeLocation = "safeZone";
+                    })(marker, i));
+                }
+
+                // Draw bayside Markers
+                for (let i=0; i<baysideMarkers.length; i++) {
+                    let position = new google.maps.LatLng(baysideMarkers[i][1],
+                                                          baysideMarkers[i][2]);
+                    let locationName = baysideMarkers[i][0];
+                    // let baysideRadius = 200;
+                    let baysideRadius = 100;
+
+                    marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: locationName
+                    });
+
+                    circle = new google.maps.Circle({
+                        map: map,
+                        radius: baysideRadius,
+                        fillColor: '#AA1100',
+                        strokeOpacity: '0'
+                    });
+                    circle.bindTo('center', marker, 'position');
+
+                    let matchesWon = locationData[locationName].fields.matches_won;
+                    let matchesLost = locationData[locationName].fields.matches_lost;
+                    let totalMatches = matchesWon + matchesLost;
+                    let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+                    let zoneText = locationData[locationName].fields.zone_text;
+
+                    // Record marker and circle details to use later with check location button
+                    let markerDetails = {'location': locationName,
+                                         'zone': zoneText,
+                                         'marker': marker,
+                                         'circle': circle,
+                                         'infection_rate': infectionRate
+                                        };
+                    markersAndCirclesList.push(markerDetails);
+
+                    let infoWindowContent =
+                        '<div class="info_content">' +
+                        '<h4>' + locationName + '</h4>' +
+                        '<p>Infection rate: ' + infectionRate + '%</p>' +
+                        '<p>Matches Won: ' + matchesWon + '</p>' +
+                        '<p>Matches Lost: ' + matchesLost + '</p>' +
+                        '</div>';
+
+                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                        return function() {
+                            infoWindow.setContent(infoWindowContent);
+                            infoWindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+
+                // Draw Safe Zone Markers
+                let safezoneMarkerList = [];
+                for (let i=0; i<safeZoneMarkers.length; i++) {
+                    let position = new google.maps.LatLng(safeZoneMarkers[i][1], safeZoneMarkers[i][2]);
+                    let locationName = safeZoneMarkers[i][0];
+                    let safeZoneRadius = 50;
+
+                    marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: locationName
+                    });
+
+                    circle = new google.maps.Circle({
+                        map: map,
+                        radius: safeZoneRadius,
+                        fillColor: '#008000',
+                        strokeOpacity: '0'
+                    });
+                    circle.bindTo('center', marker, 'position');
+
+                    let markerDetails = {'location': locationName, 'marker': marker, 'circle': circle};
+                    safezoneMarkerList.push(markerDetails);
+
+                    let antidotesInStock = safezoneData[locationName].fields.antidotes_in_stock;
+                    let antidotesGivenOut = safezoneData[locationName].fields.antidotes_given_out;
+
+                    markerDetails = {'location': locationName,
+                                         'zone': zoneText,
+                                         'marker': marker,
+                                         'circle': circle,
+                                         'antidotes_in_stock': antidotesInStock,
+                                         'antidotes_given_out': antidotesGivenOut
+                                        };
+
+                    markersAndCirclesList.push(markerDetails);
+
+                    let infoWindowContent =
+                        '<div class="info_content">' +
+                        '<h4>' + locationName + '</h4>' +
+                        '<p>Antidotes In Stock: ' + antidotesInStock + '</p>' +
+                        '<p>Antidotes Given Out: ' + antidotesGivenOut + '</p>' +
+                        '</div>';
+
+                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                        return function() {
+                            infoWindow.setContent(infoWindowContent);
+                            infoWindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+
+                // Check location on page load
+                $(document).ready(function() {
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    let typeLocation = "";
+
+                    // Find current subzone (location)
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+
+                        if (bounds.contains(pos)) {
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                            if ("infection_rate" in markersAndCirclesList[i]) {
+                                typeLocation = "infectedZone";
+                            }
+                            else {
+                                typeLocation = "safeZone";
+                            }
                         }
                     }
-                }
 
-                let currentZone;
-                if (typeLocation == "infectedZone") {
-                    currentZone = locationData[currentLocation].fields.zone_text;
-                }
-                else if (typeLocation == "safeZone") {
-                    currentZone = safezoneData[currentLocation].fields.zone_text;
-                }
-                let infectionSum = 0;
-                let numSubzones = 0;
-
-                for (let i=0; i<markersAndCirclesList.length; i++) {
-                    let zone = markersAndCirclesList[i]['zone'];
-                    let infectionIndiv = markersAndCirclesList[i]['infection_rate'];
-                    if (currentZone == zone) {
-                        infectionSum += infectionIndiv;
-                        numSubzones++;
-                    }
-                }
-
-                let zoneInfection = Math.round(infectionSum / numSubzones * 100) / 100 + "%";
-                $("#global").replaceWith(zoneInfection);
-
-                if (currentZone == "ccny") {
-                    currentZone = "City College of New York";
-                }
-                else if (currentZone == "bayside") {
-                    currentZone = "Bayside";
-                }
-                $("#zoneText").replaceWith(currentZone);
-                if (locatedInsideACircle) {
-                    let matchesWon;
-                    let matchesLost;
-                    let locationOutput;
-                    let localRate;
+                    let currentZone;
                     if (typeLocation == "infectedZone") {
-                        matchesWon = locationData[currentLocation].fields.matches_won;
-                        matchesLost = locationData[currentLocation].fields.matches_lost;
-                        let totalMatches = matchesWon + matchesLost;
-                        let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
-                        localRate = infectionRate + "%";
+                        currentZone = locationData[currentLocation].fields.zone_text;
                     }
                     else if (typeLocation == "safeZone") {
-                        matchesWon = safezoneData[currentLocation].fields.matches_won;
-                        matchesLost = safezoneData[currentLocation].fields.matches_lost;
-                        localRate = "You are in a safe zone";
+                        currentZone = safezoneData[currentLocation].fields.zone_text;
                     }
-                    locationOutput = currentLocation;
-                    $("#subzoneText").replaceWith(locationOutput);
-                    $("#local").replaceWith(localRate);
-                }
-                else {
-                    let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
-                    $("#zoneText").replaceWith(resultOutput);
-                }
-            });
+                    let infectionSum = 0;
+                    let numSubzones = 0;
 
-            // Check to see if user is inside a circle
-            $("#checkLocationButton").click(function() {
-                let locatedInsideACircle = false;
-                let currentLocation;
-                for (let i=0; i<markersAndCirclesList.length; i++) {
-                    let location = markersAndCirclesList[i]['location'];
-                    let marker = markersAndCirclesList[i]['marker'];
-                    let circle = markersAndCirclesList[i]['circle'];
-                    let bounds = circle.getBounds();
-                    if (bounds.contains(pos)) {
-                        currentLocation = location;
-                        locatedInsideACircle = true;
-                    }
-                }
-
-                if (locatedInsideACircle) {
-                    let locationOutput = "<p>You are at " + currentLocation + ".</p>";
-                    $("#infoWindow").append(locationOutput);
-                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-                }
-                else {
-                    let resultOutput = "<p>You are not inside an infected area. Please move inside a red circle and try again.</p>";
-                    $("#infoWindow").append(resultOutput);
-                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-                }
-            });
-
-            $(".RPSButton").click(function() {
-                let locatedInsideACircle = false;
-                let currentLocation;
-                let typeLocation = "";
-                for (let i=0; i<markersAndCirclesList.length; i++) {
-                    let location = markersAndCirclesList[i]['location'];
-                    let marker = markersAndCirclesList[i]['marker'];
-                    let circle = markersAndCirclesList[i]['circle'];
-                    let bounds = circle.getBounds();
-                    if (bounds.contains(pos)) {
-                        currentLocation = location;
-                        locatedInsideACircle = true;
-                        if ("infection_rate" in markersAndCirclesList[i]) {
-                            typeLocation = "infectedZone";
-                        }
-                        else {
-                            typeLocation = "safeZone";
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let zone = markersAndCirclesList[i]['zone'];
+                        let infectionIndiv = markersAndCirclesList[i]['infection_rate'];
+                        if (currentZone == zone) {
+                            infectionSum += infectionIndiv;
+                            numSubzones++;
                         }
                     }
-                }
 
-                if (locatedInsideACircle) {
-                    if (typeLocation == "infectedZone") {
-                        let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+                    let zoneInfection = Math.round(infectionSum / numSubzones * 100) / 100 + "%";
+                    $("#global").replaceWith(zoneInfection);
+
+                    if (currentZone == "ccny") {
+                        currentZone = "City College of New York";
+                    }
+                    else if (currentZone == "bayside") {
+                        currentZone = "Bayside";
+                    }
+                    $("#zoneText").replaceWith(currentZone);
+                    if (locatedInsideACircle) {
+                        let matchesWon;
+                        let matchesLost;
+                        let locationOutput;
+                        let localRate;
+                        if (typeLocation == "infectedZone") {
+                            matchesWon = locationData[currentLocation].fields.matches_won;
+                            matchesLost = locationData[currentLocation].fields.matches_lost;
+                            let totalMatches = matchesWon + matchesLost;
+                            let infectionRate = Math.round(matchesLost / totalMatches * 100 * 100) / 100;
+                            localRate = infectionRate + "%";
+                        }
+                        else if (typeLocation == "safeZone") {
+                            matchesWon = safezoneData[currentLocation].fields.matches_won;
+                            matchesLost = safezoneData[currentLocation].fields.matches_lost;
+                            localRate = "You are in a safe zone";
+                        }
+                        locationOutput = currentLocation;
+                        $("#subzoneText").replaceWith(locationOutput);
+                        $("#local").replaceWith(localRate);
+                    }
+                    else {
+                        let resultOutput = "You are not inside an infected area. Please move inside a red circle and try again.";
+                        $("#zoneText").replaceWith(resultOutput);
+                    }
+                });
+
+                // Check to see if user is inside a circle
+                $("#checkLocationButton").click(function() {
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                        }
+                    }
+
+                    if (locatedInsideACircle) {
+                        let locationOutput = "<p>You are at " + currentLocation + ".</p>";
                         $("#infoWindow").append(locationOutput);
                         $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    }
+                    else {
+                        let resultOutput = "<p>You are not inside an infected area. Please move inside a red circle and try again.</p>";
+                        $("#infoWindow").append(resultOutput);
+                        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    }
+                });
 
-                        let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
-                        let choice = choices[this.id];
-
-                        playGame(choice);
-
-                        let randomChance = Math.random();
-                        if (randomChance<.5) {
-                            let event_1 = Math.random();
-                            let eventOutput;
-                            if (event_1<=.25) {
-                                eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                $(".RPSButton").click(function() {
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    let typeLocation = "";
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                            if ("infection_rate" in markersAndCirclesList[i]) {
+                                typeLocation = "infectedZone";
                             }
-                            else if (event_1>.25 && event_1<=.5){
-                                eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                            else {
+                                typeLocation = "safeZone";
                             }
-                            $("#infoWindow").append(eventOutput);
-                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                         }
+                    }
 
-                        // Fix crsf issue (403 error)
-                        function getCookie(name) {
-                            var cookieValue = null;
-                            if (document.cookie && document.cookie !== '') {
-                                var cookies = document.cookie.split(';');
-                                for (var i = 0; i < cookies.length; i++) {
-                                    var cookie = jQuery.trim(cookies[i]);
-                                    // Does this cookie string begin with the name we want?
-                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                        break;
+                    if (locatedInsideACircle) {
+                        if (typeLocation == "infectedZone") {
+                            let locationOutput = "<p>Fighting infection at " + currentLocation + "</p>";
+                            $("#infoWindow").append(locationOutput);
+                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+
+                            let choices = {'rockButton': 'quarantine', 'paperButton': 'cure', 'scissorsButton': 'rescue'};
+                            let choice = choices[this.id];
+
+                            playGame(choice);
+
+                            let randomChance = Math.random();
+                            if (randomChance<.5) {
+                                let event_1 = Math.random();
+                                let eventOutput;
+                                if (event_1<=.25) {
+                                    eventOutput = "<p>A new shipment of antidotes arrived! Infection rate decreased.</p>"
+                                }
+                                else if (event_1>.25 && event_1<=.5){
+                                    eventOutput = "<p>You receive a call informing you a nearby safe haven was overtaken. Infection rate increased.</p>"
+                                }
+                                $("#infoWindow").append(eventOutput);
+                                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                            }
+
+                            // Fix crsf issue (403 error)
+                            function getCookie(name) {
+                                var cookieValue = null;
+                                if (document.cookie && document.cookie !== '') {
+                                    var cookies = document.cookie.split(';');
+                                    for (var i = 0; i < cookies.length; i++) {
+                                        var cookie = jQuery.trim(cookies[i]);
+                                        // Does this cookie string begin with the name we want?
+                                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                            break;
+                                        }
                                     }
                                 }
+                                return cookieValue;
                             }
-                            return cookieValue;
-                        }
 
-                        var csrftoken = getCookie('csrftoken');
+                            var csrftoken = getCookie('csrftoken');
 
-                        function csrfSafeMethod(method) {
-                                // these HTTP methods do not require CSRF protection
-                                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                        }
-
-                        $.ajaxSetup({
-                            beforeSend: function(xhr, settings) {
-                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                                }
+                            function csrfSafeMethod(method) {
+                                    // these HTTP methods do not require CSRF protection
+                                    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
                             }
-                        });
 
-                        let minigamePlayedURL = "/game/" + currentLocation + "/";
-                        if (outcome == 1) {
-                            // Player won minigame
-                            minigamePlayedURL += "win/";
-                            $.ajax({
-                                type: "POST",
-                                url: minigamePlayedURL,
-                                success: function() {
-
+                            $.ajaxSetup({
+                                beforeSend: function(xhr, settings) {
+                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                    }
                                 }
                             });
-                          }
-                        else if (outcome == -1) {
-                            // Player lost minigame
-                            minigamePlayedURL += "lose/";
-                            $.ajax({
-                                type: "POST",
-                                url: minigamePlayedURL,
-                                success: function() {
 
-                                }
-                            });
+                            let minigamePlayedURL = "/game/" + currentLocation + "/";
+                            if (outcome == 1) {
+                                // Player won minigame
+                                minigamePlayedURL += "win/";
+                                $.ajax({
+                                    type: "POST",
+                                    url: minigamePlayedURL,
+                                    success: function() {
+
+                                    }
+                                });
+                              }
+                            else if (outcome == -1) {
+                                // Player lost minigame
+                                minigamePlayedURL += "lose/";
+                                $.ajax({
+                                    type: "POST",
+                                    url: minigamePlayedURL,
+                                    success: function() {
+
+                                    }
+                                });
+                            }
+                        }
+                        else if (typeLocation == "safeZone") {
+                            let resultOutput = "<p>You are in a safezone. There is no infection to fight here.</p>";
+                            $("#infoWindow").append(resultOutput);
+                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                         }
                     }
-                    else if (typeLocation == "safeZone") {
-                        let resultOutput = "<p>You are in a safezone. There is no infection to fight here.</p>";
+                    else {
+                        let resultOutput = "<p>You are not inside an infected area. Please move inside a red circle and try again.</p>";
                         $("#infoWindow").append(resultOutput);
                         $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                     }
-                }
-                else {
-                    let resultOutput = "<p>You are not inside an infected area. Please move inside a red circle and try again.</p>";
-                    $("#infoWindow").append(resultOutput);
-                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-                }
-            });
-            
-            $("#antidoteButton").click(function() {
-                let locatedInsideACircle = false;
-                let currentLocation;
-                let typeLocation = "";
-                for (let i=0; i<markersAndCirclesList.length; i++) {
-                    let location = markersAndCirclesList[i]['location'];
-                    let marker = markersAndCirclesList[i]['marker'];
-                    let circle = markersAndCirclesList[i]['circle'];
-                    let bounds = circle.getBounds();
-                    if (bounds.contains(pos)) {
-                        currentLocation = location;
-                        locatedInsideACircle = true;
-                        if ("infection_rate" in markersAndCirclesList[i]) {
-                            typeLocation = "infectedZone";
-                        }
-                        else {
-                            typeLocation = "safeZone";
+                });
+                
+                // Use antidote button click
+                $("#useAntidoteButton").click(function() {
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    let typeLocation = "";
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                            if ("infection_rate" in markersAndCirclesList[i]) {
+                                typeLocation = "infectedZone";
+                            }
+                            else {
+                                typeLocation = "safeZone";
+                            }
                         }
                     }
-                }
 
-                if (locatedInsideACircle) {
-                    if (typeLocation == "infectedZone") {
-                        let infoWindowOutput = "<p>Antidote used.</p>";
-                        $("#infoWindow").append(infoWindowOutput);
-                        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    if (locatedInsideACircle) {
+                        if (typeLocation == "infectedZone") {
+                            let infoWindowOutput = "<p>Antidote used.</p>";
+                            $("#infoWindow").append(infoWindowOutput);
+                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                        }
+                        else if (typeLocation == "safeZone") {
+                            let resultOutput = "<p>You are in a safezone. You cannot use an antidote in a safezone.</p>";
+                            $("#infoWindow").append(resultOutput);
+                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                        }
                     }
-                    else if (typeLocation == "safeZone") {
-                        let resultOutput = "<p>You are in a safezone. You cannot use an antidote in a safezone.</p>";
+                    else {
+                        let resultOutput = "<p>You are not inside an infected area. You cannot use an antidote here.</p>";
                         $("#infoWindow").append(resultOutput);
                         $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                     }
-                }
-                else {
-                    let resultOutput = "<p>You are not inside an infected area. You cannot use an antidote here.</p>";
-                    $("#infoWindow").append(resultOutput);
-                    $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
-                }
+                });
+
+                // Get antidote button click
+                $("#getAntidoteButton").click(function() {
+                    let locatedInsideACircle = false;
+                    let currentLocation;
+                    let typeLocation = "";
+                    for (let i=0; i<markersAndCirclesList.length; i++) {
+                        let location = markersAndCirclesList[i]['location'];
+                        let marker = markersAndCirclesList[i]['marker'];
+                        let circle = markersAndCirclesList[i]['circle'];
+                        let bounds = circle.getBounds();
+                        if (bounds.contains(pos)) {
+                            currentLocation = location;
+                            locatedInsideACircle = true;
+                            if ("infection_rate" in markersAndCirclesList[i]) {
+                                typeLocation = "infectedZone";
+                            }
+                            else {
+                                typeLocation = "safeZone";
+                            }
+                        }
+                    }
+
+                    let numAntidotes = 1;
+                    if (locatedInsideACircle) {
+                        if (typeLocation == "safeZone") {
+                            let infoWindowOutput = "<p>Antidote received.</p>" +
+                                                   "<p>You have " + numAntidotes + " antidotes now.</p>";
+                            $("#infoWindow").append(infoWindowOutput);
+                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                        }
+                        else if (typeLocation == "infectedZone") {
+                            let resultOutput = "<p>You are in an infected zone. Please head over to a safe zone to pick up antidotes.</p>";
+                            $("#infoWindow").append(resultOutput);
+                            $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                        }
+                    }
+                    else {
+                        let resultOutput = "You are not in any zone. Please head over to a safe zone to pick up antidotes.</p>";
+                        $("#infoWindow").append(resultOutput);
+                        $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                    }
+                });
+
             });
-
-
         });
-    });
     });
 
     // This is for getting coords on mouseclick, only used in development
