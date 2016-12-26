@@ -539,7 +539,59 @@ function initMap() {
                             $.getJSON('/game/database/current_profile_json/', function(currentUserData) {
                                 let numAntidotesCurrentUser = currentUserData['num_antidotes'];
                                 if (numAntidotesCurrentUser > 0) {
-                                    
+                                    let numPlayerAntidotesText = $("#numAntidotesText").text();
+                                    let numPlayerAntidotes = numPlayerAntidotesText.match(/\d+/)[0];
+                                    numPlayerAntidotes--;
+
+                                    // Update number of antidotes text on screen
+                                    let newPlayerAntidoteText = "Number of antidotes: " + numPlayerAntidotes;
+                                    $("#numAntidotesText").text(newPlayerAntidoteText);
+
+                                    // Fix crsf issue (403 error)
+                                    function getCookie(name) {
+                                        var cookieValue = null;
+                                        if (document.cookie && document.cookie !== '') {
+                                            var cookies = document.cookie.split(';');
+                                            for (var i = 0; i < cookies.length; i++) {
+                                                var cookie = jQuery.trim(cookies[i]);
+                                                // Does this cookie string begin with the name we want?
+                                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        return cookieValue;
+                                    }
+
+                                    var csrftoken = getCookie('csrftoken');
+
+                                    function csrfSafeMethod(method) {
+                                            // these HTTP methods do not require CSRF protection
+                                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                                    }
+
+                                    $.ajaxSetup({
+                                        beforeSend: function(xhr, settings) {
+                                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                            }
+                                        }
+                                    });
+
+                                    // Update number of antidotes in current player and safezone models
+                                    let antidoteUsedURL = "/game/" + currentLocation + "/antidoteUsed/";
+                               
+                                    $.ajax({
+                                        type: "POST",
+                                        url: antidoteUsedURL,
+                                        success: function() {
+
+                                        }
+                                    });
+
+                                    infoWindowOutput = "<p>Antidote used.</p>" +
+                                                   "<p>You have " + numPlayerAntidotes + " antidotes now.</p>";
                                 }
                                 else {
                                     infoWindowOutput = "<p>You have no more antidotes. Please go to a safezone to pick up more antidotes.</p>";

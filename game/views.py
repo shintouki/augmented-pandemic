@@ -181,6 +181,21 @@ def antidoteReceived(request, location_name):
 
     return HttpResponse("received antidote")
 
+def antidoteUsed(request, location_name):
+    """Saving antidotes changes to db"""
+    if request.method == "POST":
+        location = get_object_or_404(Location, location_text=location_name)
+        location.matches_won += 5
+        location.save()
+
+        # save increased antidote number information to current user's profile
+        if request.user.is_authenticated:
+            current_user = request.user
+            current_user.profile.num_antidotes -= 1
+            current_user.profile.save()
+
+    return HttpResponse("used antidote")
+
 def announcement_json(request):
     """Retrieving announcements from db"""
     if request.method == "GET":
