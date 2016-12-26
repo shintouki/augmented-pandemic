@@ -557,6 +557,7 @@ function initMap() {
                     let locatedInsideACircle = false;
                     let currentLocation;
                     let typeLocation = "";
+                    let antidotesInStock = 0;
                     for (let i=0; i<markersAndCirclesList.length; i++) {
                         let location = markersAndCirclesList[i]['location'];
                         let marker = markersAndCirclesList[i]['marker'];
@@ -565,6 +566,7 @@ function initMap() {
                         if (bounds.contains(pos)) {
                             currentLocation = location;
                             locatedInsideACircle = true;
+                            antidotesInStock = markersAndCirclesList[i]['antidotes_in_stock'];
                             if ("infection_rate" in markersAndCirclesList[i]) {
                                 typeLocation = "infectedZone";
                             }
@@ -577,8 +579,19 @@ function initMap() {
                     let numAntidotes = 1;
                     if (locatedInsideACircle) {
                         if (typeLocation == "safeZone") {
-                            let infoWindowOutput = "<p>Antidote received.</p>" +
-                                                   "<p>You have " + numAntidotes + " antidotes now.</p>";
+                            let infoWindowOutput = "";
+                            if (antidotesInStock > 0) {
+                                let numPlayerAntidotesText = $("#numAntidotesText").text();
+                                let numPlayerAntidotes = numPlayerAntidotesText.match(/\d+/)[0];
+                                numPlayerAntidotes++;
+                                let newPlayerAntidoteText = "Number of antidotes: " + numPlayerAntidotes;
+                                $("#numAntidotesText").text(newPlayerAntidoteText);
+                                infoWindowOutput = "<p>Antidote received.</p>" +
+                                                   "<p>You have " + numPlayerAntidotes + " antidotes now.</p>";
+                            }
+                            else {
+                                infoWindowOutput = "<p>This safezone is out of antidotes at the moment. Please check again at a later time.</p>";
+                            }
                             $("#infoWindow").append(infoWindowOutput);
                             $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
                         }
