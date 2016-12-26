@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^(?P<location_name>.+)/win/$', views.win, name='win'),
     url(r'^(?P<location_name>.+)/lose/$', views.lose, name='lose'),
+    url(r'^(?P<location_name>.+)/antidoteReceived/$', views.antidoteReceived, name='antidoteReceived'),
 ]

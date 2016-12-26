@@ -128,6 +128,7 @@ def win(request, location_name):
         location.matches_won += 1
         location.save()
 
+        print >>sys.stderr, 'Goodbye, cruel world!'
         # save win information to current user's profile
         if request.user.is_authenticated:
             current_user = request.user
@@ -150,6 +151,22 @@ def lose(request, location_name):
             current_user.profile.save()
 
         return HttpResponse("matches_lost increased by 1")
+
+def antidoteReceived(request, location_name):
+    """Saving antidotes changes to db"""
+    if request.method == "POST":
+        safezone = get_object_or_404(Safezone, location_text=location_name)
+        safezone.antidotes_in_stock -= 1
+        safezone.antidotes_given_out += 1
+        safezone.save()
+
+        # save increased antidote number information to current user's profile
+        if request.user.is_authenticated:
+            current_user = request.user
+            current_user.profile.num_antidotes += 1
+            current_user.profile.save()
+
+    return HttpResponse("received antidote")
 
 def announcement_json(request):
     """Retrieving announcements from db"""
