@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^database/location_json/$', views.location_json, name='location_json'),
     url(r'^database/safezone_json/$', views.safezone_json, name='safezone_json'),
     url(r'^database/announcement_json/$', views.announcement_json, name='announcement_json'),
-    url(r'^database/profile_json/$', views.profile_json, name='profile_json'),
+    url(r'^database/current_profile_json/$', views.current_profile_json, name='current_profile_json'),
     url(r'^logout_successful/$', views.logout_successful, name='logout_successful'),
     url(r'^admin/', admin.site.urls),
     url(r'^(?P<location_name>.+)/win/$', views.win, name='win'),

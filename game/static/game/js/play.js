@@ -53,7 +53,7 @@ let safeZoneMarkers = [
     ['Safe Zone B', 40.77625179166222, -73.77057552337646],
     ['Safe Zone C', 40.77348937673562, -73.77469539642334],
     ['Safe Zone D', 40.77469185382073, -73.78598213195801],
-    ['Safe Zone Test', 40.771612494007364, -73.78711938858032]
+    // ['Safe Zone Test', 40.771612494007364, -73.78711938858032]
 ];
 
 function initMap() {
@@ -189,8 +189,8 @@ function initMap() {
                     let position = new google.maps.LatLng(baysideMarkers[i][1],
                                                           baysideMarkers[i][2]);
                     let locationName = baysideMarkers[i][0];
-                    // let baysideRadius = 200;
-                    let baysideRadius = 100;
+                    let baysideRadius = 200;
+                    // let baysideRadius = 100;
 
                     marker = new google.maps.Marker({
                         position: position,
@@ -485,7 +485,7 @@ function initMap() {
 
                                     }
                                 });
-                              }
+                            }
                             else if (outcome == -1) {
                                 // Player lost minigame
                                 minigamePlayedURL += "lose/";
@@ -535,6 +535,20 @@ function initMap() {
 
                     if (locatedInsideACircle) {
                         if (typeLocation == "infectedZone") {
+
+                            $.getJSON('/game/database/current_profile_json/', function(currentUserData) {
+                                let numAntidotesCurrentUser = currentUserData['num_antidotes'];
+                                if (numAntidotesCurrentUser > 0) {
+                                    
+                                }
+                                else {
+                                    infoWindowOutput = "<p>You have no more antidotes. Please go to a safezone to pick up more antidotes.</p>";
+                                }
+                                $("#infoWindow").append(infoWindowOutput);
+                                $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
+                            });
+
+
                             let infoWindowOutput = "<p>Antidote used.</p>";
                             $("#infoWindow").append(infoWindowOutput);
                             $("#infoWindow").animate({scrollTop: $("#infoWindow").prop("scrollHeight")}, 500);
@@ -576,7 +590,6 @@ function initMap() {
                         }
                     }
 
-                    let numAntidotes = 1;
                     if (locatedInsideACircle) {
                         if (typeLocation == "safeZone") {
                             let infoWindowOutput = "";
@@ -620,7 +633,7 @@ function initMap() {
                                         }
                                     }
                                 });
-                                
+
                                 // Update number of antidotes in current player and safezone models
                                 let antidoteReceivedURL = "/game/" + currentLocation + "/antidoteReceived/";
                            

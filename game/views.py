@@ -1,5 +1,7 @@
 """Game views"""
 import json
+import logging
+logger = logging.getLogger(__name__)
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 #from django.urls import reverse
@@ -53,7 +55,8 @@ def user_detail(request):
         context = {'username': current_user.username,
                    'total_matches': int(current_user.profile.total_matches()),
                    'matches_won': int(current_user.profile.matches_won),
-                   'win_rate': current_user.profile.success_rate()
+                   'win_rate': current_user.profile.success_rate(),
+                   'num_antidotes': current_user.profile.num_antidotes
                   }
         return render(request, 'game/user_detail.html', context)
     else:
@@ -120,6 +123,17 @@ def safezone_json(request):
             output_object[location_text] = location
 
         return HttpResponse(json.dumps(output_object), content_type='application/javascript')
+# Fix this
+def current_profile_json(request):
+    """Retrieving user profile data from db"""
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            current_user = request.user
+            output_object = {}
+            output_object['num_antidotes'] = current_user.profile.num_antidotes
+            return HttpResponse(json.dumps(output_object), content_type='application/javascript')
+        else:
+            return HttpResponse("No logged in user")
 
 def win(request, location_name):
     """Saving matches won to db"""
@@ -128,7 +142,6 @@ def win(request, location_name):
         location.matches_won += 1
         location.save()
 
-        print >>sys.stderr, 'Goodbye, cruel world!'
         # save win information to current user's profile
         if request.user.is_authenticated:
             current_user = request.user
@@ -150,7 +163,7 @@ def lose(request, location_name):
             current_user.profile.matches_lost += 1
             current_user.profile.save()
 
-        return HttpResponse("matches_lost increased by 1")
+    return HttpResponse("matches_lost increased by 1")
 
 def antidoteReceived(request, location_name):
     """Saving antidotes changes to db"""
@@ -183,7 +196,3 @@ def announcement_json(request):
 
         return HttpResponse(json.dumps(output_object), content_type='application/javascript')
 
-def profile_json(request):
-    """Retrieving user profile data from db"""
-
-    pass
